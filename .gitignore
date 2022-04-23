@@ -1,0 +1,16 @@
+/target
+.aws-sam/
+.venv/
+.vscode/
+.metals/
+/development*
+
+*.log
+*.csv
+*.DS_Store
+
+*/.pytest_cache
+.pytest_cache
+.idea/
+lib/
+.xml

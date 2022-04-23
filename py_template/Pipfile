@@ -1,0 +1,13 @@
+[[source]]
+url = "www.some.url/here"
+name = "PrivatePyPY"
+verify_ssl = true
+
+[packages]
+
+[dev-packages]
+pre-commit = "2.18.1"
+pytest = "7.1.1"
+
+[requires]
+python_version = "3.8"

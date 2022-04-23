@@ -1,0 +1,17 @@
+[package]
+name = "my_pacakage"
+version = "0.1.1"
+edition = "2021"
+rust-version = "1.59"
+authors = ["Dan Dixey <dan.dixey@gmail.com>"]
+description = "TODO"
+repository = "TODO"
+keywords = ["foo", "bar"]
+categories = ["setup", "dev"]
+
+[lib]
+doctest = true
+
+[dependencies]
+
+[dev-dependencies]
