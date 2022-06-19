@@ -1,11 +1,3 @@
-[profile.dev]
-codegen-units = 1024
-debug = false
-incremental = true
-lto = "thin"
-opt-level = 1
-split-debuginfo = "unpacked"
-
 [profile.release]
 codegen-units = 1
 debug = false
