@@ -7,6 +7,7 @@ Plug 'lewis6991/spellsitter.nvim'
 Plug 'sheerun/vim-polyglot'
 Plug 'itchyny/lightline.vim'
 Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
+Plug 'kyazdani42/nvim-web-devicons'
 
 " Git
 Plug 'mhinz/vim-signify'
@@ -16,15 +17,16 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 " LSP
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'williamboman/nvim-lsp-installer', { 'branch': 'main' }
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'williamboman/nvim-lsp-installer'
 
 " Navigation
+Plug 'karb94/neoscroll.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'preservim/nerdtree'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'andymass/vim-matchup'
 Plug 'm-demare/hlargs.nvim'
 
@@ -38,6 +40,8 @@ Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'saecki/crates.nvim'
+Plug 'folke/trouble.nvim'
 
 call plug#end()
 
@@ -89,12 +93,10 @@ let g:NERDSpaceDelims = 1
 map <leader>n :NERDTreeToggle<CR>
 
 " Buffers
-map <leader>m :make
 map <leader>, :bprevious<CR>
 
-" Telescope
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+" FZF
+nnoremap <leader>ff <cmd>Rg :<cr>
 
 " Rust
 let g:rustfmt_autosave = 1
@@ -132,13 +134,13 @@ local opts = {
         assist = {
           importEnforceGranularity = true,
           importPrefix = "crate"
-          },
+        },
         cargo = {
-          allFeatures = true
-          },
+            allFeatures = true
+        },
         checkOnSave = {
-          -- default: `cargo check`
-          command = "clippy"
+            -- default: `cargo clippy`
+            command = "clippy"
           },
         },
         inlayHints = {
@@ -150,9 +152,17 @@ local opts = {
       }
     },
 }
+
 require('rust-tools').setup(opts)
+
 require'lspconfig'.pyright.setup{}
 require'lspconfig'.tsserver.setup {}
+require'lspconfig'.cmp.setup {}
+
+require('crates').setup()
+require("trouble").setup()
+require('neoscroll').setup()
+
 EOF
 
 " Configure LSP code navigation shortcuts
