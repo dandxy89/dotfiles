@@ -88,14 +88,6 @@ let g:NERDCreateDefaultMappings = 0
 let g:NERDSpaceDelims = 1
 let g:rustfmt_autosave = 1 " Rust
 
-" Shortcuts
-map <leader>n :NERDTreeToggle<CR>
-map <leader>, :bprevious<CR>
-nnoremap <leader>f <cmd>Rg :<cr>
-nnoremap <F11> :tabprevious<CR>
-nnoremap <leader>t <cmd>make test<CR>
-nnoremap <leader>p <cmd>make run_pre_commit<CR>
-
 autocmd CursorHold,CursorHoldI * lua require('nvim-lightbulb').update_lightbulb()
 let g:code_action_menu_window_border = 'single'
 
@@ -279,3 +271,17 @@ nnoremap <silent> A         <cmd>CodeActionMenu<CR>
 " Trouble
 nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
+
+" Shortcuts
+map <leader>n :NERDTreeToggle<CR>
+map <leader>, :bprevious<CR>
+nnoremap <leader>f <cmd>FZF<cr>
+nnoremap <F11> :tabprevious<CR>
+
+" Harpoon
+nnoremap <F7>  :lua require("harpoon.mark").add_file()<CR>
+nnoremap <F8>  :lua require("harpoon.ui").toggle_quick_menu()<CR>
+nnoremap <F9>  :lua require("harpoon.ui").nav_next()<CR>
+
+" The Primagen Recommendation
+nnoremap <leader>t <cmd>"\_dP"<CR>

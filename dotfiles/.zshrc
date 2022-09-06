@@ -41,16 +41,12 @@ alias clippy="cargo clippy --all-targets --all-features -- -D warnings"
 export RUST_LOG=info
 
 # Gurobi
-export GRB_LICENSE_FILE="/Library/gurobi801/gurobi.lic"
-export GUROBI_HOME="/Library/gurobi801/mac64/bin"
+export GRB_LICENSE_FILE="/Library/gurobi952/macos_universal2/gurobi.lic"
+export GUROBI_HOME="/Library/gurobi952/macos_universal2"
 
 # Connecting to the AWS
 alias s2a='function(){eval $($(command -v saml2aws) script --shell=bash -a "$@");}'
-alias loginAWS='saml2aws login -a nonprod'
-export AWS_ENVIRONMENT=dev
-export AWS_REGION=us-east-1
-export AWS_DEFAULT_REGION=us-east-1
-export AWS_PROFILE=nonprod
+alias loginAWS='saml2aws login -a woodmac-nonprod'
 
 # Disable AWS TELEMETRY
 export SAM_CLI_TELEMETRY=0
@@ -77,6 +73,9 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
+
+# To Pqrquet
+alias toParquet='python3 /Users/i98012/.config/nvim/to_csv.py'
 
 # History management
 export HISTCONTROL=ignoreboth
