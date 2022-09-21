@@ -46,7 +46,7 @@ export GUROBI_HOME="/Library/gurobi952/macos_universal2"
 
 # Connecting to the AWS
 alias s2a='function(){eval $($(command -v saml2aws) script --shell=bash -a "$@");}'
-alias loginAWS='saml2aws login -a woodmac-nonprod'
+alias loginAWS='saml2aws login -a XXX'
 
 # Disable AWS TELEMETRY
 export SAM_CLI_TELEMETRY=0
