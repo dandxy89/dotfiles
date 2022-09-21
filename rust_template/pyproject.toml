@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "SomeProject"
+version = "0.1.0"
+description = "OmMyGod"
+authors = ["Dan <dan@ohmyslow.com>"]
+
+[[tool.poetry.source]]
+name = "secret_host"
+url = "url.com/simple"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.20.0"
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
