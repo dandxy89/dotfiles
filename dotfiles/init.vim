@@ -19,6 +19,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'weilbith/nvim-code-action-menu'
 Plug 'kosayoda/nvim-lightbulb'
+Plug 'klen/nvim-test'
 
 " LSP Completion
 Plug 'Shougo/deoplete.nvim'
@@ -31,7 +32,6 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/nvim-cmp'
 
 " Navigation
-Plug 'karb94/neoscroll.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'preservim/nerdtree'
 Plug 'nvim-lua/plenary.nvim'
@@ -78,7 +78,10 @@ set updatetime=100
 " Colors
 set colorcolumn=80
 set guifont=JetBrains\ Mono  " brew tap homebrew/cask-fonts && brew install --cask font-JetBrains-Mono
+
+" colorscheme gruvbox
 colorscheme gruvbox-baby
+
 set background=dark
 set showtabline=2  " always show tabline
 let g:gruvbox_termcolors=16
@@ -222,8 +225,6 @@ require('nvim-treesitter.configs').setup {
     max_file_lines = nil,
   },
 }
-require('hlargs').setup()
-require('neoscroll').setup()
 
 local rt = {
     capabilities = capabilities,
@@ -254,6 +255,8 @@ local rt = {
 
 require('rust-tools').setup(rt)
 require("trouble").setup()
+require("nvim-test").setup{}
+require('hlargs').setup()
 
 -- LSP Diagnostics Options Setup 
 local sign = function(opts)
