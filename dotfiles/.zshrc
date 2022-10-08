@@ -26,7 +26,6 @@ export LC_ALL='en_US.UTF-8'
 export LANG='en_US.UTF-8'
 export PIPENV_IGNORE_VIRTUALENVS=1
 export PIPENV_VENV_IN_PROJECT=1
-# eval "$(pipenv --completion)"  # Shell Completion
 
 # PyENV
 export PATH="/usr/local/opt/swig@3/bin:$PATH"
@@ -39,24 +38,6 @@ alias ct="cargo test"
 alias cc="cargo check"
 alias clippy="cargo clippy --all-targets --all-features -- -D warnings"
 export RUST_LOG=info
-
-# Gurobi
-export GRB_LICENSE_FILE="/Library/gurobi952/macos_universal2/gurobi.lic"
-export GUROBI_HOME="/Library/gurobi952/macos_universal2"
-
-# Connecting to the AWS
-alias s2a='function(){eval $($(command -v saml2aws) script --shell=bash -a "$@");}'
-alias loginAWS='saml2aws login -a XXX'
-
-# Disable AWS TELEMETRY
-export SAM_CLI_TELEMETRY=0
-
-# Rust stuff
-if [ ! -f "$HOME/.config/rustlang/autocomplete/rustup" ]; then
-    mkdir -p ~/.config/rustlang/autocomplete
-    rustup completions bash rustup >> ~/.config/rustlang/autocomplete/rustup
-fi
-
 export PATH="/Users/i98012/Rust/rust-analyzer/crates/rust-analyzer:$PATH"
 export CARGO_INCREMENTAL=1
 export RUSTFLAGS="-C target-cpu=native"
@@ -66,6 +47,22 @@ export CARGO_NET_GIT_FETCH_WITH_CLI=true
 export LDFLAGS="-L/usr/local/opt/openssl@3/lib"
 export CPPFLAGS="-I/usr/local/opt/openssl@3/include"
 export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"
+
+# Gurobi
+export GRB_LICENSE_FILE="/Library/gurobi952/macos_universal2/gurobi.lic"
+export GUROBI_HOME="/Library/gurobi952/macos_universal2"
+
+# Connecting to the AWS
+alias s2a='function(){eval $($(command -v saml2aws) script --shell=bash -a "$@");}'
+
+# Disable AWS TELEMETRY
+export SAM_CLI_TELEMETRY=0
+
+# Rust stuff
+if [ ! -f "$HOME/.config/rustlang/autocomplete/rustup" ]; then
+    mkdir -p ~/.config/rustlang/autocomplete
+    rustup completions bash rustup >> ~/.config/rustlang/autocomplete/rustup
+fi
 
 # Poetry
 export PATH="$HOME/.poetry/bin:$PATH"
