@@ -3,6 +3,9 @@
 vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
+  -- Packer can manage itself
+  use 'wbthomason/packer.nvim'
+  
   -- Post-install/update hook with neovim command
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
@@ -20,8 +23,8 @@ return require('packer').startup(function(use)
   -- Theme
   use { 'luisiacc/gruvbox-baby', branch = 'main' }
 
-  -- Icons
-  use { 'kyazdani42/nvim-web-devicons' }
+  -- Git Diff View
+  use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
 
   -- Highlight Arguments
   use { 'm-demare/hlargs.nvim' }
@@ -31,6 +34,9 @@ return require('packer').startup(function(use)
     'numToStr/Comment.nvim', 
     config = function() require("Comment").setup() end 
   }
+
+  -- Test Runner
+  use { 'vim-test/vim-test' }
 
   -- Nerd Tree
   use { 'preservim/nerdtree' }
@@ -47,15 +53,15 @@ return require('packer').startup(function(use)
   use { 'mbbill/undotree' }
 
   -- LSP
-  use { 'neovim/nvim-lspconfig' }
+  use { 'neovim/nvim-lspconfig' }               -- Collection of configurations for built-in LSP client
   use { 'williamboman/nvim-lsp-installer' }
-  use { 'weilbith/nvim-code-action-menu' }
-  use { 'hrsh7th/nvim-cmp' }
+  use { 'hrsh7th/nvim-cmp' }                    -- Autocompletion plugin
+  use { 'j-hui/fidget.nvim'}                    -- Standalone UI for nvim-lsp progress. Eye candy for the impatient.
 
   -- LSP Completion
   use { 'hrsh7th/cmp-nvim-lua' }
   use { 'hrsh7th/cmp-buffer' }
-  use { 'hrsh7th/cmp-nvim-lsp' }
+  use { 'hrsh7th/cmp-nvim-lsp' }                -- LSP source for nvim-cmp
   use { 'hrsh7th/cmp-nvim-lsp-signature-help' }
   use { 'hrsh7th/cmp-path' }
   use { 'hrsh7th/cmp-vsnip' }

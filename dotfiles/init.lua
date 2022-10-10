@@ -8,4 +8,4 @@ require('plugins')
 require('lsp_config')
 
 -- Init Plugins
-require('Comment').setup()
+require("fidget").setup{}

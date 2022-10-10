@@ -14,19 +14,31 @@ vim.g.mapleader = " "
 map("n", "<Leader>u", ":PackerSync<CR>")
 
 -- NERDTree
-map("n", "<Leader>n", ":NERDTreeToggle<CR>")
+map("n", "<Leader>n", ":NERDTreeFind<CR>")
+
+-- Tab New
+map("n", "<Leader>tn", ":tabnew<CR>")
+
+-- Tab Close
+map("n", "<Leader>tc", ":tabclose<CR>")
 
 -- Tab Previous
-map("n", "<Leader>p", ":tabprevious<CR>")
+map("n", "<Leader>pt", ":tabprevious<CR>")
 
 -- Previous Buffer
-map("n", "<Leader>bp", ":bprevious<CR>")
+map("n", "<Leader>gg", ":bprevious<CR>")
 
 -- Toggle UndoTree Plugin
 map("n", "<F5>", ":UndotreeToggle<CR>")
 
 -- Split Right
-map("n", "<Leader>jj", ":vsplit<CR>")
+map("n", "<Leader>sr", ":vsplit<CR>")
+
+-- Switch Window - Left
+map("n", "<Leader>wh", ":wincmd h<CR>")
+
+-- Switch Window - Right
+map("n", "<Leader>wl", ":wincmd l<CR>")
 
 -- Run Make Test
 map("n", "<Leader>mt", ":terminal make test<CR>")
@@ -40,9 +52,11 @@ map("n", "<Leader>pcc", ":vsplit<CR> :terminal cd ~/Python/c2md-rulesengine && m
 -- Log into AWS
 map("n", "<Leader>aws", ":vsplit<CR> :terminal saml2aws login -a woodmac-nonprod<CR>")
 
+-- Format Json
+map("n", "<Leader>fj", ":%!jq .<CR>")
+
 local km = vim.keymap
 
--- Harpoon Mark
 km.set("n", "<F7>", function()
   require("harpoon.mark").add_file()
 end)
@@ -63,17 +77,17 @@ km.set("n", "<Leader>f", function()
 end)
 
 -- Code Action
-km.set("n", "<leader>ga", function()
+km.set("n", "<leader>ca", function()
   vim.lsp.buf.code_action()
 end)
 
 -- LSP Symbols
-km.set("n", "<leader>gs", function()
+km.set("n", "<leader>sm", function()
   require("telescope.builtin").lsp_document_symbols()
 end)
 
 -- LSP Diagnostics
-km.set("n", "<leader>td", function()
+km.set("n", "<leader>di", function()
   require("telescope.builtin").diagnostics()
 end)
 
@@ -83,7 +97,7 @@ km.set("n", "<leader>gr", function()
 end)
 
 -- LSP Rename
-km.set({ "v", "n" }, "<leader>cn", function()
+km.set({ "v", "n" }, "<leader>rn", function()
   vim.lsp.buf.rename()
 end, { noremap = true, silent = true })
 
@@ -92,12 +106,17 @@ km.set("n", "<leader>gd", function()
   vim.lsp.buf.definition()
 end)
 
+-- LSP Implementation
+km.set("n", "<leader>gi", function()
+  vim.lsp.buf.implementation()
+end)
+
 -- LSP Sig Show
 km.set("n", "<leader>sh", function()
   vim.lsp.buf.signature_help()
 end)
 
 -- LSP Hover
-km.set("n", "<leader>hh", function()
+km.set("n", "<leader>gh", function()
   vim.lsp.buf.hover()
 end)

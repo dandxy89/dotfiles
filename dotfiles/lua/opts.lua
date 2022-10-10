@@ -34,7 +34,7 @@ opt.splitbelow = true            -- bool: Place new window below the current one
 
 -- [[ Custom ]]
 opt.guifont = "JetBrains Mono"   -- str: brew tap homebrew/cask-fonts && brew install --cask font-JetBrains-Mono
-opt.updatetime = 100 			 -- num: faster completion
+opt.updatetime = 80 			 -- num: faster completion
 opt.wrap = false 				 -- bool: display lines as one long line
 opt.completeopt = { "menuone", "noselect" }
 opt.title = true				 -- bool: set the title of window to the value of the titlestring
@@ -46,3 +46,4 @@ vim.cmd[[colorscheme gruvbox-baby]]
 vim.cmd[[set spell]]			 -- Using the Built in Spell Checker
 vim.cmd[[set splitbelow]]
 vim.cmd[[set splitright]]
+vim.cmd[[set scrolloff=999]]
