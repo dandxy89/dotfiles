@@ -1,5 +1,3 @@
-local cmp = require'cmp'
-
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
@@ -38,6 +36,7 @@ cmp.setup({
     { name = 'buffer', keyword_length = 2 },        -- source current buffer
     { name = 'vsnip', keyword_length = 2 },         -- nvim-cmp source for vim-vsnip 
     { name = 'calc'},                               -- source for math calculation
+    { name = 'luasnip' },
   },
   window = {
       completion = cmp.config.window.bordered(),
