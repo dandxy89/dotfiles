@@ -11,13 +11,15 @@ return require('packer').startup(function(use)
 
    -- Use dependency and run lua function after load
   use {
-    'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' },
+    'lewis6991/gitsigns.nvim', 
+    requires = { 'nvim-lua/plenary.nvim' },
     config = function() require('gitsigns').setup() end
   }
 
   use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.0',
-    requires = { {'nvim-lua/plenary.nvim'} }
+    'nvim-telescope/telescope.nvim', 
+    tag = '0.1.0',
+    requires = { {'nvim-lua/plenary.nvim'} },
   }
 
   -- Theme
@@ -60,7 +62,6 @@ return require('packer').startup(function(use)
   use { 'neovim/nvim-lspconfig' }
   use { 'williamboman/nvim-lsp-installer' }
   use { 'hrsh7th/nvim-cmp' }
-  use { 'j-hui/fidget.nvim'}
 
   -- LSP Completion
   use { 'hrsh7th/cmp-nvim-lua' }
@@ -79,7 +80,6 @@ return require('packer').startup(function(use)
   use {
     "folke/noice.nvim",
     event = "VimEnter",
-    commit = "312ac20daeae1ba73c300671bbf8d405419a33ef",
     config = function()
       require("noice").setup()
       require("telescope").load_extension("noice")

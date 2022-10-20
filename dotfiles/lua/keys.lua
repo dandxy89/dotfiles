@@ -14,6 +14,8 @@ vim.g.mapleader = " "
 
 -- Update Plugins
 map("n", "<Leader>u", ":PackerSync<CR>")
+-- Faster Saving
+map("n", "<Leader>w", ":w<CR>")
 -- NERDTree
 map("n", "<Leader>n", ":NERDTreeFind<CR>")
 -- Tab New
@@ -46,6 +48,10 @@ map("n", "<Leader>aws", ":vsplit<CR> :terminal saml2aws login -a woodmac-nonprod
 map("n", "<Leader>fj", ":%!jq .<CR>")
 -- Test Nearest
 map("n", "<Leader>gt", ":TestNearest<CR>")
+-- Git Status
+map("n", "<Leader>gs", ":Telescope git_status<CR>")
+-- Open Telescope
+map("n", "<Leader>ot", ":Telescope<CR>")
 
 local km = vim.keymap
 
