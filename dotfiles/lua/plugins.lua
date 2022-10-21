@@ -80,6 +80,7 @@ return require('packer').startup(function(use)
   use {
     "folke/noice.nvim",
     event = "VimEnter",
+    -- commit = "312ac20daeae1ba73c300671bbf8d405419a33ef",
     config = function()
       require("noice").setup()
       require("telescope").load_extension("noice")

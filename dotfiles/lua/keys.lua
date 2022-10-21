@@ -55,6 +55,9 @@ map("n", "<Leader>ot", ":Telescope<CR>")
 
 local km = vim.keymap
 
+-- Edit Nvim Config
+km.set("n", "<Leader>en", function() require("telescope.builtin").find_files({cwd = "~/.config/nvim"}) end)
+-- Harpoon Add File
 km.set("n", "<F7>", function() require("harpoon.mark").add_file() end)
 -- Harpoon Menu
 km.set("n", "<F8>", function() require("harpoon.ui").toggle_quick_menu() end)
