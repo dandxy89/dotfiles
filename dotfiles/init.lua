@@ -1,7 +1,5 @@
---[[ init.lua ]]
-
--- IMPORTS
-require('vars') 
+-- [[ init.lua ]] 
+require('vars')
 require('opts')
 require('keys')
 require('plugins')
