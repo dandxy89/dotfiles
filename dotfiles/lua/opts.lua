@@ -28,13 +28,19 @@ opt.splitbelow = true -- bool: Place new window below the current one
 
 -- -- [[ Custom ]]
 opt.guifont = "JetBrains Mono" -- str: brew tap homebrew/cask-fonts && brew install --cask font-JetBrains-Mono
-opt.updatetime = 200 -- num: faster completion
--- opt.wrap = false 				 -- bool: display lines as one long line
--- opt.completeopt = { "menu", "menuone", "noselect" }
+opt.updatetime = 100 -- num: faster completion
+opt.wrap = false -- bool: display lines as one long line
+opt.completeopt = {"menu", "menuone", "noselect"}
 opt.title = true -- bool: set the title of window to the value of the titlestring
 opt.autoread = true -- bool: Deal with file loads after updating via git etc
 vim.o.autoread = true -- bool: auto-reload files when modified externally
 
+-- have a fixed column for the diagnostics to appear in
+-- this removes the jitter when warnings/errors flow in
+vim.wo.signcolumn = "yes"
+
 vim.cmd [[colorscheme gruvbox-baby]]
 vim.cmd [[set spell]] -- Using the Built in Spell Checker
-vim.cmd [[set scrolloff=999]]
+vim.cmd [[set scrolloff=100]]
+vim.cmd [[set synmaxcol=200]]
+-- vim.cmd [[set lazyredraw]]

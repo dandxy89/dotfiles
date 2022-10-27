@@ -2,21 +2,16 @@
 capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local cmp = require('cmp')
-
 local lspconfig = require('lspconfig')
 
 cmp.setup({
+    preselect = cmp.PreselectMode.None,
     snippet = {
-        -- REQUIRED by nvim-cmp. get rid of it once we can
-        expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-        end
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body)
+      end,
     },
     mapping = {
-        -- Tab immediately completes. C-n/C-p to select.
-        ['<Tab>'] = cmp.mapping.confirm({
-            select = true
-        }),
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
         ['<S-Tab>'] = cmp.mapping.select_prev_item(),
@@ -30,34 +25,16 @@ cmp.setup({
             select = true
         })
     },
-    sources = {{
-        name = 'path'
-    }, -- file paths
-    {
-        name = 'nvim_lsp',
-        keyword_length = 3
-    }, -- from language server
-    {
-        name = 'nvim_lsp_signature_help'
-    }, -- display function signatures with current parameter emphasized
-    {
-        name = 'nvim_lua',
-        keyword_length = 2
-    }, -- complete neovim's Lua runtime API such vim.lsp.*
-    {
-        name = 'buffer',
-        keyword_length = 2
-    }, -- source current buffer
-    {
-        name = 'vsnip',
-        keyword_length = 2
-    }, -- nvim-cmp source for vim-vsnip 
-    {
-        name = 'calc'
-    }, -- source for math calculation
-    {
-        name = 'luasnip'
-    }},
+    sources = {
+      { name = 'path' },
+      { name = 'nvim_lsp' },
+      { name = 'nvim_lsp_signature_help' },
+      { name = 'nvim_lua' },
+      { name = 'buffer' },
+      { name = 'vsnip' },
+      { name = 'calc' },
+      { name = 'luasnip' }
+    },
     window = {
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered()

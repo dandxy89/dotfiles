@@ -19,7 +19,7 @@ map("n", "<Leader>u", ":PackerSync<CR>")
 -- Faster Saving
 map("n", "<Leader>w", ":w<CR>")
 -- NERDTree
-map("n", "<Leader>n", ":NERDTreeFind<CR>")
+map("n", "<Leader>n", ":NvimTreeToggle<CR>")
 -- Tab New
 map("n", "<Leader>tn", ":tabnew<CR>")
 -- Tab Close
@@ -85,8 +85,11 @@ km.set("n", "<leader>ca", function()
     vim.lsp.buf.code_action()
 end)
 -- LSP Symbols
-km.set("n", "<leader>sm", function()
+km.set("n", "<leader>ds", function()
     require("telescope.builtin").lsp_document_symbols()
+end)
+km.set("n", "<leader>ws", function()
+    require("telescope.builtin").lsp_workspace_symbols()
 end)
 -- LSP Diagnostics
 km.set("n", "<leader>di", function()

@@ -10,6 +10,7 @@ return require('packer').startup(function(use)
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
     }
+    use {'nvim-treesitter/nvim-treesitter-context'}
 
     -- Use dependency and run lua function after load
     use {
@@ -31,7 +32,6 @@ return require('packer').startup(function(use)
         'luisiacc/gruvbox-baby',
         branch = 'main'
     }
-    use {'kyazdani42/nvim-web-devicons'}
 
     -- Git Diff View
     use {
@@ -54,7 +54,10 @@ return require('packer').startup(function(use)
     use {'vim-test/vim-test'}
 
     -- Nerd Tree
-    use {'preservim/nerdtree'}
+    use {
+        'nvim-tree/nvim-tree.lua',
+        tag = 'nightly'
+    }
 
     -- Leap - faster navigation
     use {'ggandor/leap.nvim'}
@@ -92,7 +95,6 @@ return require('packer').startup(function(use)
     use {
         "folke/noice.nvim",
         event = "VimEnter",
-        -- commit = "312ac20daeae1ba73c300671bbf8d405419a33ef",
         config = function()
             require("noice").setup()
             require("telescope").load_extension("noice")
