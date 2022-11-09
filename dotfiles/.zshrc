@@ -15,11 +15,16 @@ alias zshconfig="subl ~/.zshrc"
 alias ohmyzsh="subl ~/.oh-my-zsh"
 alias dd="source .venv/bin/activate; nvim ."
 
+alias f1n="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://www.newsnow.co.uk/h/Sport/F1"
+alias htn="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://www.newsnow.co.uk/h/Hot+Topics"
+
 # Path Extenstions
-export PATH="/usr/local/bin/chromedriver:$PATH"
+export packpath="/Users/i98012/.local/share/nvim/site/pack/packer/start/packer.nvim"
 export PATH="$PATH:/Users/dixeda/.local/bin"
 export PATH="/usr/local/opt/python@3.7/bin:$PATH"
 export PATH="/usr/local/opt/python@3.8/bin:$PATH"
+export PATH="/usr/local/opt/python@3.9/bin:$PATH"
+export PATH="/usr/local/opt/python@3.10/bin:$PATH"
 
 # PIPENV Variables
 export LC_ALL='en_US.UTF-8'

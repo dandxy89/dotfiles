@@ -1,4 +1,7 @@
 -- Add additional capabilities supported by nvim-cmp
+require("mason").setup()
+require("mason-lspconfig").setup()
+
 capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local cmp = require('cmp')
@@ -32,7 +35,7 @@ cmp.setup({
       { name = 'nvim_lua' },
       { name = 'buffer' },
       { name = 'vsnip' },
-      { name = 'calc' },
+      -- { name = 'calc' },
       { name = 'luasnip' }
     },
     window = {
@@ -56,27 +59,6 @@ require('lspconfig')['tsserver'].setup {
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities
-}
-
-require('Comment').setup()
-require('crates').setup()
-
-require('nvim-treesitter.configs').setup {
-    ensure_installed = {"bash", "c", "cmake", "css", "dockerfile", "go", "gomod", "gowork", "hcl", "help", "html",
-                        "http", "javascript", "json", "lua", "make", "markdown", "python", "regex", "ruby", "rust",
-                        "toml", "vim", "yaml", "zig"},
-    auto_install = true,
-    highlight = {
-        enable = true
-    },
-    ident = {
-        enable = true
-    },
-    rainbow = {
-        enable = true,
-        extended_mode = true,
-        max_file_lines = nil
-    }
 }
 
 local rt = {
@@ -106,8 +88,30 @@ local rt = {
     }
 }
 
+require('Comment').setup()
+require('crates').setup()
 require('rust-tools').setup(rt)
 require('hlargs').setup()
+
+require('nvim-treesitter.configs').setup {
+    ensure_installed = {
+        "bash", "c", "cmake", "css", "dockerfile", "go", "gomod", "gowork", "hcl", "help", "html",
+        "http", "javascript", "json", "lua", "make", "markdown", "python", "regex", "ruby", "rust",
+        "toml", "vim", "yaml", "zig"
+    },
+    auto_install = true,
+    highlight = {
+        enable = true
+    },
+    ident = {
+        enable = true
+    },
+    rainbow = {
+        enable = true,
+        extended_mode = true,
+        max_file_lines = nil
+    }
+}
 
 -- LSP Diagnostics Options Setup 
 local sign = function(opts)

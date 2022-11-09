@@ -6,16 +6,13 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     -- Post-install/update hook with neovim command
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
-    }
-    use {'nvim-treesitter/nvim-treesitter-context'}
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use { 'nvim-treesitter/nvim-treesitter-context' }
 
     -- Use dependency and run lua function after load
     use {
         'lewis6991/gitsigns.nvim',
-        requires = {'nvim-lua/plenary.nvim'},
+        requires = { 'nvim-lua/plenary.nvim' },
         config = function()
             require('gitsigns').setup()
         end
@@ -26,12 +23,10 @@ return require('packer').startup(function(use)
         tag = '0.1.0',
         requires = {{'nvim-lua/plenary.nvim'}}
     }
+    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
     -- Theme
-    use {
-        'luisiacc/gruvbox-baby',
-        branch = 'main'
-    }
+    use { "ellisonleao/gruvbox.nvim" }
 
     -- Git Diff View
     use {
@@ -55,8 +50,8 @@ return require('packer').startup(function(use)
 
     -- Nerd Tree
     use {
-        'nvim-tree/nvim-tree.lua',
-        tag = 'nightly'
+      'nvim-tree/nvim-tree.lua', 
+      requires = { 'nvim-tree/nvim-web-devicons' }, tag = 'nightly'
     }
 
     -- Leap - faster navigation
@@ -74,11 +69,12 @@ return require('packer').startup(function(use)
     use {'mbbill/undotree'}
 
     -- LSP
-    use {'neovim/nvim-lspconfig'}
-    use {'williamboman/nvim-lsp-installer'}
-    use {'hrsh7th/nvim-cmp'}
+    use { "williamboman/mason.nvim" }
+    use { "williamboman/mason-lspconfig.nvim" }
+    use { "neovim/nvim-lspconfig" }
 
     -- LSP Completion
+    use {'hrsh7th/nvim-cmp'}
     use {'hrsh7th/cmp-nvim-lua'}
     use {'hrsh7th/cmp-buffer'}
     use {'hrsh7th/cmp-nvim-lsp'}

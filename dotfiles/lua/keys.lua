@@ -12,8 +12,6 @@ end
 -- Map leader to space
 vim.g.mapleader = " "
 
--- vim.notify = require("notify")
-
 -- Update Plugins
 map("n", "<Leader>u", ":PackerSync<CR>")
 -- Faster Saving
@@ -40,11 +38,10 @@ map("n", "<Leader>wh", ":wincmd h<CR>")
 map("n", "<Leader>wl", ":wincmd l<CR>")
 -- Run Make Test
 map("n", "<Leader>mt", ":terminal make test<CR>")
--- Run Test Calculate Cost om GGM (TEMP)
-map("n", "<Leader>tcc",
-    ":vsplit<CR> :terminal poetry run pytest tests/unit_tests/Preprocessing/test_CalculateCosts.py<CR>")
+-- Run the Black formatter
+map("", "<Leader>ff", ":!black %<CR>")
 -- Run Pre-Commit in C2MD
-map("n", "<Leader>pcc", ":vsplit<CR> :terminal cd ~/Python/c2md-rulesengine && make run_pre_commit<CR>")
+map("n", "<Leader>rpc", ":vsplit<CR> :terminal make run_pre_commit<CR>")
 -- Log into AWS
 map("n", "<Leader>aws", ":vsplit<CR> :terminal saml2aws login -a woodmac-nonprod<CR>")
 -- Format Json
@@ -55,6 +52,12 @@ map("n", "<Leader>gt", ":TestNearest<CR>")
 map("n", "<Leader>gs", ":Telescope git_status<CR>")
 -- Open Telescope
 map("n", "<Leader>ot", ":Telescope<CR>")
+-- Resize - thinner buffer
+map("n", "<Leader>=", ":vertical resize +10<CR>")
+-- Resize - widen buffer
+map("n", "<Leader>-", ":vertical resize -10<CR>")
+-- Remove search highlighting
+map("n", "<Leader>nh", ":nohl<CR>")
 
 local km = vim.keymap
 
@@ -79,6 +82,10 @@ end)
 -- Find Files
 km.set("n", "<Leader>f", function()
     require("telescope.builtin").find_files()
+end)
+-- Live grep
+km.set("n", "<Leader>lg", function()
+    require("telescope.builtin").live_grep()
 end)
 -- Code Action
 km.set("n", "<leader>ca", function()
