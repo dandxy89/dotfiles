@@ -6,13 +6,16 @@ capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local cmp = require('cmp')
 local lspconfig = require('lspconfig')
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 cmp.setup({
     preselect = cmp.PreselectMode.None,
     snippet = {
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-      end,
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end
     },
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -28,16 +31,22 @@ cmp.setup({
             select = true
         })
     },
-    sources = {
-      { name = 'path' },
-      { name = 'nvim_lsp' },
-      { name = 'nvim_lsp_signature_help' },
-      { name = 'nvim_lua' },
-      { name = 'buffer' },
-      { name = 'vsnip' },
-      -- { name = 'calc' },
-      { name = 'luasnip' }
-    },
+    sources = {{
+        name = 'path'
+    }, {
+        name = 'nvim_lsp'
+    }, {
+        name = 'nvim_lsp_signature_help'
+    }, {
+        name = 'nvim_lua'
+    }, {
+        name = 'buffer'
+    }, {
+        name = 'vsnip'
+    }, -- { name = 'calc' },
+    {
+        name = 'luasnip'
+    }},
     window = {
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered()
@@ -50,12 +59,13 @@ cmp.setup({
 local lsp_flags = {
     debounce_text_changes = 150
 }
-require('lspconfig')['pyright'].setup {
+require('lspconfig').marksman.setup {}
+require('lspconfig').pyright.setup {
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities
 }
-require('lspconfig')['tsserver'].setup {
+require('lspconfig').tsserver.setup {
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities
@@ -94,11 +104,9 @@ require('rust-tools').setup(rt)
 require('hlargs').setup()
 
 require('nvim-treesitter.configs').setup {
-    ensure_installed = {
-        "bash", "c", "cmake", "css", "dockerfile", "go", "gomod", "gowork", "hcl", "help", "html",
-        "http", "javascript", "json", "lua", "make", "markdown", "python", "regex", "ruby", "rust",
-        "toml", "vim", "yaml", "zig"
-    },
+    ensure_installed = {"bash", "c", "cmake", "css", "dockerfile", "go", "gomod", "gowork", "hcl", "help", "html",
+                        "http", "javascript", "json", "lua", "make", "markdown", "python", "regex", "ruby", "rust",
+                        "toml", "vim", "yaml", "zig"},
     auto_install = true,
     highlight = {
         enable = true
@@ -113,7 +121,7 @@ require('nvim-treesitter.configs').setup {
     }
 }
 
--- LSP Diagnostics Options Setup 
+-- LSP Diagnostics Options Setup
 local sign = function(opts)
     vim.fn.sign_define(opts.name, {
         texthl = opts.name,
@@ -157,4 +165,3 @@ vim.cmd([[
   set signcolumn=yes
   autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 ]])
-

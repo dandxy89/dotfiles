@@ -5,28 +5,51 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
-    -- Post-install/update hook with neovim command
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use { 'nvim-treesitter/nvim-treesitter-context' }
+    -- impatient
+    use 'lewis6991/impatient.nvim'
 
-    -- Use dependency and run lua function after load
+    -- treesitter + treesitter context
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate'
+    }
+    use {'nvim-treesitter/nvim-treesitter-context'}
+
+    -- Highlights for files changed in git projects
     use {
         'lewis6991/gitsigns.nvim',
-        requires = { 'nvim-lua/plenary.nvim' },
         config = function()
             require('gitsigns').setup()
-        end
+        end,
+        requires = {'nvim-lua/plenary.nvim'}
     }
 
+    -- Telescope
     use {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.0',
-        requires = {{'nvim-lua/plenary.nvim'}}
+        requires = {{'nvim-lua/plenary.nvim'}},
+        config = function()
+            require('telescope').setup {
+                extensions = {
+                    fzf = {
+                        fuzzy = true, -- false will only do exact matching
+                        override_generic_sorter = true, -- override the generic sorter
+                        override_file_sorter = true, -- override the file sorter
+                        case_mode = "smart_case" -- or "ignore_case" or "respect_case"
+                    }
+                }
+            }
+            require('telescope').load_extension('fzf')
+        end
     }
-    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+    use {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'make'
+    }
 
     -- Theme
-    use { "ellisonleao/gruvbox.nvim" }
+    use {"ellisonleao/gruvbox.nvim"}
 
     -- Git Diff View
     use {
@@ -48,14 +71,13 @@ return require('packer').startup(function(use)
     -- Test Runner
     use {'vim-test/vim-test'}
 
-    -- Nerd Tree
-    use {
-      'nvim-tree/nvim-tree.lua', 
-      requires = { 'nvim-tree/nvim-web-devicons' }, tag = 'nightly'
-    }
-
     -- Leap - faster navigation
-    use {'ggandor/leap.nvim'}
+    use {
+        'ggandor/leap.nvim',
+        config = function()
+            require('leap').add_default_mappings()
+        end
+    }
 
     -- Harpoon
     use {'ThePrimeagen/harpoon'}
@@ -69,9 +91,9 @@ return require('packer').startup(function(use)
     use {'mbbill/undotree'}
 
     -- LSP
-    use { "williamboman/mason.nvim" }
-    use { "williamboman/mason-lspconfig.nvim" }
-    use { "neovim/nvim-lspconfig" }
+    use {"williamboman/mason.nvim"}
+    use {"williamboman/mason-lspconfig.nvim"}
+    use {"neovim/nvim-lspconfig"}
 
     -- LSP Completion
     use {'hrsh7th/nvim-cmp'}
@@ -98,4 +120,21 @@ return require('packer').startup(function(use)
         requires = {"MunifTanjim/nui.nvim", "rcarriga/nvim-notify"}
     }
 
+    -- Autopairs
+    use {
+        "windwp/nvim-autopairs",
+        config = function()
+            require("nvim-autopairs").setup {}
+        end
+    }
+
+    -- http://neovimcraft.com/plugin/nvim-neo-tree/neo-tree.nvim/index.html
+    use {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v2.x",
+        requires = {"nvim-lua/plenary.nvim", "kyazdani42/nvim-web-devicons", "MunifTanjim/nui.nvim", {
+            's1n7ax/nvim-window-picker',
+            tag = "v1.*"
+        }}
+    }
 end)

@@ -16,8 +16,10 @@ vim.g.mapleader = " "
 map("n", "<Leader>u", ":PackerSync<CR>")
 -- Faster Saving
 map("n", "<Leader>w", ":w<CR>")
--- NERDTree
-map("n", "<Leader>n", ":NvimTreeToggle<CR>")
+-- Neotree Toggle
+map("n", "<Leader>n", ":Neotree toggle<CR>")
+-- Neotree Buffers
+map("n", "<Leader>nb", ":Neotree buffers<CR>")
 -- Tab New
 map("n", "<Leader>tn", ":tabnew<CR>")
 -- Tab Close
@@ -31,7 +33,7 @@ map("n", "<Leader>bp", ":bprevious<CR>")
 -- Toggle UndoTree Plugin
 map("n", "<F5>", ":UndotreeToggle<CR>")
 -- Split Right
-map("n", "<Leader>sr", ":vsplit<CR>")
+map("n", "<Leader>sr", ":vs<CR>")
 -- Switch Window - Left
 map("n", "<Leader>wh", ":wincmd h<CR>")
 -- Switch Window - Right
@@ -39,7 +41,7 @@ map("n", "<Leader>wl", ":wincmd l<CR>")
 -- Run Make Test
 map("n", "<Leader>mt", ":terminal make test<CR>")
 -- Run the Black formatter
-map("", "<Leader>ff", ":!black %<CR>")
+map("", "<Leader>gf", ":!black %<CR>")
 -- Run Pre-Commit in C2MD
 map("n", "<Leader>rpc", ":vsplit<CR> :terminal make run_pre_commit<CR>")
 -- Log into AWS
@@ -130,3 +132,12 @@ km.set("n", "<leader>gh", function()
     vim.lsp.buf.hover()
 end)
 
+-- Code folding
+--  zf - create
+--  zo - open
+--  zc - Close
+
+-- Spelling
+--  [s ]s - find Spelling errors
+--  zg - adds to local store
+--  z= - offer Spelling suggestions
