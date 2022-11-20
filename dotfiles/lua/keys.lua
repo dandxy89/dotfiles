@@ -11,55 +11,157 @@ end
 
 -- Map leader to space
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
--- Update Plugins
-map("n", "<Leader>u", ":PackerSync<CR>")
+-- -- [[ Update Plugins ]]
+map("n", "<Leader>u", ":PackerSync<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Faster Saving
-map("n", "<Leader>w", ":w<CR>")
+map("n", "<Leader>w", ":w<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Neotree Toggle
-map("n", "<Leader>n", ":Neotree toggle<CR>")
+map("n", "<Leader>n", ":Neotree toggle<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Neotree Buffers
-map("n", "<Leader>nb", ":Neotree buffers<CR>")
+map("n", "<Leader>nb", ":Neotree buffers<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Tab New
-map("n", "<Leader>tn", ":tabnew<CR>")
+map("n", "<Leader>tn", ":tabnew<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Tab Close
-map("n", "<Leader>tc", ":tabclose<CR>")
+map("n", "<Leader>tc", ":tabclose<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Tab Previous
-map("n", "<Leader>pt", ":tabprevious<CR>")
+map("n", "<Leader>pt", ":tabprevious<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Next Buffer
-map("n", "<Leader>bn", ":bNext<CR>")
+map("n", "<Leader>bn", ":bNext<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Previous Buffer
-map("n", "<Leader>bp", ":bprevious<CR>")
+map("n", "<Leader>bp", ":bprevious<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Toggle UndoTree Plugin
-map("n", "<F5>", ":UndotreeToggle<CR>")
+map("n", "<F5>", ":UndotreeToggle<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Split Right
-map("n", "<Leader>sr", ":vs<CR>")
+map("n", "<Leader>sr", ":vs<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Switch Window - Left
-map("n", "<Leader>wh", ":wincmd h<CR>")
+map("n", "<Leader>wh", ":wincmd h<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Switch Window - Right
-map("n", "<Leader>wl", ":wincmd l<CR>")
+map("n", "<Leader>wl", ":wincmd l<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Run Make Test
-map("n", "<Leader>mt", ":terminal make test<CR>")
+map("n", "<Leader>mt", ":terminal make test<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Run the Black formatter
-map("", "<Leader>gf", ":!black %<CR>")
+map("", "<Leader>gf", ":!black %<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Run Pre-Commit in C2MD
-map("n", "<Leader>rpc", ":vsplit<CR> :terminal make run_pre_commit<CR>")
+map("n", "<Leader>rpc", ":vsplit<CR> :terminal make run_pre_commit<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Log into AWS
-map("n", "<Leader>aws", ":vsplit<CR> :terminal saml2aws login -a woodmac-nonprod<CR>")
+map("n", "<Leader>aws", ":vsplit<CR> :terminal saml2aws login -a woodmac-nonprod<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Format Json
-map("n", "<Leader>fj", ":%!jq .<CR>")
+map("n", "<Leader>fj", ":%!jq .<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Test Nearest
-map("n", "<Leader>gt", ":TestNearest<CR>")
+map("n", "<Leader>gt", ":TestNearest<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Git Status
-map("n", "<Leader>gs", ":Telescope git_status<CR>")
+map("n", "<Leader>gs", ":Telescope git_status<CR>", {
+    noremap = true,
+    nowait = true
+})
+
+-- Telescope Harpoon
+map("n", "<Leader>hm", ":Telescope marks<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Open Telescope
-map("n", "<Leader>ot", ":Telescope<CR>")
+map("n", "<Leader>ot", ":Telescope<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Resize - thinner buffer
-map("n", "<Leader>=", ":vertical resize +10<CR>")
+map("n", "<Leader>=", ":vertical resize +10<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Resize - widen buffer
-map("n", "<Leader>-", ":vertical resize -10<CR>")
+map("n", "<Leader>-", ":vertical resize -10<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Remove search highlighting
-map("n", "<Leader>nh", ":nohl<CR>")
+map("n", "<Leader>nh", ":nohl<CR>", {
+    noremap = true,
+    nowait = true
+})
 
 local km = vim.keymap
 
@@ -68,69 +170,156 @@ km.set("n", "<Leader>en", function()
     require("telescope.builtin").find_files({
         cwd = "~/.config/nvim"
     })
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- Harpoon Add File
 km.set("n", "<F7>", function()
     require("harpoon.mark").add_file()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- Harpoon Menu
 km.set("n", "<F8>", function()
     require("harpoon.ui").toggle_quick_menu()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- Harpoon Cycle Next
 km.set("n", "<F9>", function()
     require("harpoon.ui").nav_next()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- Find Files
 km.set("n", "<Leader>f", function()
     require("telescope.builtin").find_files()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- Live grep
 km.set("n", "<Leader>lg", function()
     require("telescope.builtin").live_grep()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- Code Action
 km.set("n", "<leader>ca", function()
     vim.lsp.buf.code_action()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Symbols
 km.set("n", "<leader>ds", function()
     require("telescope.builtin").lsp_document_symbols()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 km.set("n", "<leader>ws", function()
     require("telescope.builtin").lsp_workspace_symbols()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Diagnostics
-km.set("n", "<leader>di", function()
+km.set("n", "<leader>wi", function()
     require("telescope.builtin").diagnostics()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
+-- LSP Diagnostics for Buffer
+km.set("n", "<leader>di", function()
+    require("telescope.builtin").diagnostics({
+        bufnr = 0
+    })
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP References
 km.set("n", "<leader>gr", function()
     require("telescope.builtin").lsp_references()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Rename
 km.set({"v", "n"}, "<leader>rn", function()
     vim.lsp.buf.rename()
 end, {
     noremap = true,
-    silent = true
+    silent = true,
+    nowait = true
 })
+
 -- LSP Definition
 km.set("n", "<leader>gd", function()
     vim.lsp.buf.definition()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Implementation
 km.set("n", "<leader>gi", function()
     vim.lsp.buf.implementation()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Sig Show
 km.set("n", "<leader>sh", function()
     vim.lsp.buf.signature_help()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Hover
 km.set("n", "<leader>gh", function()
     vim.lsp.buf.hover()
-end)
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
 
 -- Code folding
 --  zf - create

@@ -1,6 +1,8 @@
 -- [[ vars.lua ]]
 local g = vim.g
 g.t_co = 256
+g.pairing_mode = false
+g.degraded_mode = false
 g.background = "dark"
 
 -- [[ opts.lua ]]
@@ -41,29 +43,49 @@ opt.completeopt = {"menu", "menuone", "noselect"}
 opt.title = true -- bool: set the title of window to the value of the titlestring
 opt.autoread = true -- bool: Deal with file loads after updating via git etc
 vim.o.autoread = true -- bool: auto-reload files when modified externally
-
--- have a fixed column for the diagnostics to appear in
--- this removes the jitter when warnings/errors flow in
+opt.backup = false
+opt.writebackup = false
+opt.swapfile = false
+opt.undofile = true
 vim.wo.signcolumn = "yes"
 
+vim.cmd [[set clipboard+=unnamedplus]]
+vim.cmd [[set ttyfast]] -- Speed up scrolling in Vim
+vim.cmd [[set timeoutlen=350]]
+
+-- -- [[ Scrolling ]]
+vim.o.cursorline = false
+opt.scrolloff = 100
+opt.synmaxcol = 100
+opt.mouse = 'a'
+
+-- -- [[ Theme ]]
 vim.cmd [[colorscheme gruvbox]]
 
--- Use the spellchecker
--- :setlocal spell spelllang=en_gb
+-- -- [[ Spelling On ]]
 vim.cmd [[set spell spelllang=en_gb]]
 
--- Scrolling config
-vim.cmd [[set scrolloff=100]]
-vim.cmd [[set synmaxcol=200]]
-vim.cmd [[set nobackup]]
-vim.cmd [[set noswapfile]]
-vim.cmd [[set noundofile]]
-vim.cmd [[set clipboard+=unnamedplus]]
+-- -- [[ vim-test config ]]
+vim.cmd [[let test#strategy = "neovim"]]
 
--- Removes unwanted trailing whitespace
+-- [[ AUTOCMD Removes unwanted trailing whitespace ]]
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
     pattern = {"*"},
     command = [[%s/\s\+$//e]]
 })
-vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
+-- -- [[ AUTOCMD Highlight yanked text ]]
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("highlight_yank", {
+        clear = true
+    }),
+    pattern = "*",
+    callback = function()
+        vim.highlight.on_yank({
+            timeout = 300
+        })
+    end
+})
+
+-- -- [[ NeoTree ]]
+vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
