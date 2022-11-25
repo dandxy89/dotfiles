@@ -37,6 +37,10 @@ export PATH="/usr/local/opt/swig@3/bin:$PATH"
 export HOMEBREW_NO_AUTO_UPDATE=true
 [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
 
+# Neovim
+alias install_pynvim_poetry="poetry run pip install pynvim -U"
+alias install_pynvim="pip install pynvim -U"
+
 # Rust
 alias cb="cargo build --release"
 alias ct="cargo test"

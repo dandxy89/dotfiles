@@ -43,16 +43,12 @@ cmp.setup({
         name = 'buffer'
     }, {
         name = 'vsnip'
-    }, -- { name = 'calc' },
-    {
+    }, {
         name = 'luasnip'
     }},
     window = {
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered()
-    },
-    experimental = {
-        ghost_text = true
     }
 })
 
@@ -84,8 +80,8 @@ local rt = {
                     allFeatures = true
                 },
                 checkOnSave = {
-                    -- default: `cargo clippy`
-                    command = "clippy"
+                    command = "check"
+                    -- command = "clippy",
                 },
                 inlayHints = {
                     lifetimeElisionHints = {
@@ -104,10 +100,9 @@ require('rust-tools').setup(rt)
 require('hlargs').setup()
 
 require('nvim-treesitter.configs').setup {
-    ensure_installed = {"bash", "c", "cmake", "css", "dockerfile", "go", "gomod", "gowork", "hcl", "help", "html",
-                        "http", "javascript", "json", "lua", "make", "markdown", "python", "regex", "ruby", "rust",
-                        "toml", "vim", "yaml", "zig"},
-    auto_install = true,
+    ensure_installed = {"bash", "c", "cmake", "dockerfile", "hcl", "help", "http", "json", "lua", "make", "markdown",
+                        "python", "regex", "rust", "toml", "vim", "yaml"},
+    -- auto_install = true,
     highlight = {
         enable = true
     },
@@ -120,46 +115,6 @@ require('nvim-treesitter.configs').setup {
         max_file_lines = nil
     }
 }
-
--- LSP Diagnostics Options Setup
-local sign = function(opts)
-    vim.fn.sign_define(opts.name, {
-        texthl = opts.name,
-        text = opts.text,
-        numhl = ''
-    })
-end
-
-sign({
-    name = 'DiagnosticSignError',
-    text = ''
-})
-sign({
-    name = 'DiagnosticSignWarn',
-    text = ''
-})
-sign({
-    name = 'DiagnosticSignHint',
-    text = ''
-})
-sign({
-    name = 'DiagnosticSignInfo',
-    text = ''
-})
-
-vim.diagnostic.config({
-    virtual_text = false,
-    signs = true,
-    update_in_insert = true,
-    underline = true,
-    severity_sort = false,
-    float = {
-        border = 'rounded',
-        source = 'always',
-        header = '',
-        prefix = ''
-    }
-})
 
 vim.cmd([[
     set signcolumn=yes

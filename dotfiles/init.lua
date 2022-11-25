@@ -1,58 +1,40 @@
 -- [[ init.lua ]]
 -- brew reinstall neovim
+require('impatient')
+
 vim.cmd([[
   syntax off
   filetype off
 ]])
 
-require('impatient')
+-- -- [[ Disable builtin plugins ]]
+local g = vim.g
+local disabled_built_ins = {"2html_plugin", "getscript", "getscriptPlugin", "gzip", "logipat", "netrw", "netrwPlugin",
+                            "netrwSettings", "netrwFileHandlers", "matchit", "tar", "tarPlugin", "rrhelper",
+                            "spellfile_plugin", "vimball", "vimballPlugin", "zip", "zipPlugin", "tutor", "rplugin",
+                            "synmenu", "optwin", "compiler", "bugreport", "ftplugin", "shada_plugin",
+                            "spellfile_plugin", "tutor_mode_plugin", "remote_plugins"}
+
+for _, plugin in pairs(disabled_built_ins) do
+    g["loaded_" .. plugin] = 1
+end
 
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_netrwSettings = 1
-
-vim.g.loaded_vimball = 1
-vim.g.loaded_vimballPlugin = 1
-
-vim.g.loaded_getscript = 1
-vim.g.loaded_getscriptPlugin = 1
-
-vim.g.loaded_matchparen = 1
-vim.g.loaded_matchit = 1
-
-vim.g.loaded_logiPat = 1
-vim.g.loaded_rrhelper = 1
-
-vim.g.loaded_tar = 1
-vim.g.loaded_tarPlugin = 1
-vim.g.loaded_gzip = 1
-vim.g.loaded_zip = 1
-vim.g.loaded_zipPlugin = 1
-
-vim.g.loaded_2html_plugin = 1
-
-vim.g.loaded_shada_plugin = 1
-vim.g.loaded_spellfile_plugin = 1
-vim.g.loaded_tutor_mode_plugin = 1
-vim.g.loaded_remote_plugins = 1
-
--- Settings
+-- -- [[ Settings ]]
 require('opts')
 require('keys')
 
--- Pack Installs
+-- -- [[ Pack Installs ]]
 require('plugins')
 
--- LSP Setup
+-- -- [[ LSP Setup ]]
 require('lsp_config')
 
--- Init Plugins
-require("luasnip.loaders.from_vscode").lazy_load()
+-- -- [[ Plugins ]]
 require('nvim_neo_tree')
-require('window_picker')
+require('onedark').load()
 
 vim.cmd([[
   syntax on

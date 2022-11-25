@@ -22,8 +22,7 @@ return require('packer').startup({
             'nvim-treesitter/nvim-treesitter',
             run = ':TSUpdate'
         }
-        use {'nvim-treesitter/nvim-treesitter-context'}
-        -- use {'nvim-treesitter/playground'}
+        use 'nvim-treesitter/nvim-treesitter-context'
         -- Highlights for files changed in git projects
         use {
             'lewis6991/gitsigns.nvim',
@@ -36,8 +35,9 @@ return require('packer').startup({
         -- Telescope
         use {
             'nvim-telescope/telescope.nvim',
-            tag = '0.1.0',
-            requires = {{'nvim-lua/plenary.nvim'}},
+            -- tag = '0.1.0',
+            branch = 'master',
+            requires = {'nvim-lua/plenary.nvim', 'yegappan/mru', 'alan-w-255/telescope-mru.nvim'},
             config = function()
                 require('telescope').setup {
                     extensions = {
@@ -45,31 +45,33 @@ return require('packer').startup({
                             fuzzy = true, -- false will only do exact matching
                             override_generic_sorter = true, -- override the generic sorter
                             override_file_sorter = true, -- override the file sorter
-                            case_mode = "smart_case" -- or "ignore_case" or "respect_case"
+                            case_mode = 'smart_case' -- or 'ignore_case' or 'respect_case'
                         }
                     }
                 }
                 require('telescope').load_extension('fzf')
-                require("telescope").load_extension('harpoon')
+                require'telescope'.load_extension('mru')
             end
         }
         use {
             'nvim-telescope/telescope-fzf-native.nvim',
             run = 'make'
         }
+
         -- Theme
-        use {"ellisonleao/gruvbox.nvim"}
+        use 'navarasu/onedark.nvim'
+
         -- Highlight Arguments
-        use {'m-demare/hlargs.nvim'}
+        use 'm-demare/hlargs.nvim'
         -- Easy Commenting
         use {
             'numToStr/Comment.nvim',
             config = function()
-                require("Comment").setup()
+                require('Comment').setup()
             end
         }
         -- Test Runner
-        use {'vim-test/vim-test'}
+        use 'vim-test/vim-test'
         -- Leap - faster navigation
         use {
             'ggandor/leap.nvim',
@@ -78,70 +80,50 @@ return require('packer').startup({
             end
         }
         -- Harpoon
-        use {'ThePrimeagen/harpoon'}
+        use 'ThePrimeagen/harpoon'
         -- Rust
-        use {'rust-lang/rust.vim'}
-        use {'simrat39/rust-tools.nvim'}
-        use {'saecki/crates.nvim'}
+        use 'simrat39/rust-tools.nvim'
+        use 'saecki/crates.nvim'
         -- Undo Tree
-        use {'mbbill/undotree'}
+        use 'mbbill/undotree'
         -- LSP
-        use {"williamboman/mason.nvim"}
-        use {"williamboman/mason-lspconfig.nvim"}
-        use {"neovim/nvim-lspconfig"}
+        use 'williamboman/mason.nvim'
+        use 'williamboman/mason-lspconfig.nvim'
+        use 'neovim/nvim-lspconfig'
         -- LSP Completion
-        use {'hrsh7th/nvim-cmp'}
-        use {'hrsh7th/cmp-nvim-lua'}
-        use {'hrsh7th/cmp-buffer'}
-        use {'hrsh7th/cmp-nvim-lsp'}
-        use {'hrsh7th/cmp-nvim-lsp-signature-help'}
-        use {'hrsh7th/cmp-path'}
-        use {'hrsh7th/cmp-vsnip'}
+        use 'hrsh7th/nvim-cmp'
+        use 'hrsh7th/cmp-nvim-lua'
+        use 'hrsh7th/cmp-buffer'
+        use 'hrsh7th/cmp-nvim-lsp'
+        use 'hrsh7th/cmp-nvim-lsp-signature-help'
+        use 'hrsh7th/cmp-path'
+        use 'hrsh7th/cmp-vsnip'
         -- Snippets
-        use {'L3MON4D3/LuaSnip'}
-        use {'rafamadriz/friendly-snippets'}
-        use {'saadparwaiz1/cmp_luasnip'}
+        use 'saadparwaiz1/cmp_luasnip'
         -- Noice
         use {
-            "folke/noice.nvim",
-            event = "VimEnter",
+            'folke/noice.nvim',
+            event = 'VimEnter',
             config = function()
-                require("noice").setup({
-                    lsp = {
-                        override = {
-                            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                            ["vim.lsp.util.stylize_markdown"] = true,
-                            ["cmp.entry.get_documentation"] = true
-                        }
-                    },
-                    presets = {
-                        bottom_search = true, -- use a classic bottom cmdline for search
-                        command_palette = true, -- position the cmdline and popupmenu together
-                        long_message_to_split = true, -- long messages will be sent to a split
-                        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-                        lsp_doc_border = false -- add a border to hover docs and signature help
-                    }
-                })
-                require("telescope").load_extension("noice")
+                require('noice').setup()
+                require('telescope').load_extension('noice')
             end,
-            requires = {"MunifTanjim/nui.nvim", "rcarriga/nvim-notify"}
+            requires = {'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify'}
         }
         -- http://neovimcraft.com/plugin/nvim-neo-tree/neo-tree.nvim/index.html
         use {
-            "nvim-neo-tree/neo-tree.nvim",
-            branch = "v2.x",
-            requires = {"nvim-lua/plenary.nvim", "kyazdani42/nvim-web-devicons", "MunifTanjim/nui.nvim", {
-                's1n7ax/nvim-window-picker',
-                tag = "v1.*"
-            }}
+            'nvim-neo-tree/neo-tree.nvim',
+            branch = 'v2.x',
+            requires = {'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim'}
         }
         -- Autopairs
         use {
-            "windwp/nvim-autopairs",
+            'windwp/nvim-autopairs',
             config = function()
-                require("nvim-autopairs").setup {}
+                require('nvim-autopairs').setup {}
             end
         }
+
         if packer_bootstrap then
             require('packer').sync()
         end

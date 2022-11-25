@@ -139,6 +139,11 @@ map("n", "<Leader>hm", ":Telescope marks<CR>", {
     nowait = true
 })
 
+map("n", "<Leader>ru", ":Telescope mru<CR>", {
+    noremap = true,
+    nowait = true
+})
+
 -- Open Telescope
 map("n", "<Leader>ot", ":Telescope<CR>", {
     noremap = true,
@@ -206,11 +211,7 @@ end, {
 -- Find Files
 km.set("n", "<Leader>f", function()
     require("telescope.builtin").find_files()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
+end)
 
 -- Live grep
 km.set("n", "<Leader>lg", function()
