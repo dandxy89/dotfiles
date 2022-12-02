@@ -2,14 +2,19 @@
 require("mason").setup()
 require("mason-lspconfig").setup()
 
-capabilities = require('cmp_nvim_lsp').default_capabilities()
+local lspconfig = require("lspconfig")
+local lsp_defaults = lspconfig.util.default_config
+
+lsp_defaults.capabilities = vim.tbl_deep_extend('force', lsp_defaults.capabilities,
+    require('cmp_nvim_lsp').default_capabilities())
+
+-- capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local cmp = require('cmp')
 local lspconfig = require('lspconfig')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
-
 cmp.setup({
     preselect = cmp.PreselectMode.None,
     snippet = {
@@ -31,20 +36,34 @@ cmp.setup({
             select = true
         })
     },
+    sorting = {
+        comparators = {cmp.config.compare.offset, cmp.config.compare.exact, cmp.config.compare.score,
+                       require"cmp-under-comparator".under, cmp.config.compare.kind, cmp.config.compare.sort_text,
+                       cmp.config.compare.length, cmp.config.compare.order}
+    },
     sources = {{
-        name = 'path'
+        name = 'path',
+        keyword_length = 2,
+        max_item_count = 5
     }, {
-        name = 'nvim_lsp'
+        name = 'nvim_lsp',
+        keyword_length = 1,
+        max_item_count = 15
     }, {
-        name = 'nvim_lsp_signature_help'
+        name = 'nvim_lsp_signature_help',
+        keyword_length = 2
     }, {
-        name = 'nvim_lua'
+        name = 'nvim_lua',
+        keyword_length = 2
     }, {
-        name = 'buffer'
+        name = 'buffer',
+        keyword_length = 1,
+        max_item_count = 10
     }, {
         name = 'vsnip'
     }, {
-        name = 'luasnip'
+        name = 'rg',
+        max_item_count = 10
     }},
     window = {
         completion = cmp.config.window.bordered(),
@@ -52,23 +71,28 @@ cmp.setup({
     }
 })
 
-local lsp_flags = {
-    debounce_text_changes = 150
+require('lspconfig').marksman.setup {
+    flags = {
+        debounce_text_changes = 150
+    }
 }
-require('lspconfig').marksman.setup {}
 require('lspconfig').pyright.setup {
     on_attach = on_attach,
-    flags = lsp_flags,
-    capabilities = capabilities
+    flags = {
+        debounce_text_changes = 150
+    }
 }
 require('lspconfig').tsserver.setup {
     on_attach = on_attach,
-    flags = lsp_flags,
-    capabilities = capabilities
+    flags = {
+        debounce_text_changes = 150
+    }
 }
 
-local rt = {
-    capabilities = capabilities,
+require('rust-tools').setup({
+    flags = {
+        debounce_text_changes = 150
+    },
     server = {
         settings = {
             ["rust-analyzer"] = {
@@ -80,8 +104,7 @@ local rt = {
                     allFeatures = true
                 },
                 checkOnSave = {
-                    command = "check"
-                    -- command = "clippy",
+                    command = "check" -- "clippy",
                 },
                 inlayHints = {
                     lifetimeElisionHints = {
@@ -91,14 +114,22 @@ local rt = {
                 }
             }
         }
+    },
+    tools = {
+        runnables = {
+            use_telescope = true
+        },
+        inlay_hints = {
+            auto = true,
+            show_parameter_hints = false,
+            parameter_hints_prefix = "",
+            other_hints_prefix = ""
+        }
     }
-}
+})
 
 require('Comment').setup()
-require('crates').setup()
-require('rust-tools').setup(rt)
 require('hlargs').setup()
-
 require('nvim-treesitter.configs').setup {
     ensure_installed = {"bash", "c", "cmake", "dockerfile", "hcl", "help", "http", "json", "lua", "make", "markdown",
                         "python", "regex", "rust", "toml", "vim", "yaml"},
@@ -120,3 +151,14 @@ vim.cmd([[
     set signcolumn=yes
     autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 ]])
+
+local format_sync_grp = vim.api.nvim_create_augroup("Format", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.rs",
+    callback = function()
+        vim.lsp.buf.format({
+            timeout_ms = 200
+        })
+    end,
+    group = format_sync_grp
+})

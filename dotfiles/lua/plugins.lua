@@ -15,14 +15,17 @@ return require('packer').startup({
     function(use)
         -- Packer can manage itself
         use 'wbthomason/packer.nvim'
+
         -- Impatient
         use 'lewis6991/impatient.nvim'
+
         -- Treesitter + Treesitter context
         use {
             'nvim-treesitter/nvim-treesitter',
-            run = ':TSUpdate'
+            run = ':TSUpdate',
+            requires = {'nvim-treesitter/nvim-treesitter-context'}
         }
-        use 'nvim-treesitter/nvim-treesitter-context'
+
         -- Highlights for files changed in git projects
         use {
             'lewis6991/gitsigns.nvim',
@@ -35,9 +38,11 @@ return require('packer').startup({
         -- Telescope
         use {
             'nvim-telescope/telescope.nvim',
-            -- tag = '0.1.0',
             branch = 'master',
-            requires = {'nvim-lua/plenary.nvim', 'yegappan/mru', 'alan-w-255/telescope-mru.nvim'},
+            requires = {'nvim-lua/plenary.nvim', 'yegappan/mru', 'alan-w-255/telescope-mru.nvim', {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                run = 'make'
+            }},
             config = function()
                 require('telescope').setup {
                     extensions = {
@@ -53,16 +58,12 @@ return require('packer').startup({
                 require'telescope'.load_extension('mru')
             end
         }
-        use {
-            'nvim-telescope/telescope-fzf-native.nvim',
-            run = 'make'
-        }
-
         -- Theme
         use 'navarasu/onedark.nvim'
 
         -- Highlight Arguments
         use 'm-demare/hlargs.nvim'
+
         -- Easy Commenting
         use {
             'numToStr/Comment.nvim',
@@ -70,8 +71,10 @@ return require('packer').startup({
                 require('Comment').setup()
             end
         }
+
         -- Test Runner
         use 'vim-test/vim-test'
+
         -- Leap - faster navigation
         use {
             'ggandor/leap.nvim',
@@ -79,27 +82,37 @@ return require('packer').startup({
                 require('leap').add_default_mappings()
             end
         }
+
         -- Harpoon
         use 'ThePrimeagen/harpoon'
+
         -- Rust
-        use 'simrat39/rust-tools.nvim'
-        use 'saecki/crates.nvim'
+        use {'simrat39/rust-tools.nvim'}
+        use {
+            'saecki/crates.nvim',
+            event = {"BufRead Cargo.toml"},
+            requires = {{'nvim-lua/plenary.nvim'}},
+            config = function()
+                require('crates').setup()
+            end
+        }
+
         -- Undo Tree
         use 'mbbill/undotree'
+
         -- LSP
         use 'williamboman/mason.nvim'
         use 'williamboman/mason-lspconfig.nvim'
         use 'neovim/nvim-lspconfig'
+
         -- LSP Completion
-        use 'hrsh7th/nvim-cmp'
-        use 'hrsh7th/cmp-nvim-lua'
-        use 'hrsh7th/cmp-buffer'
-        use 'hrsh7th/cmp-nvim-lsp'
-        use 'hrsh7th/cmp-nvim-lsp-signature-help'
-        use 'hrsh7th/cmp-path'
-        use 'hrsh7th/cmp-vsnip'
-        -- Snippets
-        use 'saadparwaiz1/cmp_luasnip'
+        use {
+            'hrsh7th/nvim-cmp',
+            requires = {'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-nvim-lsp-signature-help',
+                        'hrsh7th/cmp-path', 'hrsh7th/cmp-vsnip', 'lukas-reineke/cmp-under-comparator',
+                        'lukas-reineke/cmp-rg'}
+        }
+
         -- Noice
         use {
             'folke/noice.nvim',
@@ -110,12 +123,15 @@ return require('packer').startup({
             end,
             requires = {'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify'}
         }
+
         -- http://neovimcraft.com/plugin/nvim-neo-tree/neo-tree.nvim/index.html
+        use {'kyazdani42/nvim-web-devicons'}
         use {
             'nvim-neo-tree/neo-tree.nvim',
             branch = 'v2.x',
             requires = {'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim'}
         }
+
         -- Autopairs
         use {
             'windwp/nvim-autopairs',
@@ -129,7 +145,7 @@ return require('packer').startup({
         end
     end,
     config = {
-        max_jobs = 30,
+        -- max_jobs = 40,
         auto_reload_compiled = true,
         compile_on_sync = true
     }

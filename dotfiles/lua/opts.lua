@@ -33,6 +33,12 @@ opt.splitright = true -- bool: Place new window to right of current one
 opt.splitbelow = true -- bool: Place new window below the current one
 
 -- -- [[ Custom ]]
+vim.o.autoread = true -- bool: auto-reload files when modified externally
+opt.timeout = true
+opt.ttimeout = true
+opt.timeoutlen = 0
+opt.ttimeoutlen = 0
+opt.redrawtime = 100
 opt.guifont = "jetbrains-mono-nerd-font" -- str: brew tap homebrew/cask-fonts && brew install jet_brains_mono_nerd_font
 opt.updatetime = 100 -- num: faster completion
 opt.wrap = true -- bool: display lines as one long line
