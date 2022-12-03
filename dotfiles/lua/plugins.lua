@@ -98,7 +98,10 @@ return require('packer').startup({
         }
 
         -- Undo Tree
-        use 'mbbill/undotree'
+        use {
+            'mbbill/undotree',
+            event = 'InsertEnter'
+        }
 
         -- LSP
         use 'williamboman/mason.nvim'

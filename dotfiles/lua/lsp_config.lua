@@ -47,8 +47,8 @@ cmp.setup({
         max_item_count = 5
     }, {
         name = 'nvim_lsp',
-        keyword_length = 1,
-        max_item_count = 15
+        keyword_length = 1
+        -- max_item_count = 15
     }, {
         name = 'nvim_lsp_signature_help',
         keyword_length = 2
@@ -104,7 +104,8 @@ require('rust-tools').setup({
                     allFeatures = true
                 },
                 checkOnSave = {
-                    command = "check" -- "clippy",
+                    -- command = "check" -- "clippy",
+                    command = "clippy" -- "clippy",
                 },
                 inlayHints = {
                     lifetimeElisionHints = {
