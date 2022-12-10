@@ -17,6 +17,9 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 cmp.setup({
     preselect = cmp.PreselectMode.None,
+    experimental = {
+        ghost_text = true
+    },
     snippet = {
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
@@ -80,6 +83,21 @@ require('lspconfig').pyright.setup {
     on_attach = on_attach,
     flags = {
         debounce_text_changes = 150
+    },
+    settings = {
+        pyright = {
+            autoImportCompletion = true,
+            reportUnusedFunction = true,
+            reportUnusedVariable = false
+        },
+        python = {
+            analysis = {
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'off',
+                autoImportCompletions = true,
+                diagnosticMode = 'workspace'
+            }
+        }
     }
 }
 require('lspconfig').tsserver.setup {

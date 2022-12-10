@@ -3,10 +3,15 @@ local g = vim.g
 g.t_co = 256
 g.pairing_mode = false
 g.degraded_mode = false
--- g.background = "dark"
 
 -- [[ opts.lua ]]
 local opt = vim.opt -- Set options (global/buffer/windows-scoped)
+
+-- -- [[ Theme ]]
+opt.background = "dark"
+vim.cmd.colorscheme "oxocarbon"
+-- https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized
+opt.guifont = "Liga SFMono Nerd Font"
 
 -- -- [[ Context ]]
 opt.colorcolumn = '100' -- str:  Show col for max line length
@@ -34,33 +39,43 @@ opt.splitbelow = true -- bool: Place new window below the current one
 
 -- -- [[ Custom ]]
 vim.o.autoread = true -- bool: auto-reload files when modified externally
+vim.o.ls = 0
+vim.o.ch = 0
+
+opt.clipboard = 'unnamedplus'
+
+opt.autoindent = true
+opt.smartindent = true
+
 opt.timeout = true
 opt.ttimeout = true
 opt.timeoutlen = 0
 opt.ttimeoutlen = 0
+vim.cmd [[set timeoutlen=400]]
+
 opt.redrawtime = 100
-opt.guifont = "jetbrains-mono-nerd-font" -- str: brew tap homebrew/cask-fonts && brew install jet_brains_mono_nerd_font
 opt.updatetime = 50 -- num: faster completion
-opt.wrap = true -- bool: display lines as one long line
+
+opt.wrap = false -- bool: display lines as one long line
 opt.completeopt = {"menu", "menuone", "noselect"}
+
 opt.title = true -- bool: set the title of window to the value of the titlestring
 opt.autoread = true -- bool: Deal with file loads after updating via git etc
 vim.o.autoread = true -- bool: auto-reload files when modified externally
+
 opt.backup = false
 opt.writebackup = false
 opt.swapfile = false
-opt.undofile = true
-opt.showmatch = true
-vim.wo.signcolumn = "yes"
+opt.undofile = false
 
-vim.cmd [[set clipboard+=unnamedplus]]
-vim.cmd [[set ttyfast]] -- Speed up scrolling in Vim
-vim.cmd [[set timeoutlen=400]]
+opt.showmatch = true
+opt.ttyfast = true -- Speed up scrolling in Vim
+vim.wo.signcolumn = "yes"
 
 -- -- [[ Scrolling ]]
 vim.o.cursorline = false
-opt.scrolloff = 100
-opt.synmaxcol = 100
+opt.scrolloff = 15
+opt.synmaxcol = 35
 opt.mouse = 'a'
 
 -- -- [[ Spelling On ]]

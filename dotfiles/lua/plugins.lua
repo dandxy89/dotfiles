@@ -41,10 +41,15 @@ return require('packer').startup({
             branch = 'master',
             requires = {'nvim-lua/plenary.nvim', 'yegappan/mru', 'alan-w-255/telescope-mru.nvim', {
                 'nvim-telescope/telescope-fzf-native.nvim',
-                run = 'make'
+                run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
             }},
             config = function()
                 require('telescope').setup {
+                    pickers = {
+                        lsp_references = {
+                            show_line = false
+                        }
+                    },
                     extensions = {
                         fzf = {
                             fuzzy = true, -- false will only do exact matching
@@ -56,10 +61,11 @@ return require('packer').startup({
                 }
                 require('telescope').load_extension('fzf')
                 require'telescope'.load_extension('mru')
+                -- require("telescope").load_extension("harpoon")
             end
         }
         -- Theme
-        use 'navarasu/onedark.nvim'
+        use 'nyoom-engineering/oxocarbon.nvim'
 
         -- Highlight Arguments
         use 'm-demare/hlargs.nvim'
