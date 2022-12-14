@@ -2,16 +2,13 @@
 -- brew reinstall neovim
 require('impatient')
 
-vim.cmd([[
-  syntax off
-  filetype off
-]])
+vim.opt.syntax = "off"
+vim.opt.filetype = "off"
 
 -- -- [[ Disable builtin plugins ]]
 local g = vim.g
-local disabled_built_ins = {"2html_plugin", "getscript", "getscriptPlugin", "gzip", "logipat", 
-                            "netrw", "netrwPlugin", "netrwSettings", "netrwFileHandlers", 
-                            "matchit", "tar", "tarPlugin", "rrhelper",
+local disabled_built_ins = {"2html_plugin", "getscript", "getscriptPlugin", "gzip", "logipat", "netrw", "netrwPlugin",
+                            "netrwSettings", "netrwFileHandlers", "matchit", "tar", "tarPlugin", "rrhelper",
                             "spellfile_plugin", "vimball", "vimballPlugin", "zip", "zipPlugin", "tutor", "rplugin",
                             "synmenu", "optwin", "compiler", "bugreport", "ftplugin", "shada_plugin",
                             "spellfile_plugin", "tutor_mode_plugin", "remote_plugins"}
@@ -29,12 +26,12 @@ require('keys')
 
 -- -- [[ Pack Installs ]]
 require('plugins')
+require("inlay-hints").setup()
 
 -- -- [[ LSP Setup ]]
-require('lsp_config')
+require('lsp')
 
 -- -- [[ Plugins ]]
-require('nvim_neo_tree')
+require('neo_tree')
 
--- syntax on
-vim.cmd([[filetype on]])
+vim.opt.filetype = "on"

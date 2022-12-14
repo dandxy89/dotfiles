@@ -275,6 +275,15 @@ end, {
     nowait = true
 })
 
+-- Fuzzy Find in Current buffer
+km.set("n", "<leader>ff", function()
+    require("telescope.builtin").current_buffer_fuzzy_find()
+end, {
+    noremap = true,
+    silent = true,
+    nowait = true
+})
+
 -- LSP Rename
 km.set({"v", "n"}, "<leader>rn", function()
     vim.lsp.buf.rename()

@@ -10,6 +10,7 @@ local opt = vim.opt -- Set options (global/buffer/windows-scoped)
 -- -- [[ Theme ]]
 opt.background = "dark"
 vim.cmd.colorscheme "oxocarbon"
+
 -- https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized
 opt.guifont = "Liga SFMono Nerd Font"
 
@@ -49,9 +50,8 @@ opt.smartindent = true
 
 opt.timeout = true
 opt.ttimeout = true
-opt.timeoutlen = 0
 opt.ttimeoutlen = 0
-vim.cmd [[set timeoutlen=400]]
+opt.timeoutlen = 400
 
 opt.redrawtime = 100
 opt.updatetime = 50 -- num: faster completion

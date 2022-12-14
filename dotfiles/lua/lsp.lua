@@ -2,16 +2,14 @@
 require("mason").setup()
 require("mason-lspconfig").setup()
 
+local ih = require("inlay-hints")
 local lspconfig = require("lspconfig")
 local lsp_defaults = lspconfig.util.default_config
 
 lsp_defaults.capabilities = vim.tbl_deep_extend('force', lsp_defaults.capabilities,
     require('cmp_nvim_lsp').default_capabilities())
 
--- capabilities = require('cmp_nvim_lsp').default_capabilities()
-
 local cmp = require('cmp')
-local lspconfig = require('lspconfig')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
@@ -51,7 +49,6 @@ cmp.setup({
     }, {
         name = 'nvim_lsp',
         keyword_length = 1
-        -- max_item_count = 15
     }, {
         name = 'nvim_lsp_signature_help',
         keyword_length = 2
@@ -74,13 +71,15 @@ cmp.setup({
     }
 })
 
-require('lspconfig').marksman.setup {
+-- Markdown
+lspconfig.marksman.setup {
     flags = {
         debounce_text_changes = 150
     }
 }
-require('lspconfig').pyright.setup {
-    on_attach = on_attach,
+
+-- Python
+lspconfig.pyright.setup {
     flags = {
         debounce_text_changes = 150
     },
@@ -100,18 +99,79 @@ require('lspconfig').pyright.setup {
         }
     }
 }
+
+-- Lua
+local runtime_path = vim.split(package.path, ";")
+table.insert(runtime_path, "lua/?.lua")
+table.insert(runtime_path, "lua/?/init.lua")
+lspconfig.sumneko_lua.setup({
+    on_attach = function(c, b)
+        ih.on_attach(c, b)
+    end,
+    settings = {
+        Lua = {
+            runtime = {
+                version = "LuaJIT",
+                path = runtime_path
+            },
+            diagnostics = {
+                globals = {"vim"}
+            },
+            telemetry = {
+                enable = false
+            },
+            hint = {
+                enable = true
+            }
+        }
+    }
+})
+
+-- TypeScript
 require('lspconfig').tsserver.setup {
-    on_attach = on_attach,
+    cmd = {"typescript-language-server", "--stdio"},
+    filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
     flags = {
         debounce_text_changes = 150
+    },
+    on_attach = function(c, b)
+        ih.on_attach(c, b)
+    end,
+    settings = {
+        javascript = {
+            inlayHints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayVariableTypeHints = true
+            }
+        },
+        typescript = {
+            inlayHints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayVariableTypeHints = true
+            }
+        }
     }
 }
 
+-- Rust
 require('rust-tools').setup({
     flags = {
         debounce_text_changes = 150
     },
     server = {
+        on_attach = function(c, b)
+            ih.on_attach(c, b)
+        end,
         settings = {
             ["rust-analyzer"] = {
                 assist = {
@@ -122,8 +182,7 @@ require('rust-tools').setup({
                     allFeatures = true
                 },
                 checkOnSave = {
-                    -- command = "check" -- "clippy",
-                    command = "clippy" -- "clippy",
+                    command = "clippy"
                 },
                 inlayHints = {
                     lifetimeElisionHints = {
@@ -138,21 +197,23 @@ require('rust-tools').setup({
         runnables = {
             use_telescope = true
         },
+        on_initialized = function()
+            ih.set_all()
+        end,
         inlay_hints = {
-            auto = true,
-            show_parameter_hints = false,
-            parameter_hints_prefix = "",
-            other_hints_prefix = ""
+            auto = false
         }
     }
 })
 
-require('Comment').setup()
+-- Highlight Arguments
 require('hlargs').setup()
+
+-- Treesitter Config
 require('nvim-treesitter.configs').setup {
     ensure_installed = {"bash", "c", "cmake", "dockerfile", "hcl", "help", "http", "json", "lua", "make", "markdown",
                         "python", "regex", "rust", "toml", "vim", "yaml"},
-    -- auto_install = true,
+    auto_install = true,
     highlight = {
         enable = true
     },
@@ -167,10 +228,11 @@ require('nvim-treesitter.configs').setup {
 }
 
 vim.cmd([[
-    set signcolumn=yes
-    autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
+set signcolumn=yes
+autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 ]])
 
+-- Format Rust Code on Save
 local format_sync_grp = vim.api.nvim_create_augroup("Format", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*.rs",
