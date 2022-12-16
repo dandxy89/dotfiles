@@ -21,17 +21,17 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
 -- -- [[ Settings ]]
-require('opts')
-require('keys')
+require('core.opts')
+require('core.keys')
 
 -- -- [[ Pack Installs ]]
-require('plugins')
-require("inlay-hints").setup()
+require('core.plugins')
 
 -- -- [[ LSP Setup ]]
-require('lsp')
+-- require('core.lsp')
+-- require('core.completions')
 
 -- -- [[ Plugins ]]
-require('neo_tree')
+-- require('core.neo_tree')
 
 vim.opt.filetype = "on"

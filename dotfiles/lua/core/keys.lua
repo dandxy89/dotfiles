@@ -20,6 +20,13 @@ map("n", "<Leader>u", ":PackerSync<CR>", {
     silent = true
 })
 
+-- -- Duplicate current line
+map("n", "B", "yyp", {
+    noremap = true,
+    nowait = true,
+    silent = true
+})
+
 -- Faster Saving
 map("n", "<Leader>w", ":w<CR>", {
     noremap = true,
@@ -179,33 +186,6 @@ end, {
     nowait = true
 })
 
--- Harpoon Add File
-km.set("n", "<F7>", function()
-    require("harpoon.mark").add_file()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- Harpoon Menu
-km.set("n", "<F8>", function()
-    require("harpoon.ui").toggle_quick_menu()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- Harpoon Cycle Next
-km.set("n", "<F9>", function()
-    require("harpoon.ui").nav_next()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
 -- Find Files
 km.set("n", "<Leader>f", function()
     require("telescope.builtin").find_files()
@@ -220,55 +200,8 @@ end, {
     nowait = true
 })
 
--- Code Action
-km.set("n", "<leader>ca", function()
-    vim.lsp.buf.code_action()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP Symbols
-km.set("n", "<leader>ds", function()
-    require("telescope.builtin").lsp_document_symbols()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
 km.set("n", "<leader>ws", function()
     require("telescope.builtin").lsp_workspace_symbols()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP Diagnostics
-km.set("n", "<leader>wi", function()
-    require("telescope.builtin").diagnostics()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP Diagnostics for Buffer
-km.set("n", "<leader>di", function()
-    require("telescope.builtin").diagnostics({
-        bufnr = 0
-    })
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP References
-km.set("n", "<leader>gr", function()
-    require("telescope.builtin").lsp_references()
 end, {
     noremap = true,
     silent = true,
@@ -284,45 +217,18 @@ end, {
     nowait = true
 })
 
--- LSP Rename
-km.set({"v", "n"}, "<leader>rn", function()
-    vim.lsp.buf.rename()
+-- Document Symbols
+km.set("n", "<leader>ds", function()
+    require("telescope.builtin").lsp_document_symbols()
 end, {
     noremap = true,
     silent = true,
     nowait = true
 })
 
--- LSP Definition
-km.set("n", "<leader>gd", function()
-    vim.lsp.buf.definition()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP Implementation
-km.set("n", "<leader>gi", function()
-    vim.lsp.buf.implementation()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP Sig Show
-km.set("n", "<leader>sh", function()
-    vim.lsp.buf.signature_help()
-end, {
-    noremap = true,
-    silent = true,
-    nowait = true
-})
-
--- LSP Hover
-km.set("n", "<leader>gh", function()
-    vim.lsp.buf.hover()
+-- LSP Diagnostics
+km.set("n", "<leader>wi", function()
+    require("telescope.builtin").diagnostics()
 end, {
     noremap = true,
     silent = true,

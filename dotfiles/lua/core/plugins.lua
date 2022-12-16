@@ -26,15 +26,6 @@ return require('packer').startup({
             requires = {'nvim-treesitter/nvim-treesitter-context'}
         }
 
-        -- Highlights for files changed in git projects
-        use {
-            'lewis6991/gitsigns.nvim',
-            config = function()
-                require('gitsigns').setup()
-            end,
-            requires = {'nvim-lua/plenary.nvim'}
-        }
-
         -- Telescope
         use {
             'nvim-telescope/telescope.nvim',
@@ -64,6 +55,7 @@ return require('packer').startup({
                 -- require("telescope").load_extension("harpoon")
             end
         }
+
         -- Theme
         use 'nyoom-engineering/oxocarbon.nvim'
 
@@ -89,9 +81,6 @@ return require('packer').startup({
             end
         }
 
-        -- Harpoon
-        use 'ThePrimeagen/harpoon'
-
         -- Rust
         use {'simrat39/inlay-hints.nvim'}
         use {'simrat39/rust-tools.nvim'}
@@ -110,17 +99,18 @@ return require('packer').startup({
             event = 'InsertEnter'
         }
 
-        -- LSP
-        use 'williamboman/mason.nvim'
-        use 'williamboman/mason-lspconfig.nvim'
-        use 'neovim/nvim-lspconfig'
-
-        -- LSP Completion
+        -- LSP Zero
         use {
-            'hrsh7th/nvim-cmp',
-            requires = {'hrsh7th/cmp-buffer', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-nvim-lsp-signature-help',
-                        'hrsh7th/cmp-path', 'hrsh7th/cmp-vsnip', 'lukas-reineke/cmp-under-comparator',
-                        'lukas-reineke/cmp-rg'}
+            'VonHeikemen/lsp-zero.nvim',
+            requires = { -- LSP Support
+            {'neovim/nvim-lspconfig'}, {'williamboman/mason.nvim'}, {'williamboman/mason-lspconfig.nvim'},
+
+            -- Autocompletion
+            {'hrsh7th/nvim-cmp'}, {'hrsh7th/cmp-buffer'}, {'hrsh7th/cmp-path'}, {'saadparwaiz1/cmp_luasnip'},
+            {'hrsh7th/cmp-nvim-lsp'}, {'hrsh7th/cmp-nvim-lua'}, {'lukas-reineke/cmp-rg'},
+            {'lukas-reineke/cmp-under-comparator'}, {'hrsh7th/cmp-nvim-lsp-signature-help'}, -- Snippets
+            {'ray-x/cmp-treesitter'}, {'hrsh7th/cmp-calc'}, {'L3MON4D3/LuaSnip'}, {'saadparwaiz1/cmp_luasnip'},
+            {'rafamadriz/friendly-snippets'}}
         }
 
         -- Noice
