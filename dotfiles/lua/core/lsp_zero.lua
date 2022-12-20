@@ -1,8 +1,7 @@
 local lsp = require("lsp-zero")
 
 lsp.preset("recommended")
-
-lsp.ensure_installed({'tsserver', 'pyright', 'sumneko_lua', 'rust_analyzer'})
+lsp.ensure_installed({ 'tsserver', 'pyright', 'sumneko_lua', 'rust_analyzer' })
 
 local cmp = require('cmp')
 local cmp_select = {
@@ -28,7 +27,7 @@ lsp.configure('pyright', {
 })
 
 lsp.setup_nvim_cmp({
-    sources = {{
+    sources = { {
         name = 'path',
         keyword_length = 2,
         max_item_count = 10
@@ -58,23 +57,32 @@ lsp.setup_nvim_cmp({
     }, {
         name = 'rg',
         max_item_count = 10
-    }}
+    } },
+    experimental = {
+        ghost_text = {
+            hl_group = "LspCodeLens"
+        }
+    }
 })
 
 local rust_lsp = lsp.build_options('rust_analyzer', {
     settings = {
         ["rust-analyzer"] = {
+            cargo = {
+                allFeatures = true
+            },
             assist = {
                 importEnforceGranularity = true,
                 importPrefix = "crate"
             },
-            cargo = {
-                allFeatures = true
-            },
             checkOnSave = {
-                command = "clippy"
+                command = "clippy",
+                extraArgs = { "--no-deps" }
             },
             inlayHints = {
+                parameter_hints_prefix = "  <-  ",
+                other_hints_prefix = "  =>  ",
+                highlight = "LspCodeLens",
                 lifetimeElisionHints = {
                     enable = true,
                     useParameterNames = true
@@ -85,17 +93,13 @@ local rust_lsp = lsp.build_options('rust_analyzer', {
 })
 
 lsp.set_preferences({
-    suggest_lsp_servers = false,
+    suggest_lsp_servers = true,
     sign_icons = {
         error = 'E',
         warn = 'W',
         hint = 'H',
         info = 'I'
     }
-})
-
-vim.diagnostic.config({
-    virtual_text = true
 })
 
 lsp.on_attach(function(_, bufnr)
@@ -105,7 +109,7 @@ lsp.on_attach(function(_, bufnr)
         nowait = true,
         silent = true
     }
-    vim.keymap.set("n", "<leader>rn", function()
+    vim.keymap.set("n", "<F2>", function()
         vim.lsp.buf.rename()
     end, opts)
     vim.keymap.set("n", "<leader>ca", function()
@@ -132,6 +136,10 @@ lsp.on_attach(function(_, bufnr)
 end)
 
 lsp.setup()
+
+vim.diagnostic.config({
+    virtual_text = true
+})
 
 require('rust-tools').setup({
     server = rust_lsp

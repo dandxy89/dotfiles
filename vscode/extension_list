@@ -1,53 +1,66 @@
-akamud.vscode-theme-onedark-2.2.3                               ms-toolsai.jupyter-keymap-1.0.0
-arzg.sema-1.12.1                                                ms-toolsai.jupyter-renderers-1.0.6
-belkacemberras.spellcheck-0.0.1                                 ms-vscode-remote.remote-containers-0.231.6
-blockhunters.rust-test-stubber-0.0.3                            ms-vscode-remote.remote-ssh-0.78.0
-bodil.prettier-toml-0.1.0                                       ms-vscode-remote.remote-wsl-0.66.0
-bungcip.better-toml-0.3.2                                       ms-vscode.cmake-tools-1.10.5
-coenraads.bracket-pair-colorizer-2-0.2.4                        ms-vscode.cpptools-1.9.8-darwin-x64
-conradludgate.rust-playground-0.2.0                             ms-vscode.cpptools-extension-pack-1.1.0
-cschlosser.doxdocgen-1.4.0                                      ms-vscode.cpptools-themes-1.0.0
-davidanson.vscode-markdownlint-0.47.0                           ms-vscode.js-debug-companion-1.0.17
-donjayamanne.githistory-0.6.19                                  ms-vscode.live-server-0.2.12
-dunstontc.vscode-rust-syntax-0.0.32                             ms-vscode.powershell-2021.12.0
-dustypomerleau.rust-syntax-0.6.0                                ms-vscode.references-view-0.0.89
-eamodio.gitlens-12.0.6                                          ms-vscode.test-adapter-converter-0.1.6
-edipox.feel-better-0.3.0                                        nick-rudenko.back-n-forth-3.1.1
-esbenp.prettier-vscode-9.5.0                                    nizami.update-python-packages-and-requirements-txt-1.1.7
-federicovarela.pipenv-scripts-1.0.3                             oderwat.indent-rainbow-8.3.1
-formulahendry.code-runner-0.11.7                                prime31.zig-0.2.0
-foxundermoon.shell-format-7.2.2                                 rajivshah01234.make-runner-1.0.3
-github.vscode-pull-request-github-0.40.0                        randomfractalsinc.vscode-data-preview-2.3.0
-golang.go-0.32.0                                                redhat.java-1.5.0-darwin-x64
-grapecity.gc-excelviewer-4.2.54                                 redhat.vscode-yaml-1.6.0
-gruntfuggly.todo-tree-0.0.215                                   rogalmic.bash-debug-0.3.9
-harryhopkinson.vs-code-runner-2.0.1                             rokoroku.vscode-theme-darcula-1.2.3
-hbenl.vscode-test-explorer-2.21.1                               scala-lang.scala-0.5.5
-hdevalke.rust-test-lens-1.0.0                                   scalameta.metals-1.13.0
-humao.rest-client-0.24.6                                        secanis.jenkinsfile-support-0.1.0
-ivory-lab.jenkinsfile-support-1.1.0                             serayuzgur.crates-0.5.10
-janisdd.vscode-edit-csv-0.6.8                                   shakram02.bash-beautify-0.1.1
-janjoerke.jenkins-pipeline-linter-connector-1.2.0               shd101wyy.markdown-preview-enhanced-0.6.2
-jankincai.vscode-requirements-0.1.0                             sneezry.vscode-devto-0.0.13
-jeff-hykin.better-cpp-syntax-1.15.13                            streetsidesoftware.code-spell-checker-2.1.11
-jeraldson.vscode-rusty-onedark-1.0.3                            swellaby.rust-pack-0.2.29
-jgclark.vscode-todo-highlight-2.0.4                             swellaby.vscode-rust-test-adapter-0.11.0
-jscearcy.rust-doc-viewer-2.0.1                                  technosophos.vscode-make-1.0.2
-julialang.language-julia-1.6.17                                 tht13.python-0.2.3
-jumpinjackie.vscode-map-preview-0.5.9                           tiehuis.zig-0.2.5
-kddejong.vscode-cfn-lint-0.21.0                                 tomaszbartoszewski.avro-tools-0.0.2
-kevinrose.vsc-python-indent-1.15.0                              tomoki1207.pdf-1.2.0
-kishoreithadi.dotnet-core-essentials-0.0.8                      trinm1709.dracula-theme-from-intellij-0.3.0
-leo-labs.dotnet-1.3.0                                           twixes.pypi-assistant-1.1.2
-markis.code-coverage-1.8.6                                      twxs.cmake-0.0.17
-marlon407.code-groovy-0.1.2                                     vadimcn.vscode-lldb-1.7.0
-matklad.pale-fire-0.4.18                                        visualstudioexptteam.vscodeintellicode-1.2.20
-matklad.rust-analyzer-0.3.1026-darwin-x64                       vscjava.vscode-java-debug-0.40.1
-matklad.rust-analyzer-0.3.1027-darwin-x64                       vscjava.vscode-java-dependency-0.19.0
-mechatroner.rainbow-csv-2.2.0                                   vscjava.vscode-java-pack-0.22.4
-miguelsolorio.fluent-icons-0.0.17                               vscjava.vscode-java-test-0.34.2
-ms-azuretools.vscode-docker-1.22.0                              vscjava.vscode-maven-0.35.1
-ms-dotnettools.csharp-1.24.4-darwin-x64                         vscode-icons-team.vscode-icons-11.11.0
-ms-python.python-2022.4.1                                       wcrichton.flowistry-0.5.22
-ms-python.vscode-pylance-2022.4.2                               zhangyue.rust-mod-generator-1.0.10
-ms-toolsai.jupyter-2022.3.1000901801                            zxh404.vscode-proto3-0.5.5
+austenc.tailwind-docs
+batisteo.vscode-django
+BelkacemBerras.spellcheck
+blockhunters.rust-test-stubber
+bodil.prettier-toml
+bradlc.vscode-tailwindcss
+bungcip.better-toml
+charliermarsh.ruff
+christherama.django-test-runner
+ConradLudgate.rust-playground
+datoux.vscode-pytest-intellisence
+DavidAnson.vscode-markdownlint
+donjayamanne.githistory
+dustypomerleau.rust-syntax
+ecmel.vscode-html-css
+esbenp.prettier-vscode
+formulahendry.code-runner
+GrapeCity.gc-excelviewer
+HarryHopkinson.vs-code-runner
+hbenl.vscode-test-explorer
+hdevalke.rust-test-lens
+humao.rest-client
+ibmlover.oxocarbon
+ivory-lab.jenkinsfile-support
+janisdd.vscode-edit-csv
+jankincai.vscode-requirements
+JScearcy.rust-doc-viewer
+kddejong.vscode-cfn-lint
+KevinRose.vsc-python-indent
+littlefoxteam.vscode-python-test-adapter
+mechatroner.rainbow-csv
+mhutchie.git-graph
+ms-azuretools.vscode-docker
+ms-dotnettools.csharp
+ms-dotnettools.vscode-dotnet-runtime
+ms-python.isort
+ms-python.pylint
+ms-python.python
+ms-python.vscode-pylance
+ms-toolsai.jupyter
+ms-toolsai.jupyter-renderers
+ms-vscode.makefile-tools
+ms-vscode.test-adapter-converter
+nick-rudenko.back-n-forth
+NicolasVuillamy.vscode-groovy-lint
+oderwat.indent-rainbow
+pamaron.pytest-runner
+rajivshah01234.make-runner
+redhat.java
+redhat.vscode-yaml
+rogalmic.bash-debug
+rust-lang.rust-analyzer
+serayuzgur.crates
+shakram02.bash-beautify
+shd101wyy.markdown-preview-enhanced
+streetsidesoftware.code-spell-checker
+sumneko.lua
+Swellaby.rust-pack
+Swellaby.vscode-rust-test-adapter
+technosophos.vscode-make
+vadimcn.vscode-lldb
+vscjava.vscode-java-debug
+vscjava.vscode-java-pack
+vscode-icons-team.vscode-icons
+yinfei.luahelper
+ZhangYue.rust-mod-generator
