@@ -158,19 +158,29 @@ map("n", "<Leader>ot", ":Telescope<CR>", {
 -- Resize - thinner buffer
 map("n", "<Leader>=", ":vertical resize +10<CR>", {
     noremap = true,
-    nowait = true
+    nowait = true,
+    silent = true
 })
 
 -- Resize - widen buffer
 map("n", "<Leader>-", ":vertical resize -10<CR>", {
     noremap = true,
-    nowait = true
+    nowait = true,
+    silent = true
 })
 
 -- Remove search highlighting
 map("n", "<Leader>nh", ":nohl<CR>", {
     noremap = true,
-    nowait = true
+    nowait = true,
+    silent = true
+})
+
+-- Remove search highlighting
+map("n", "<Leader>nh", ":nohl<CR>", {
+    noremap = true,
+    nowait = true,
+    silent = true
 })
 
 local km = vim.keymap

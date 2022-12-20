@@ -2,9 +2,19 @@
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 -- Quit Neovim if Neotree is the last remaining window
-vim.cmd([[
-    autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "neo-tree" | q | endif
-]])
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.api.nvim_create_augroup("NvimTreeClose", {
+        clear = true
+    }),
+    pattern = "NvimTree_*",
+    callback = function()
+        local layout = vim.api.nvim_call_function("winlayout", {})
+        if layout[1] == "leaf" and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), "filetype") ==
+            "NvimTree" and layout[3] == nil then
+            vim.cmd("confirm quit")
+        end
+    end
+})
 
 -- If you want icons for diagnostic errors, you'll need to define them somewhere:
 vim.fn.sign_define("DiagnosticSignError", {

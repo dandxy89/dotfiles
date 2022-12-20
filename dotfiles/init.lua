@@ -27,11 +27,4 @@ require('core.keys')
 -- -- [[ Pack Installs ]]
 require('core.plugins')
 
--- -- [[ LSP Setup ]]
--- require('core.lsp')
--- require('core.completions')
-
--- -- [[ Plugins ]]
--- require('core.neo_tree')
-
 vim.opt.filetype = "on"

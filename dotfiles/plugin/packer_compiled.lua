@@ -200,7 +200,7 @@ local no_errors, error_msg = pcall(function()
             url = "https://github.com/nvim-neo-tree/neo-tree.nvim"
         },
         ["noice.nvim"] = {
-            config = {"\27LJ\2\n�\2\0\0\5\0\f\0\0196\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\0025\3\b\0=\3\t\2B\0\2\0016\0\0\0'\2\n\0B\0\2\0029\0\v\0'\2\1\0B\0\2\1K\0\1\0\19load_extension\14telescope\fpresets\1\0\5\19lsp_doc_border\1\15inc_rename\1\26long_message_to_split\2\20command_palette\2\18bottom_search\2\blsp\1\0\0\roverride\1\0\0\1\0\3 cmp.entry.get_documentation\2\"vim.lsp.util.stylize_markdown\0021vim.lsp.util.convert_input_to_markdown_lines\2\nsetup\nnoice\frequire\0"},
+            config = {"\27LJ\2\n�\2\0\0\5\0\f\0\0196\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\0025\3\b\0=\3\t\2B\0\2\0016\0\0\0'\2\n\0B\0\2\0029\0\v\0'\2\1\0B\0\2\1K\0\1\0\19load_extension\14telescope\fpresets\1\0\5\15inc_rename\1\19lsp_doc_border\1\18bottom_search\2\20command_palette\2\26long_message_to_split\2\blsp\1\0\0\roverride\1\0\0\1\0\3 cmp.entry.get_documentation\0021vim.lsp.util.convert_input_to_markdown_lines\2\"vim.lsp.util.stylize_markdown\2\nsetup\nnoice\frequire\0"},
             loaded = false,
             needs_bufread = false,
             only_cond = false,
@@ -279,7 +279,7 @@ local no_errors, error_msg = pcall(function()
             url = "https://github.com/alan-w-255/telescope-mru.nvim"
         },
         ["telescope.nvim"] = {
-            config = {"\27LJ\2\n�\2\0\0\5\0\14\0\0276\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\0025\3\t\0005\4\b\0=\4\n\3=\3\v\2B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\n\0B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\r\0B\0\2\1K\0\1\0\bmru\19load_extension\15extensions\bfzf\1\0\0\1\0\4\25override_file_sorter\2\28override_generic_sorter\2\nfuzzy\2\14case_mode\15smart_case\fpickers\1\0\0\19lsp_references\1\0\0\1\0\1\14show_line\1\nsetup\14telescope\frequire\0"},
+            config = {"\27LJ\2\n�\2\0\0\5\0\14\0\0276\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\0025\3\t\0005\4\b\0=\4\n\3=\3\v\2B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\n\0B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\r\0B\0\2\1K\0\1\0\bmru\19load_extension\15extensions\bfzf\1\0\0\1\0\4\25override_file_sorter\2\14case_mode\15smart_case\nfuzzy\2\28override_generic_sorter\2\fpickers\1\0\0\19lsp_references\1\0\0\1\0\1\14show_line\1\nsetup\14telescope\frequire\0"},
             loaded = true,
             path = "/Users/i98012/.local/share/nvim/site/pack/packer/start/telescope.nvim",
             url = "https://github.com/nvim-telescope/telescope.nvim"
@@ -299,35 +299,35 @@ local no_errors, error_msg = pcall(function()
     }
 
     time([[Defining packer_plugins]], false)
-    -- Config for: leap.nvim
-    time([[Config for leap.nvim]], true)
-    try_loadstring(
-        "\27LJ\2\nA\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\25add_default_mappings\tleap\frequire\0",
-        "config", "leap.nvim")
-    time([[Config for leap.nvim]], false)
     -- Config for: telescope.nvim
     time([[Config for telescope.nvim]], true)
     try_loadstring(
-        "\27LJ\2\n�\2\0\0\5\0\14\0\0276\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\0025\3\t\0005\4\b\0=\4\n\3=\3\v\2B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\n\0B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\r\0B\0\2\1K\0\1\0\bmru\19load_extension\15extensions\bfzf\1\0\0\1\0\4\25override_file_sorter\2\28override_generic_sorter\2\nfuzzy\2\14case_mode\15smart_case\fpickers\1\0\0\19lsp_references\1\0\0\1\0\1\14show_line\1\nsetup\14telescope\frequire\0",
+        "\27LJ\2\n�\2\0\0\5\0\14\0\0276\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\4\0005\4\3\0=\4\5\3=\3\a\0025\3\t\0005\4\b\0=\4\n\3=\3\v\2B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\n\0B\0\2\0016\0\0\0'\2\1\0B\0\2\0029\0\f\0'\2\r\0B\0\2\1K\0\1\0\bmru\19load_extension\15extensions\bfzf\1\0\0\1\0\4\25override_file_sorter\2\14case_mode\15smart_case\nfuzzy\2\28override_generic_sorter\2\fpickers\1\0\0\19lsp_references\1\0\0\1\0\1\14show_line\1\nsetup\14telescope\frequire\0",
         "config", "telescope.nvim")
     time([[Config for telescope.nvim]], false)
-    -- Config for: Comment.nvim
-    time([[Config for Comment.nvim]], true)
-    try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0",
-        "config", "Comment.nvim")
-    time([[Config for Comment.nvim]], false)
     -- Config for: nvim-autopairs
     time([[Config for nvim-autopairs]], true)
     try_loadstring(
         "\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0",
         "config", "nvim-autopairs")
     time([[Config for nvim-autopairs]], false)
+    -- Config for: leap.nvim
+    time([[Config for leap.nvim]], true)
+    try_loadstring(
+        "\27LJ\2\nA\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\25add_default_mappings\tleap\frequire\0",
+        "config", "leap.nvim")
+    time([[Config for leap.nvim]], false)
+    -- Config for: Comment.nvim
+    time([[Config for Comment.nvim]], true)
+    try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0",
+        "config", "Comment.nvim")
+    time([[Config for Comment.nvim]], false)
     vim.cmd [[augroup packer_load_aucmds]]
     vim.cmd [[au!]]
     -- Event lazy-loads
     time([[Defining lazy-load event autocommands]], true)
-    vim.cmd [[au InsertEnter * ++once lua require("packer.load")({'undotree'}, { event = "InsertEnter *" }, _G.packer_plugins)]]
     vim.cmd [[au BufRead Cargo.toml ++once lua require("packer.load")({'crates.nvim'}, { event = "BufRead Cargo.toml" }, _G.packer_plugins)]]
+    vim.cmd [[au InsertEnter * ++once lua require("packer.load")({'undotree'}, { event = "InsertEnter *" }, _G.packer_plugins)]]
     vim.cmd [[au VimEnter * ++once lua require("packer.load")({'noice.nvim'}, { event = "VimEnter *" }, _G.packer_plugins)]]
     time([[Defining lazy-load event autocommands]], false)
     vim.cmd("augroup END")

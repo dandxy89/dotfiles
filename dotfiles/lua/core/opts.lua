@@ -47,6 +47,8 @@ vim.o.autoread = true -- bool: auto-reload files when modified externally
 opt.clipboard = 'unnamedplus'
 
 opt.autoindent = true
+opt.smartindent = true
+
 opt.timeout = true
 opt.ttimeout = true
 opt.ttimeoutlen = 0

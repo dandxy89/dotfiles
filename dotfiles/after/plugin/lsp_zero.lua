@@ -31,18 +31,19 @@ lsp.setup_nvim_cmp({
     sources = {{
         name = 'path',
         keyword_length = 2,
-        max_item_count = 5
+        max_item_count = 10
     }, {
         name = 'nvim_lsp',
         keyword_length = 1
     }, {
         name = 'nvim_lsp_signature_help',
-        keyword_length = 2
+        keyword_length = 1
     }, {
         name = 'nvim_lua',
-        keyword_length = 2
+        keyword_length = 1
     }, {
-        name = 'luasnip'
+        name = 'luasnip',
+        max_item_count = 10
     }, {
         name = 'buffer',
         keyword_length = 1,
@@ -50,7 +51,8 @@ lsp.setup_nvim_cmp({
     }, {
         name = 'vsnip'
     }, {
-        name = 'treesitter'
+        name = 'treesitter',
+        max_item_count = 10
     }, {
         name = 'calc'
     }, {
@@ -143,7 +145,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*.rs",
     callback = function()
         vim.lsp.buf.format({
-            timeout_ms = 200
+            timeout_ms = 300
         })
     end,
     group = format_sync_grp
