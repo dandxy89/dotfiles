@@ -27,12 +27,14 @@ return {
       -- Snippets
       { "hrsh7th/cmp-calc" },
       { "L3MON4D3/LuaSnip" },
-      { "saadparwaiz1/cmp_luasnip" },
+      -- { "saadparwaiz1/cmp_luasnip" },
       { "rafamadriz/friendly-snippets" },
       -- Highlights
       { "m-demare/hlargs.nvim" },
       -- Rust
       { "simrat39/rust-tools.nvim" },
+      -- Zig
+      { "ziglang/zig.vim" },
       -- Test Runner
       { "klen/nvim-test" },
       -- View and search LSP symbols, tags in Vim/NeoVim.

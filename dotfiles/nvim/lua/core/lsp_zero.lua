@@ -65,9 +65,9 @@ lsp.setup_nvim_cmp {
     {
       name = "nvim_lua",
     },
-    {
-      name = "luasnip",
-    },
+    -- {
+    --   name = "luasnip",
+    -- },
     {
       name = "treesitter",
     },
