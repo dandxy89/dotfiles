@@ -1,5 +1,5 @@
 return {
-    {
+  {
     "cappyzawa/trim.nvim",
     event = "BufWrite",
     opts = {

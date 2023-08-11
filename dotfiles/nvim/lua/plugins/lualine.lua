@@ -4,8 +4,8 @@ return {
     event = "VeryLazy",
     opts = function()
       require("lualine").setup({
-          options = {
-            theme = "auto", -- Can also be "auto" to detect automatically.
+        options = {
+          theme = "auto",   -- Can also be "auto" to detect automatically.
         }
       })
     end,

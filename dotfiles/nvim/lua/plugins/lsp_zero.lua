@@ -2,6 +2,7 @@ return {
   {
     -- For keymaps see Github page
     "VonHeikemen/lsp-zero.nvim",
+    branch = 'v2.x',
     keys = { "<leader>u" },
     event = "InsertEnter",
     opts = function()

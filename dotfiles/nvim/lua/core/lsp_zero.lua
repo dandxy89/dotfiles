@@ -17,7 +17,7 @@ lsp.ensure_installed {
   "pylsp",
 }
 lsp.on_attach(function(client, bufnr)
-  lsp.default_keymaps({buffer = bufnr, preserve_mappings = false})
+  lsp.default_keymaps({ buffer = bufnr, preserve_mappings = false })
 end)
 -- lsp.nvim_workspace()
 
