@@ -40,6 +40,12 @@ return {
       { "klen/nvim-test" },
       -- View and search LSP symbols, tags in Vim/NeoVim.
       { "liuchengxu/vista.vim" },
+      {
+        "ivanjermakov/troublesum.nvim",
+        config = function()
+            require("troublesum").setup()
+        end
+      },
     },
   },
 }
