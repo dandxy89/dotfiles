@@ -1,32 +1,30 @@
 return {
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      require("lualine").setup {}
-    end,
-  },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "VeryLazy",
-    opts = function()
-      require("indent_blankline").setup {
-        show_trailing_blankline_indent = false,
-        show_first_indent_level = false,
-        show_current_context = true,
-        show_current_context_start = true,
-        filetype_exclude = {
-          "help",
-          "terminal",
-          "alpha",
-          "packer",
-          "lspinfo",
-          "TelescopePrompt",
-          "TelescopeResults",
-          "mason",
-          "",
-        },
-      }
-    end,
-  },
+    {
+        "nvim-lualine/lualine.nvim",
+        event = "VeryLazy",
+        opts = function()
+            require("lualine").setup({
+                options = {
+                    theme = "auto", -- Can also be "auto" to detect automatically.
+                    component_separators = { left = '', right = '' },
+                    section_separators = { left = '', right = '' },
+                },
+                sections = {
+                    lualine_a = { 'mode' },
+                    lualine_b = { 'branch', 'diff', 'diagnostics' },
+                    lualine_c = { 'filename' },
+                    lualine_x = { 'encoding', 'fileformat', 'filetype' },
+                    lualine_y = { 'progress' },
+                    lualine_z = { 'location' }
+                },
+                extensions = { "neo-tree", "lazy" },
+            })
+        end,
+    },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        event = "VeryLazy",
+        opts = {}
+    },
 }

@@ -1,6 +1,6 @@
 return {
-  {
-    "ThePrimeagen/harpoon",
-    event = "VeryLazy",
-  },
+    {
+        "ThePrimeagen/harpoon",
+        event = "VeryLazy",
+    },
 }
