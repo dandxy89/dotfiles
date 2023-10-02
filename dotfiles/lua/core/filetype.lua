@@ -1,4 +1,10 @@
-vim.filetype.add {
+--       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+--       ╏                                                               ╏
+--       ╏                            File Associations                  ╏
+--       ╏                                                               ╏
+--       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+vim.filetype.add({
     filename = {
         [".env"] = "config",
         [".todo"] = "txt",
@@ -7,4 +13,4 @@ vim.filetype.add {
         ["req.*.txt"] = "config",
         ["gitconf.*"] = "gitconfig",
     },
-}
+})

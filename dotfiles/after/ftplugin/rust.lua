@@ -1,18 +1,11 @@
 --       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 --       ╏                                                               ╏
---       ╏                            Icon                               ╏
+--       ╏                            Rust                               ╏
 --       ╏                                                               ╏
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-return {
-    -- DEV Icons
-    {
-        "nvim-tree/nvim-web-devicons",
-        lazy = true,
-        opts = function()
-            require("nvim-web-devicons").setup({
-                default = true,
-            })
-        end,
-    },
-}
+require("hoversplit").vsplit_remain_focused()
+
+vim.cmd.inoreabbrev("<buffer> true True")
+vim.cmd.inoreabbrev("<buffer> false False")
+vim.cmd.inoreabbrev("<buffer> -- //")

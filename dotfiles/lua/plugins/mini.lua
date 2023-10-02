@@ -1,17 +1,23 @@
+--       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+--       ╏                                                               ╏
+--       ╏                            Mini Family                        ╏
+--       ╏                                                               ╏
+--       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 return {
     {
         "echasnovski/mini.starter",
         lazy = false,
         config = function()
-            local starter = require "mini.starter"
-            starter.setup {
+            local starter = require("mini.starter")
+            starter.setup({
                 items = {
                     starter.sections.telescope(),
                 },
                 content_hooks = {
                     starter.gen_hook.aligning("center", "center"),
                 },
-            }
+            })
         end,
     },
     {

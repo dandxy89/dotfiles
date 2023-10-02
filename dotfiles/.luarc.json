@@ -1,54 +1,10 @@
 {
-    "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-    "Lua.diagnostics.disable": [
-        "unused-local"
-    ],
-    "Lua.diagnostics.globals": [
+    "diagnostics.globals": [
         "vim",
-        "packer_plugins"
-    ],
-    "Lua.workspace.library": [
-        "/Users/i98012/.config/nvim",
-        "/Users/i98012/.local/share/nvim/lazy/lazy.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/nvim-test",
-        "/Users/i98012/.local/share/nvim/lazy/autoclose.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/rust-tools.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/hlargs.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/friendly-snippets",
-        "/Users/i98012/.local/share/nvim/lazy/LuaSnip",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-calc",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-treesitter",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-nvim-lsp-signature-help",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-under-comparator",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-rg",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-nvim-lua",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-nvim-lsp",
-        "/Users/i98012/.local/share/nvim/lazy/cmp_luasnip",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-path",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-buffer",
-        "/Users/i98012/.local/share/nvim/lazy/nvim-cmp",
-        "/Users/i98012/.local/share/nvim/lazy/mason-lspconfig.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/mason.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/nvim-lspconfig",
-        "/Users/i98012/.local/share/nvim/lazy/lsp-zero.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/nvim-notify",
-        "/Users/i98012/.local/share/nvim/lazy/nui.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/noice.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/oxocarbon.nvim",
-        "/Users/i98012/.local/share/nvim/lazy/mini.starter",
-        "/Users/i98012/.local/share/nvim/lazy/nvim-treesitter",
-        "/usr/local/share/nvim/runtime",
-        "/usr/local/lib/nvim",
-        "/Users/i98012/.local/state/nvim/lazy/readme",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-calc/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-treesitter/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-nvim-lsp-signature-help/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-rg/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-nvim-lua/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-nvim-lsp/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp_luasnip/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-path/after",
-        "/Users/i98012/.local/share/nvim/lazy/cmp-buffer/after",
-        "${3rd}/luassert/library"
+        "describe",
+        "it",
+        "setup",
+        "teardown",
+        "_cwd_current_buffer"
     ]
 }

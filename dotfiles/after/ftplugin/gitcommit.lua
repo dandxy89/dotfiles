@@ -1,18 +1,8 @@
 --       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 --       ╏                                                               ╏
---       ╏                            Icon                               ╏
+--       ╏                           Git.                                ╏
 --       ╏                                                               ╏
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-return {
-    -- DEV Icons
-    {
-        "nvim-tree/nvim-web-devicons",
-        lazy = true,
-        opts = function()
-            require("nvim-web-devicons").setup({
-                default = true,
-            })
-        end,
-    },
-}
+vim.opt_local.wrap = true
+vim.opt_local.spell = true

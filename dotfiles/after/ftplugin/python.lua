@@ -1,18 +1,21 @@
 --       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 --       ╏                                                               ╏
---       ╏                            Icon                               ╏
+--       ╏                            Python                             ╏
 --       ╏                                                               ╏
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-return {
-    -- DEV Icons
-    {
-        "nvim-tree/nvim-web-devicons",
-        lazy = true,
-        opts = function()
-            require("nvim-web-devicons").setup({
-                default = true,
-            })
-        end,
-    },
-}
+require("hoversplit").vsplit_remain_focused()
+
+-- use pep8 standards
+vim.opt_local.expandtab = true
+vim.opt_local.shiftwidth = 4
+vim.opt_local.tabstop = 4
+vim.opt_local.softtabstop = 4
+
+-- Auto changes
+vim.cmd.inoreabbrev("<buffer> true True")
+vim.cmd.inoreabbrev("<buffer> false False")
+vim.cmd.inoreabbrev("<buffer> -- #")
+vim.cmd.inoreabbrev("<buffer> null None")
+vim.cmd.inoreabbrev("<buffer> none None")
+vim.cmd.inoreabbrev("<buffer> nil None")

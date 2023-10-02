@@ -1,3 +1,9 @@
+--       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+--       ╏                                                               ╏
+--       ╏                            Colour Schemes                     ╏
+--       ╏                                                               ╏
+--       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
 return {
     {
         "gmr458/vscode_dark_modern.nvim",
@@ -12,4 +18,13 @@ return {
             vim.cmd.colorscheme("dark_modern")
         end,
     },
+    -- {
+    --     "nyoom-engineering/oxocarbon.nvim",
+    --     priority = 1000,
+    --     lazy = false,
+    --     config = function()
+    --         vim.opt.background = "dark" -- set this to dark or light
+    --         vim.cmd.colorscheme("oxocarbon")
+    --     end,
+    -- },
 }
