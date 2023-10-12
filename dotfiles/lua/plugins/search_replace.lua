@@ -7,7 +7,7 @@
 return {
     {
         "roobert/search-replace.nvim",
-        keys = { "<leader>u" },
+        keys = { "<Leader>u" },
         event = "InsertEnter",
         config = function()
             require("search-replace").setup({

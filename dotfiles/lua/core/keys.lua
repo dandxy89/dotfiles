@@ -28,8 +28,8 @@ local function map(mode, lhs, rhs, desc)
 end
 
 -- Change the cwd to the directory of the current active buffer.
+---@diagnostic disable-next-line: lowercase-global
 function _cwd_current_buffer()
-    -- map_key(n_v, "gc", "<Cmd>lua _cwd_current_buffer()<CR><Cmd>NvimTreeRefresh<CR>", default_settings)
     local abs_path = vim.api.nvim_buf_get_name(0)
     local dir = abs_path:match("(.*[/\\])")
     if dir == nil then
@@ -64,22 +64,23 @@ local normal_mode = {
     { "<Leader>f", ":Telescope find_files hidden=true<CR>", "Find Files" },
     { "<Leader>nc", ":Telescope find_files cwd=~/.config/nvim<CR>", "Edit Nvim Config" },
     { "<Leader>lg", ":Telescope live_grep<CR>", "Live grep" },
-    { "<leader>ws", ":Telescope lsp_workspace_symbols<CR>", "LSP Workspace Symbols" },
-    { "<leader>ff", ":Telescope current_buffer_fuzzy_find<CR>", "Fuzzy Find in Current buffer" },
-    { "<leader>ds", ":Telescope lsp_document_symbols<CR>", "Document Symbols" },
-    { "<leader>di", ":Telescope diagnostics<CR>", "LSP Diagnostics" },
+    { "<Leader>bl", ":Telescope buffers<CR>", "Buffer list" },
+    { "<Leader>ws", ":Telescope lsp_workspace_symbols<CR>", "LSP Workspace Symbols" },
+    { "<Leader>ff", ":Telescope current_buffer_fuzzy_find<CR>", "Fuzzy Find in Current buffer" },
+    { "<Leader>ds", ":Telescope lsp_document_symbols<CR>", "Document Symbols" },
+    { "<Leader>di", ":Telescope diagnostics<CR>", "LSP Diagnostics" },
     { "<C-a>", "gg<S-v>G", "Select all" },
     { "x", '"_x', "No map x" },
     { "qm", ":lua require('harpoon.ui').toggle_quick_menu()<CR>", "Harpoon: view all project marks with" },
     { "qj", ":lua require('harpoon.ui').nav_next()<CR>", "Harpoon: navigates to next mark" },
     { "qk", ":lua require('harpoon.ui').nav_prev()<CR>", "Harpoon: navigates to previous mark" },
     { "qh", ":lua require('harpoon.mark').add_file()<CR>", "Harpoon: add a file" },
-    { "<leader>nf", "<cmd>enew<cr>", "New file" },
+    { "<Leader>nf", "<cmd>enew<cr>", "New file" },
     { "<Tab>", "v><C-\\><C-N>", "Tab/Shift+tab to indent/dedent" },
-    { "<leader>fp", ":SearchReplaceSingleBufferOpen<CR>", "Find & Replace" },
-    { "<leader>nl", ":lua require('noice').cmd('last')<CR>", "Noice Last" },
-    { "<leader>nh", ":lua require('noice').cmd('history')<CR>", "Noice History" },
-    { "<leader>ca", ":lua vim.lsp.buf.code_action()<CR>", "Code Action" },
+    { "<Leader>fp", ":SearchReplaceSingleBufferOpen<CR>", "Find & Replace" },
+    { "<Leader>nl", ":lua require('noice').cmd('last')<CR>", "Noice Last" },
+    { "<Leader>nh", ":lua require('noice').cmd('history')<CR>", "Noice History" },
+    { "<Leader>ca", ":lua vim.lsp.buf.code_action()<CR>", "Code Action" },
     { "H", "_", "H to go the start of line(n)" },
     { "L", "$", "L to go to the end of line(n)" },
     { "J", "}", "J to jump previous blocks(n)" },
@@ -93,6 +94,8 @@ local normal_mode = {
     { "<Leader>op", ":Telescope neovim-project discover<CR>", "Known Projects" },
     { "<Leader><tab>", "<Cmd>lua require('telescope.builtin').commands()<CR>", "Options in Telescope" },
     { "<Leader>e", ":lua vim.diagnostic.open_float()<CR>", "Open Diagnostics Float" },
+    -- { "<Leader>bc", ":%bd | e#<CR>", "Close all buffers"},
+
     -- { "", "", ""},
 }
 

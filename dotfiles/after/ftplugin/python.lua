@@ -19,3 +19,6 @@ vim.cmd.inoreabbrev("<buffer> -- #")
 vim.cmd.inoreabbrev("<buffer> null None")
 vim.cmd.inoreabbrev("<buffer> none None")
 vim.cmd.inoreabbrev("<buffer> nil None")
+
+-- Centre Buffer
+vim.cmd([[:NoNeckPain]])

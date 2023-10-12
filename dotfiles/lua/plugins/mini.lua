@@ -39,6 +39,7 @@ return {
         event = "VeryLazy",
         config = function()
             require("mini.pairs").setup()
+            -- "'" has been overridden in after/ftplugin/rust.lua
         end,
     },
 }

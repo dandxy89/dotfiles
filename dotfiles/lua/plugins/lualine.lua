@@ -30,7 +30,9 @@ return {
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
-        event = "VeryLazy",
+        -- event = "VeryLazy",
+        keys = { "<leader>u" },
+        event = "InsertEnter",
         opts = {},
     },
 }

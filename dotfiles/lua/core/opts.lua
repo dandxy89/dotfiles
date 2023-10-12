@@ -9,7 +9,6 @@ local arr = {
     { "writebackup",    false },
     { "swapfile",       false },
     { "undofile",       false },
-    -- { "guifont", "Liga SFMono Nerd Font" },
     { "guifont",        "JetBrains Mono NL" },
     { "number",         true },
     { "relativenumber", true },

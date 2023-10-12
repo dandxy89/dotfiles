@@ -7,11 +7,11 @@
 return {
     {
         "dnlhc/glance.nvim",
-        keys = { "<leader>u" },
+        keys = { "<Leader>u" },
         event = "InsertEnter",
         config = function()
             require("glance").setup({
-                -- your configuration
+                height = 23,
             })
         end,
     },

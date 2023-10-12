@@ -9,7 +9,13 @@ return {
         "saecki/crates.nvim",
         ft = "toml",
         opts = function()
-            require("crates").setup()
+            require("crates").setup({
+                src = {
+                    cmp = {
+                        enabled = true,
+                    },
+                },
+            })
         end,
     },
 }

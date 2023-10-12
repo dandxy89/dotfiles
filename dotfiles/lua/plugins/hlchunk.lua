@@ -8,7 +8,7 @@
 return {
     {
         "shellRaining/hlchunk.nvim",
-        keys = { "<leader>u" },
+        keys = { "<Leader>u" },
         event = "InsertEnter",
         opts = function()
             require("hlchunk").setup({
