@@ -7,8 +7,7 @@
 return {
     {
         "roobert/hoversplit.nvim",
-        keys = { "<Leader>u" },
-        event = "InsertEnter",
+        keys = { "<Leader>hV" },
         config = function()
             require("hoversplit").setup({
                 key_bindings = {

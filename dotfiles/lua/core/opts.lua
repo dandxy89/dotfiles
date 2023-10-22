@@ -5,13 +5,20 @@
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 local arr = {
+    -- FONT
+    -- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.0/JetBrainsMono.zip
+    -- { "guifont",        "JetBrainsMono Nerd Font" },
+    -- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.0/GeistMono.zip
+    { "guifont",        "GeistMono NF" },
+    --
+    -- NVIM settings
     { "backup",         false },
     { "writebackup",    false },
     { "swapfile",       false },
     { "undofile",       false },
-    { "guifont",        "JetBrains Mono NL" },
     { "number",         true },
     { "relativenumber", true },
+    { "encoding",       "utf8" },
     { "encoding",       "utf8" },
     { "fileencoding",   "utf8" },
     { "expandtab",      true },
@@ -28,22 +35,22 @@ local arr = {
     { "ttimeoutlen",    0 },
     { "timeoutlen",     300 },
     { "signcolumn",     "yes" },
-    { "updatetime",     200 },
     { "wrap",           false },
     { "completeopt",    "menu,menuone,noselect" },
     { "autoread",       true },
     { "belloff",        "all" },
     { "shortmess",      "filnxtToOFWIcC" },
     { "mouse",          "a" },
-    { "history",        1000 },
+    { "history",        50 },
     { "title",          true },
-    { "spelllang",      "en" },
-    { "guicursor",      "a:blinkon200" },
+    { "spelllang",      "en_gb" },
     { "laststatus",     3 },
     { "clipboard",      "unnamedplus" },
     { "background",     "dark" },
     { "compatible",     false },
-    -- { "compatible", false },
+    { "scrolloff",      8 },
+    { "spell",          true },
+    -- { "updatetime",     50 },
 }
 
 for _, v in pairs(arr) do

@@ -40,10 +40,16 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 -- Autoclose the nvimtree once I leave the pane
 vim.api.nvim_create_autocmd("BufLeave", {
     callback = function()
-        if vim.bo.filetype == "neo-tree" then
+        if vim.bo.filetype == "netrw" then
             vim.cmd("q")
         end
     end,
+})
+
+-- Turn off paste mode when leaving insert
+vim.api.nvim_create_autocmd("InsertLeave", {
+    pattern = "*",
+    command = "set nopaste",
 })
 
 -- Close some filetypes with <q>

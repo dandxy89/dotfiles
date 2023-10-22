@@ -4,8 +4,6 @@
 --       ╏                                                               ╏
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-require("hoversplit").vsplit_remain_focused()
-
 -- use pep8 standards
 vim.opt_local.expandtab = true
 vim.opt_local.shiftwidth = 4
@@ -19,6 +17,3 @@ vim.cmd.inoreabbrev("<buffer> -- #")
 vim.cmd.inoreabbrev("<buffer> null None")
 vim.cmd.inoreabbrev("<buffer> none None")
 vim.cmd.inoreabbrev("<buffer> nil None")
-
--- Centre Buffer
-vim.cmd([[:NoNeckPain]])

@@ -7,6 +7,8 @@
 return {
     {
         "mbbill/undotree",
-        event = "VeryLazy",
+        keys = { "<leader>u" },
+        ft = { "pest", "rust", "python" },
+        -- event = "VeryLazy",
     },
 }

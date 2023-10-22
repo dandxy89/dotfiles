@@ -13,13 +13,24 @@ g.maplocalleader = " "
 g.loaded_ruby_provider = 0
 g.loaded_perl_provider = 0
 
+-- netrw
+vim.g.netrw_banner = 0    -- gets rid of the annoying banner for netrw
+vim.g.netrw_liststyle = 3 -- tree style view in netrw
+
 -- -- [[ Lazy Plugins ]]
 require("lazy").setup {
     spec = {
         { import = "plugins" },
     },
-    defaults = { lazy = true },
-    checker = { enabled = true },
+    defaults = { 
+        lazy = true
+    },
+    checker = { 
+        enabled = false
+    },
+    install = {
+        missing = false,
+    },
     performance = {
         cache = {
             enabled = true,
@@ -33,10 +44,6 @@ require("lazy").setup {
                     "getscriptPlugin",
                     "gzip",
                     "logipat",
-                    "netrw",
-                    "netrwPlugin",
-                    "netrwSettings",
-                    "netrwFileHandlers",
                     "matchit",
                     "tar",
                     "tarPlugin",

@@ -16,17 +16,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     group = format_sync_grp,
 })
 
--- Diagnostics
--- https://github.com/VonHeikemen/lsp-zero.nvim#diagnostics
-vim.diagnostic.config({
-    signs = true,
-    update_in_insert = true,
-    underline = true,
-    severity_sort = false,
-    float = true,
-    virtual_text = { spacing = 4, prefix = "●" },
-})
-
 -- LSP Zero
 local lsp_zero = require("lsp-zero")
 lsp_zero.on_attach(function(_, bufnr)
@@ -44,10 +33,6 @@ cmp.setup({
             ---@diagnostic disable-next-line: undefined-global
             luasnip.lsp_expand(args.body)
         end,
-    },
-    completion = {
-        -- completeopt = "menu,menuone,noinsert",
-        completeopt = "menu,menuone,preview,noselect",
     },
     mapping = lsp_zero.defaults.cmp_mappings({
         ["<C-Space>"] = cmp.mapping.complete(),
@@ -71,16 +56,16 @@ cmp.setup({
         end, { "i", "s" }),
     }),
     sources = {
+        { name = "codeium" },
+        { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" }, -- nvim_lsp
         { name = "buffer" },   -- cmp-buffer
-        { name = "luasnip" },  -- snippets
-        { name = "nvim_lsp_signature_help" },
-        { name = "path" },
         { name = "treesitter" },
-        { name = "calc" },
+        { name = "luasnip" },  -- snippets
+        { name = "path" },
         { name = "rg" },
         { name = "crates" },
-        { name = "nvim_lua" },
+        { name = "nvim-lsp" },
     },
     experimental = {
         ghost_text = true,
@@ -125,6 +110,9 @@ vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { bg = "NONE", fg = "#D4D4D4" })   
 vim.api.nvim_set_hl(0, "CmpItemKindProperty", { link = "CmpItemKindKeyword" })                         -- front
 vim.api.nvim_set_hl(0, "CmpItemKindUnit", { link = "CmpItemKindKeyword" })                             -- front
 
+--
+require("luasnip.loaders.from_vscode").lazy_load({})
+
 -- Custom LSP configuration
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("lspconfig").lua_ls.setup({
@@ -157,7 +145,7 @@ require("lspconfig").lua_ls.setup({
     },
     capabilities = capabilities,
 })
-require("rust-tools").setup({
+require("lspconfig").rust_analyzer.setup({
     settings = {
         ["rust-analyzer"] = {
             cargo = {
@@ -171,8 +159,11 @@ require("rust-tools").setup({
                 importPrefix = "crate",
             },
             checkOnSave = {
-                command = "clippy",
-                extraArgs = { "--no-deps" },
+                -- command = "clippy",
+                command = "check",
+            },
+            diagnostics = {
+                enable = true;
             },
             inlayHints = {
                 locationLinks = true,
@@ -183,8 +174,14 @@ require("rust-tools").setup({
             },
             telemetry = { enable = false },
             flags = { debounce_text_changes = 300 },
-        },
-    },
+            procMacro = {
+                enable = true
+            },
+            add_return_type = {
+                enable = true
+            },
+        }
+    }
 })
 require("lspconfig").tsserver.setup({
     settings = {
@@ -246,6 +243,7 @@ require("mason-lspconfig").setup({
         "pylsp",
         "ruff_lsp",
         "rust_analyzer",
+        "pest_ls",
     },
     handlers = {
         lsp_zero.default_setup,
@@ -257,9 +255,19 @@ vim.fn.sign_define("DiagnosticSignError", { text = "🆇", texthl = "DiagnosticS
 vim.fn.sign_define("DiagnosticSignWarn", { text = "⚠️", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ️", texthl = "DiagnosticSignInfo" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+
+-- Diagnostics
+-- https://github.com/VonHeikemen/lsp-zero.nvim#diagnostics
 vim.diagnostic.config({
-    underline = false,
-    virtual_text = false,
     signs = true,
-    severity_sort = true,
+    update_in_insert = true,
+    underline = true,
+    severity_sort = false,
+    float = true,
+    virtual_text = { spacing = 4, prefix = "●" },
+})
+
+-- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+  border = "rounded",
 })

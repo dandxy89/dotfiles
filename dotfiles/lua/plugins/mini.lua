@@ -7,7 +7,9 @@
 return {
     {
         "echasnovski/mini.starter",
+        version = false,
         lazy = false,
+        priority = 1000,
         config = function()
             local starter = require("mini.starter")
             starter.setup({
@@ -22,24 +24,18 @@ return {
     },
     {
         "echasnovski/mini.comment",
+        version = false,
         event = "VeryLazy",
         config = function()
             require("mini.comment").setup()
         end,
     },
     {
-        "echasnovski/mini.cursorword",
-        event = "VeryLazy",
-        config = function()
-            require("mini.cursorword").setup()
-        end,
-    },
-    {
         "echasnovski/mini.pairs",
         event = "VeryLazy",
+        version = false,
         config = function()
             require("mini.pairs").setup()
-            -- "'" has been overridden in after/ftplugin/rust.lua
         end,
     },
 }

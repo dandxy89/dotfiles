@@ -7,7 +7,8 @@
 return {
     {
         "nvim-lualine/lualine.nvim",
-        event = "VeryLazy",
+        cond = vim.g.vscode == nil,
+        event = { "BufReadPost", "BufNewFile" },
         opts = function()
             require("lualine").setup({
                 options = {
@@ -23,16 +24,8 @@ return {
                     lualine_y = { "progress" },
                     lualine_z = { "location" },
                 },
-                extensions = { "neo-tree", "lazy" },
+                extensions = { "lazy" },
             })
         end,
-    },
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        -- event = "VeryLazy",
-        keys = { "<leader>u" },
-        event = "InsertEnter",
-        opts = {},
     },
 }
