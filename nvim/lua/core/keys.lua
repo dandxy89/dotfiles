@@ -87,7 +87,7 @@ local normal_mode = {
     -- Hmm
     { "H",             "_",                                                       "H to go the start of line(n)" },
     { "L",             "$",                                                       "L to go to the end of line(n)" },
-    { "K",             "{",                                                       "K to jump previous blocks(n)" },
+    -- { "K",             "{",                                                       "K to jump previous blocks(n)" },
     { "J",             "}",                                                       "J to jump previous blocks(n)" },
     -- Undo
     { "<C-Z>",         "<Cmd>undo<CR>",                                           "Undo" },
@@ -103,12 +103,11 @@ local normal_mode = {
     { "<Leader>e",     ":lua vim.diagnostic.open_float()<CR>",                    "Open Diagnostics Float" },
     -- Terminal
     { "<Leader>tt",    ":vnew term://zsh<CR>",                                    "Open Terminal" },
-    -- Executor
-    { "<Leader>eo",    ":ExecutorRun <CR>",                                       "Run Executor" },
-    -- Neotest
-    { "<Leader>ta",    ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", "Run tests in file" },
-    { "<Leader>tn",    ":lua require('neotest').run.run()<CR>",                   "Run nearest test" },
-    { "<Leader>to",    ":lua require('neotest').output.open({enter=false})<CR>",  "Show Neotest output" },
+    -- Executor && Neotest
+    -- { "<Leader>eo",    ":ExecutorRun <CR>",                                       "Run Executor" },
+    -- { "<Leader>ta",    ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", "Run tests in file" },
+    -- { "<Leader>tn",    ":lua require('neotest').run.run()<CR>",                   "Run nearest test" },
+    -- { "<Leader>to",    ":lua require('neotest').output.open({enter=false})<CR>",  "Show Neotest output" },
     -- LazyGit
     { "<Leader>gg",    ":LazyGit<CR>",                                            "LazyGit Command Shell" },
 }

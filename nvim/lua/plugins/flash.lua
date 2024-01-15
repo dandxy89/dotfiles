@@ -8,8 +8,11 @@ return {
     {
         "folke/flash.nvim",
         -- event = "VeryLazy",
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune" },
-        ---@type Flash.Config
+        ft = { 
+            "pest", "rust", "python", "lua", "ocamllsp", 
+            "dune", "javascript", "typescript", 
+            "typescriptreact", "typescript.tsx"
+        },
         opts = {},
         -- stylua: ignore
         keys = {

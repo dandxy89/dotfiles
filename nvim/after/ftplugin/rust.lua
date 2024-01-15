@@ -11,9 +11,11 @@ vim.cmd.inoreabbrev("<buffer> -- //")
 -- Override mini-pairs
 vim.keymap.set('i', "'", "'", { buffer = 0 })
 
-require("neotest").setup({
-    adapters = {
-        require("neotest-rust")
-    }
-})
+-- require("neotest").setup({
+--     adapters = {
+--         require("neotest-rust") {
+--             args = { "--all-features" },
+--         }
+--     }
+-- })
 

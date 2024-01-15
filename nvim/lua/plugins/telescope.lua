@@ -22,12 +22,29 @@ return {
         },
         opts = function()
             local telescope = require('telescope')
+            local builtin = require('telescope.builtin')
+            -- Custom keymaps
+            vim.keymap.set("n", "<Leader>fw", function()
+                local word = vim.fn.expand("<cword>")
+                builtin.grep_string({ search = word })
+            end, { desc = "Search for word under cursor" })
+            vim.keymap.set("n", "<Leader>few", function()
+                local word = vim.fn.expand("<cWORD>")
+                builtin.grep_string({ search = word })
+            end, { desc = "Search for the exact word under cursor" })
+            -- Setup
             telescope.setup({
+                -- Previews
+                file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+                grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+                qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
+                -- Pickers
                 pickers = {
                     lsp_references = {
-                        show_line = false,
+                        show_line = true,
                     },
                 },
+                -- Extensions
                 extensions = {
                     fzf = {
                         fuzzy = true,                   -- false will only do exact matching

@@ -10,7 +10,11 @@ return {
         "VonHeikemen/lsp-zero.nvim",
         branch = "v3.x",
         keys = { "<leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune" },
+        ft = {
+            "pest", "rust", "python", "lua", "ocamllsp",
+            "dune", "javascript", "typescript",
+            "typescriptreact", "typescript.tsx"
+        },
         opts = function()
             require("mason").setup({
                 ui = {
@@ -54,12 +58,12 @@ return {
             { "lukas-reineke/cmp-under-comparator" },  -- Sort completion
             { "hrsh7th/cmp-nvim-lsp-signature-help" }, -- LSP signature
             -- Snippets
-            {
-                "L3MON4D3/LuaSnip",
-                version = "v2.*",
-                dependencies = { "rafamadriz/friendly-snippets" },
-                run = "make install_jsregexp"
-            },
+            -- {
+            --     "L3MON4D3/LuaSnip",
+            --     version = "v2.*",
+            --     dependencies = { "rafamadriz/friendly-snippets" },
+            --     run = "make install_jsregexp"
+            -- },
             -- Highlights
             { "m-demare/hlargs.nvim" },  -- Highlight arguments
             {
@@ -68,24 +72,24 @@ return {
             -- Pest Grammar
             { "pest-parser/pest.vim" },
             -- Testing
-            {
-                "google/executor.nvim", --  Run test or a given command in the background
-                config = function()
-                    require("executor").setup({
-                        use_split = true,
-                    })
-                end
-            },
+            -- {
+            --     "google/executor.nvim", --  Run test or a given command in the background
+            --     config = function()
+            --         require("executor").setup({
+            --             use_split = true,
+            --         })
+            --     end
+            -- },
             -- Neotest
-            {
-                "nvim-neotest/neotest",
-                dependencies = {
-                    "nvim-lua/plenary.nvim",
-                    "antoinemadec/FixCursorHold.nvim", -- Required to fix lsp doc highlight
-                    "rouge8/neotest-rust",             -- Rust nextest
-                    "nvim-neotest/neotest-python",     -- Python
-                }
-            }
+            -- {
+            --     "nvim-neotest/neotest",
+            --     dependencies = {
+            --         "nvim-lua/plenary.nvim",
+            --         "antoinemadec/FixCursorHold.nvim", -- Required to fix lsp doc highlight
+            --         "rouge8/neotest-rust",             -- Rust nextest
+            --         "nvim-neotest/neotest-python",     -- Python
+            --     }
+            -- }
         },
     },
 }

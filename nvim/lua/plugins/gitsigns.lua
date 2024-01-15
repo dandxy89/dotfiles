@@ -9,7 +9,11 @@ return {
         "lewis6991/gitsigns.nvim",
         event = "VeryLazy",
         keys = { "<leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune" },
+        ft = {
+            "pest", "rust", "python", "lua", "ocamllsp",
+            "dune", "javascript", "typescript",
+            "typescriptreact", "typescript.tsx"
+        },
         config = function()
             local gitIcons = {
                 LineAdded = " ",

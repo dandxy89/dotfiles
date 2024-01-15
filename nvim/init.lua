@@ -36,7 +36,7 @@ require("lazy").setup {
         lazy = true
     },
     checker = {
-        enabled = false
+        enabled = true,
     },
     install = {
         missing = false,

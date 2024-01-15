@@ -9,6 +9,10 @@ return {
         "nvim-lualine/lualine.nvim",
         cond = vim.g.vscode == nil,
         event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "nvim-tree/nvim-web-devicons",
+            "meuter/lualine-so-fancy.nvim",
+        },
         opts = function()
             local diagnostics = {
                 "diagnostics",
@@ -23,24 +27,38 @@ return {
                     component_separators = { left = "", right = "" },
                     section_separators = { left = "", right = "" },
                     icons_enabled = true,
+                    globalstatus = true,
                     always_divide_middle = true,
                     refresh = {
                         statusline = 1000,
                     }
                 },
                 sections = {
-                    lualine_a = { "mode" },
-                    lualine_b = { "branch", "diff" },
-                    lualine_c = { "filename", diagnostics },
-                    lualine_x = { "encoding", "fileformat", "filetype" },
+                    lualine_a = {
+                        { "fancy_mode", width = 3 }
+                    },
+                    lualine_b = {
+                        { "fancy_branch" },
+                        { "fancy_diff" },
+                    },
+                    lualine_c = {
+                        { "fancy_cwd", substitute_home = true }
+                    },
+                    lualine_x = {
+                        { "encoding", "fileformat", "filetype" },
+                        { "fancy_macro" },
+                        { "fancy_diagnostics" },
+                        { "fancy_searchcount" },
+                        { "fancy_location" },
+                    },
                     lualine_y = {
                         {
-                            require("lazy.status").updates,
-                            cond = require("lazy.status").has_updates,
-                            color = { fg = "#ff9e64" },
-                        },
+                            "location"
+                        }
                     },
-                    lualine_z = { "location" },
+                    lualine_z = {
+                        { "fancy_lsp_servers" }
+                    },
                 },
                 extensions = { 'fzf', "lazy" },
             })

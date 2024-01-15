@@ -104,7 +104,7 @@ cmp.setup({
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" }, -- nvim_lsp
         { name = "buffer" },   -- cmp-buffer
-        { name = "luasnip" },  -- snippets
+        -- { name = "luasnip" },  -- snippets
         { name = "path" },
         { name = "rg" },
         { name = "crates" },
@@ -141,8 +141,8 @@ vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { bg = "NONE", fg = "#D4D4D4" })   
 vim.api.nvim_set_hl(0, "CmpItemKindProperty", { link = "CmpItemKindKeyword" })                         -- front
 vim.api.nvim_set_hl(0, "CmpItemKindUnit", { link = "CmpItemKindKeyword" })                             -- front
 
---
-require("luasnip.loaders.from_vscode").lazy_load({})
+-- Luasnip
+-- require("luasnip.loaders.from_vscode").lazy_load({})
 
 -- Custom LSP configuration
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -208,6 +208,7 @@ require("lspconfig").rust_analyzer.setup({
             },
             checkOnSave = {
                 command = "check",
+                -- command = "clippy",
             },
             diagnostics = {
                 enable = true,
@@ -217,7 +218,10 @@ require("lspconfig").rust_analyzer.setup({
                 parameter_hints_prefix = "  <-  ",
                 other_hints_prefix = "  =>  ",
                 highlight = "LspCodeLens",
-                lifetimeElisionHints = { enable = true, useParameterNames = true },
+                lifetimeElisionHints = { 
+                    enable = true, 
+                    useParameterNames = true
+                },
             },
             interpret = {
                 tests = true
@@ -228,7 +232,7 @@ require("lspconfig").rust_analyzer.setup({
             procMacro = {
                 enable = true
             },
-            flags = { debounce_text_changes = 150 },
+            -- flags = { debounce_text_changes = 150 },
         }
     }
 })
@@ -246,16 +250,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 -- Typescript
 require("lspconfig").tsserver.setup({
-    settings = {
-        tsserver = {
-            filetypes = { "javascript", "typescript", "typescriptreact", "typescript.tsx" },
-            ---@diagnostic disable-next-line: undefined-field
-            root_dir = function()
-                ---@diagnostic disable-next-line: undefined-field
-                return vim.loop.cwd()
-            end,
-        },
-    },
     capabilities = capabilities,
     flags = { debounce_text_changes = 150 },
 })
@@ -328,6 +322,12 @@ vim.diagnostic.config({
     float = true,
     virtual_text = { spacing = 4, prefix = "●" },
 })
+
+-- opens a float window for diagnostics when you keep cursor on them, including full text
+vim.cmd([[
+set signcolumn=yes
+autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
+]])
 
 -- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {

@@ -18,9 +18,9 @@ vim.cmd.inoreabbrev("<buffer> null None")
 vim.cmd.inoreabbrev("<buffer> none None")
 vim.cmd.inoreabbrev("<buffer> nil None")
 
-require("neotest").setup({
-    adapters = {
-        require("neotest-python")
-    }
-})
+-- require("neotest").setup({
+--     adapters = {
+--         require("neotest-python")
+--     }
+-- })
 
