@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Function to convert nanotimestamp to seconds since the epoch
+nanotimestamp_to_seconds() {
+    local nanotimestamp="$1"
+    local seconds="$(($nanotimestamp / 1000000000))"
+    echo "$seconds"
+}
+
+# Function to convert seconds since the epoch to readable datetime
+seconds_to_datetime() {
+    local seconds="$1"
+    local datetime="$(date -r "$seconds" "+%Y-%m-%d %H:%M:%S")"
+    echo "$datetime"
+}
+
+# Check if an argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <nanotimestamp>"
+    exit 1
+fi
+
+nanotimestamp="$1"
+
+# Convert nanotimestamp to seconds
+seconds=$(nanotimestamp_to_seconds "$nanotimestamp")
+
+# Convert seconds to readable datetime
+datetime=$(seconds_to_datetime "$seconds")
+
+echo "Nanotimestamp: $nanotimestamp"
+echo "Datetime: $datetime"

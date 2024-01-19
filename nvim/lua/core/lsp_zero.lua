@@ -99,19 +99,27 @@ cmp.setup({
             luasnip.lsp_expand(args.body)
         end,
     },
-    sources = {
+    sources = cmp.config.sources({
         { name = "codeium" },
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" }, -- nvim_lsp
         { name = "buffer" },   -- cmp-buffer
-        -- { name = "luasnip" },  -- snippets
         { name = "path" },
-        { name = "rg" },
+        { name = "rg",                     keyword_length = 2 },
         { name = "crates" },
         { name = "nvim-lsp" },
-    },
+        {
+            name = 'spell',
+            option = {
+                keep_all_entries = false,
+                enable_in_context = function()
+                    return true
+                end,
+            },
+        },
+    }),
     experimental = {
-        -- ghost_text = true,
+        ghost_text = true,
         native_menu = false,
     },
     sorting = {
@@ -180,16 +188,16 @@ require("lspconfig").lua_ls.setup({
 })
 
 -- OCaml
-require("lspconfig").ocamllsp.setup({
-    cmd = { "ocamllsp" },
-    filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
-    root_dir = function()
-        ---@diagnostic disable-next-line: undefined-field
-        return vim.loop.cwd()
-    end,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 150 },
-})
+-- require("lspconfig").ocamllsp.setup({
+--     cmd = { "ocamllsp" },
+--     filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
+--     root_dir = function()
+--         ---@diagnostic disable-next-line: undefined-field
+--         return vim.loop.cwd()
+--     end,
+--     capabilities = capabilities,
+--     flags = { debounce_text_changes = 150 },
+-- })
 
 -- Rust
 require("lspconfig").rust_analyzer.setup({
@@ -218,8 +226,8 @@ require("lspconfig").rust_analyzer.setup({
                 parameter_hints_prefix = "  <-  ",
                 other_hints_prefix = "  =>  ",
                 highlight = "LspCodeLens",
-                lifetimeElisionHints = { 
-                    enable = true, 
+                lifetimeElisionHints = {
+                    enable = true,
                     useParameterNames = true
                 },
             },
@@ -275,7 +283,7 @@ require("lspconfig").pylsp.setup({
                 autopep8 = { enabled = false },
                 yapf = { enabled = false },
                 pylint = { enabled = false },
-                ruff = { enabled = false }, -- using ruff_lsp
+                ruff = { enabled = true }, -- using ruff_lsp
                 -- Enabled
                 jedi_completion = { fuzzy = true },
                 black = { enabled = true },
@@ -318,7 +326,7 @@ vim.diagnostic.config({
     signs = true,
     update_in_insert = true,
     underline = true,
-    severity_sort = false,
+    severity_sort = true,
     float = true,
     virtual_text = { spacing = 4, prefix = "●" },
 })
@@ -332,4 +340,27 @@ autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 -- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded",
+})
+
+-- `:` cmdline setup.
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        {
+            name = 'cmdline',
+            option = {
+                ignore_cmds = { 'Man', '!' }
+            }
+        }
+    })
+})
+
+-- `/` cmdline setup.
+cmp.setup.cmdline('/', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
 })

@@ -7,7 +7,6 @@
 return {
     {
         "nvim-telescope/telescope.nvim",
-        -- branch = "master",
         tag = "0.1.5",
         cmd = "Telescope",
         event = "BufReadPre",

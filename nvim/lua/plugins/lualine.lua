@@ -7,19 +7,12 @@
 return {
     {
         "nvim-lualine/lualine.nvim",
-        cond = vim.g.vscode == nil,
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
             "nvim-tree/nvim-web-devicons",
             "meuter/lualine-so-fancy.nvim",
         },
         opts = function()
-            local diagnostics = {
-                "diagnostics",
-                sections = { "error", "warn" },
-                colored = true,        -- Displays diagnostics status in color if set to true.
-                always_visible = true, -- Show diagnostics even if there are none.
-            }
             ---@diagnostic disable-next-line: undefined-field
             require("lualine").setup({
                 options = {

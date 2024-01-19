@@ -7,12 +7,7 @@
 return {
     {
         "folke/flash.nvim",
-        -- event = "VeryLazy",
-        ft = { 
-            "pest", "rust", "python", "lua", "ocamllsp", 
-            "dune", "javascript", "typescript", 
-            "typescriptreact", "typescript.tsx"
-        },
+        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
         opts = {},
         -- stylua: ignore
         keys = {
@@ -29,14 +24,6 @@ return {
                     })
                 end,
                 desc = "Flash",
-            },
-            {
-                "S",
-                mode = { "n", "o", "x" },
-                function()
-                    require("flash").treesitter()
-                end,
-                desc = "Flash Treesitter",
             },
             {
                 "r",

@@ -15,6 +15,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     group = format_sync_grp,
 })
 
+-- Jump to last edit position on opening file
+vim.api.nvim_create_autocmd('BufReadPost', {
+    desc = 'Open file at the last position it was edited earlier',
+    pattern = '*',
+    command = 'silent! normal! g`"zv'
+})
+
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()

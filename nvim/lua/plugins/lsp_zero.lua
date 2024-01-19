@@ -6,15 +6,10 @@
 
 return {
     {
-        -- For keymaps see Github page
         "VonHeikemen/lsp-zero.nvim",
         branch = "v3.x",
-        keys = { "<leader>u" },
-        ft = {
-            "pest", "rust", "python", "lua", "ocamllsp",
-            "dune", "javascript", "typescript",
-            "typescriptreact", "typescript.tsx"
-        },
+        keys = { "<Leader>u" },
+        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
         opts = function()
             require("mason").setup({
                 ui = {
@@ -54,42 +49,14 @@ return {
             { "hrsh7th/cmp-buffer" },                  -- Buffer completions
             { "hrsh7th/cmp-path" },                    -- Path completions
             { "hrsh7th/cmp-nvim-lsp" },                -- LSP completions
+            { "hrsh7th/cmp-cmdline" },                 -- Cmd Line
             { "lukas-reineke/cmp-rg" },                -- Rg completions
             { "lukas-reineke/cmp-under-comparator" },  -- Sort completion
             { "hrsh7th/cmp-nvim-lsp-signature-help" }, -- LSP signature
-            -- Snippets
-            -- {
-            --     "L3MON4D3/LuaSnip",
-            --     version = "v2.*",
-            --     dependencies = { "rafamadriz/friendly-snippets" },
-            --     run = "make install_jsregexp"
-            -- },
-            -- Highlights
-            { "m-demare/hlargs.nvim" },  -- Highlight arguments
-            {
-                "RRethy/vim-illuminate", -- Highlight word under cursor
-            },
-            -- Pest Grammar
-            { "pest-parser/pest.vim" },
-            -- Testing
-            -- {
-            --     "google/executor.nvim", --  Run test or a given command in the background
-            --     config = function()
-            --         require("executor").setup({
-            --             use_split = true,
-            --         })
-            --     end
-            -- },
-            -- Neotest
-            -- {
-            --     "nvim-neotest/neotest",
-            --     dependencies = {
-            --         "nvim-lua/plenary.nvim",
-            --         "antoinemadec/FixCursorHold.nvim", -- Required to fix lsp doc highlight
-            --         "rouge8/neotest-rust",             -- Rust nextest
-            --         "nvim-neotest/neotest-python",     -- Python
-            --     }
-            -- }
+            { "f3fora/cmp-spell" },
+            { "m-demare/hlargs.nvim" },                -- Highlight arguments
+            { "RRethy/vim-illuminate" },               --  Highlight word under cursor
+            { "pest-parser/pest.vim" },                -- Pest Grammar
         },
     },
 }

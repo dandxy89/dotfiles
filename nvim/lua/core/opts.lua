@@ -39,15 +39,15 @@ local arr = {
     { "mouse",          "a" },
     { "history",        50 },
     { "title",          true },
+    { "spell",          true },
     { "spelllang",      "en_gb" },
     { "laststatus",     3 },
     { "background",     "dark" },
     { "compatible",     false },
     { "scrolloff",      8 },
-    { "spell",          true },
-    { "spell",          true },
-    { "updatetime",     300 },
+    { "updatetime",     50 },
     { "signcolumn",     "yes:1" },
+    { "pumheight",      25 },
 }
 
 for _, v in pairs(arr) do
@@ -55,11 +55,13 @@ for _, v in pairs(arr) do
 end
 
 -- Cursor shape
-vim.opt.gcr = {
-    'i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor',
-    'n-v:block-Curosr/lCursor',
-    'o:hor50-Curosr/lCursor',
-    'r-cr:hor20-Curosr/lCursor',
+vim.opt.guicursor = {
+    "n-v-c:block",                                  -- Normal, visual, command-line: block cursor
+    "i-ci-ve:ver25",                                -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
+    "r-cr:hor20",                                   -- Replace, command-line replace: horizontal bar cursor with 20% height
+    "o:hor50",                                      -- Operator-pending: horizontal bar cursor with 50% height
+    "a:blinkwait700-blinkoff400-blinkon250",        -- All modes: blinking settings
+    "sm:block-blinkwait175-blinkoff150-blinkon175", -- Showmatch: block cursor with specific blinking settings
 }
 
 -- Use histogram algorithm for diffing, generates more readable diffs in

@@ -16,3 +16,4 @@ lib/
 .xml
 dotfiles/spell
 dotfiles/pack/
+nvim/spell/**

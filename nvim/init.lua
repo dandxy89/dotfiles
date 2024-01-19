@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global, inject-field
 --       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 --       ╏                                                               ╏
 --       ╏                            init.lua                           ╏
@@ -17,13 +18,12 @@ g.loaded_node_provider = 0
 g.loaded_python3_provider = 0
 
 -- netrw
-vim.g.netrw_banner = 0    -- gets rid of the annoying banner for netrw
 vim.g.netrw_liststyle = 3 -- tree style view in netrw
 
 -- -- [[ Lazy Plugins ]]
 require("lazy").setup {
     change_detection = {
-        enabled = true,
+        enabled = false,
         notify = false,
     },
     ui = {
@@ -36,7 +36,7 @@ require("lazy").setup {
         lazy = true
     },
     checker = {
-        enabled = true,
+        enabled = false,
     },
     install = {
         missing = false,

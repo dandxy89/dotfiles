@@ -42,7 +42,8 @@ return {
         opts = function()
             ---@diagnostic disable-next-line: missing-fields
             require("nvim-treesitter.configs").setup({
-                auto_install = true,
+                auto_install = false,
+                sync_install = false,
                 ensure_installed = {
                     "bash",
                     "c",
