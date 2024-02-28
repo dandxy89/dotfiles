@@ -105,7 +105,13 @@ cmp.setup({
         { name = "nvim_lsp" }, -- nvim_lsp
         { name = "buffer" },   -- cmp-buffer
         { name = "path" },
-        { name = "rg",                     keyword_length = 2 },
+        {
+            name = 'omni',
+            option = {
+                disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' }
+            }
+        },
+        { name = "rg",      keyword_length = 2 },
         { name = "crates" },
         { name = "nvim-lsp" },
         {

@@ -50,9 +50,23 @@ function FindAndReplaceFile()
     vim.api.nvim_feedkeys(keys, "n", false)
 end
 
+local keymap = vim.keymap.set
+local genghis = require("genghis")
+keymap("n", "<leader>yp", genghis.copyFilepath)
+keymap("n", "<leader>yn", genghis.copyFilename)
+keymap("n", "<leader>cx", genghis.chmodx)
+keymap("n", "<leader>rf", genghis.renameFile)
+keymap("n", "<leader>mf", genghis.moveAndRenameFile)
+keymap("n", "<leader>mc", genghis.moveToFolderInCwd)
+keymap("n", "<leader>nf", genghis.createNewFile)
+keymap("n", "<leader>yf", genghis.duplicateFile)
+keymap("n", "<leader>df", genghis.trashFile)
+keymap("x", "<leader>x", genghis.moveSelectionToNewFile)
+
 -- NORMAL MODE
 nnoremap("S", function() FindAndReplaceFile() end)                                -- Press 'S' for quick find/replace for the word under the cursor
 nnoremap("<Leader>w", ":w<CR>")                                                   -- Faster Saving
+nnoremap("<Space>", "Nop>")                                                       -- Nop Space bar
 nnoremap("<Leader>n", ":15Lex<CR>")                                               -- Netrw
 nnoremap("<Leader>nb", vim.cmd.Explore)                                           -- Netrw as a Buffer
 nnoremap("<Leader>cf", "<cmd>let @+ = expand(\"%\")<CR>")                         -- Copy File Name
@@ -114,7 +128,7 @@ vnoremap("L", "$")                                     -- L to go to the end of 
 vnoremap("K", ":m '>-2<CR>gv=gv")                      -- Move current line up
 vnoremap("J", ":m '>+1<CR>gv=gv")                      -- Move current line down
 vnoremap("<Leader>r", "\"hy:%s/<C-r>h//g<left><left>") -- Replace Selected
-vnoremap("<space>", "<nop>")                           -- Disable Space bar since it'll be used as the leader key
+vnoremap("<space>", "<Nop>")                           -- Disable Space bar since it'll be used as the leader key
 -- vnoremap()
 
 -- TERMINAL MODE
@@ -125,3 +139,4 @@ tnoremap("<C-j>", [[<Cmd>wincmd j<CR>]]) -- Window navigation from terminal
 tnoremap("<C-k>", [[<Cmd>wincmd k<CR>]]) -- Window navigation from terminal
 tnoremap("<C-l>", [[<Cmd>wincmd l<CR>]]) -- Window navigation from terminal
 -- tnoremap()
+

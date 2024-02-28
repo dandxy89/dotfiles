@@ -55,8 +55,9 @@ return {
             { "hrsh7th/cmp-nvim-lsp-signature-help" }, -- LSP signature
             { "f3fora/cmp-spell" },
             { "m-demare/hlargs.nvim" },                -- Highlight arguments
-            { "RRethy/vim-illuminate" },               --  Highlight word under cursor
+            { "RRethy/vim-illuminate" },               -- Highlight word under cursor
             { "pest-parser/pest.vim" },                -- Pest Grammar
+            { "hrsh7th/cmp-omni" },                    -- Omnifunc
         },
     },
 }
