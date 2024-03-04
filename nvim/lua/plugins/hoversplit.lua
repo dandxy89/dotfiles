@@ -7,7 +7,8 @@
 return {
     {
         "roobert/hoversplit.nvim",
-        keys = { "<Leader>hV" },
+        keys = { "<Leader>u" },
+        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
         config = function()
             require("hoversplit").setup({
                 key_bindings = {

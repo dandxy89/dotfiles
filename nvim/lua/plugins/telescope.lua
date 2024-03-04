@@ -71,6 +71,8 @@ return {
     },
     {
         "chrisgrieser/nvim-genghis",
-        dependencies = "stevearc/dressing.nvim"
+        dependencies = {
+            { "stevearc/dressing.nvim" }
+        }
     }
 }
