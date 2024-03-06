@@ -262,6 +262,18 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     group = format_sync_grp,
 })
 
+-- Pest Language
+require("lspconfig").pest_ls.setup({
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 150 },
+})
+
+-- Zig
+require("lspconfig").zls.setup({
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 150 },
+})
+
 -- Typescript
 require("lspconfig").tsserver.setup({
     capabilities = capabilities,

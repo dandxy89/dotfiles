@@ -9,7 +9,7 @@ return {
         "VonHeikemen/lsp-zero.nvim",
         branch = "v3.x",
         keys = { "<Leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
+        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml", "zig" },
         opts = function()
             require("mason").setup({
                 ui = {
@@ -33,6 +33,7 @@ return {
                     "ruff_lsp",      -- PYTHON
                     "rust_analyzer", -- RUST
                     "pest_ls",       -- PEST
+                    "zls",           -- ZIG
                 },
                 automatic_installation = true,
             })
