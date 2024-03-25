@@ -2,7 +2,7 @@ return {
     {
         "kdheepak/lazygit.nvim",
         keys = { "<Leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
+        ft = { "pest", "rust", "python", "lua", "toml" },
         dependencies = {
             "nvim-lua/plenary.nvim",
         },

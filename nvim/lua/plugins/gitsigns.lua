@@ -8,7 +8,7 @@ return {
     {
         "lewis6991/gitsigns.nvim",
         keys = { "<Leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
+        ft = { "pest", "rust", "python", "lua", "toml" },
         config = function()
             local gitIcons = {
                 LineAdded = " ",

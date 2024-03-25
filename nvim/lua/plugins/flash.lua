@@ -7,7 +7,7 @@
 return {
     {
         "folke/flash.nvim",
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
+        ft = { "pest", "rust", "python", "lua", "toml" },
         opts = {},
         -- stylua: ignore
         keys = {
