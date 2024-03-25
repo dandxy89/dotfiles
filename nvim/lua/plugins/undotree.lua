@@ -8,6 +8,6 @@ return {
     {
         "mbbill/undotree",
         keys = { "<Leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
+        ft = { "pest", "rust", "python", "lua", "toml" },
     },
 }

@@ -68,11 +68,5 @@ return {
             telescope.load_extension("whaler")
             telescope.load_extension("noice")
         end,
-    },
-    {
-        "chrisgrieser/nvim-genghis",
-        dependencies = {
-            { "stevearc/dressing.nvim" }
-        }
     }
 }

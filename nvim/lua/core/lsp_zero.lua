@@ -193,18 +193,6 @@ require("lspconfig").lua_ls.setup({
     capabilities = capabilities,
 })
 
--- OCaml
--- require("lspconfig").ocamllsp.setup({
---     cmd = { "ocamllsp" },
---     filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "reason", "dune" },
---     root_dir = function()
---         ---@diagnostic disable-next-line: undefined-field
---         return vim.loop.cwd()
---     end,
---     capabilities = capabilities,
---     flags = { debounce_text_changes = 150 },
--- })
-
 -- Rust
 require("lspconfig").rust_analyzer.setup({
     settings = {
@@ -269,10 +257,12 @@ require("lspconfig").pest_ls.setup({
 })
 
 -- Zig
-require("lspconfig").zls.setup({
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 150 },
-})
+-- require("lspconfig").zls.setup({
+--     capabilities = capabilities,
+--     flags = { debounce_text_changes = 150 },
+--     cmd = { "zls" },
+--     filetypes = { "zig", "zon" },
+-- })
 
 -- Typescript
 require("lspconfig").tsserver.setup({

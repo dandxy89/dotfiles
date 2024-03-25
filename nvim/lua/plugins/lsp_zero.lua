@@ -9,7 +9,7 @@ return {
         "VonHeikemen/lsp-zero.nvim",
         branch = "v3.x",
         keys = { "<Leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml", "zig" },
+        ft = { "pest", "rust", "python", "lua", "toml" },
         opts = function()
             require("mason").setup({
                 ui = {
@@ -33,7 +33,7 @@ return {
                     "ruff_lsp",      -- PYTHON
                     "rust_analyzer", -- RUST
                     "pest_ls",       -- PEST
-                    "zls",           -- ZIG
+                    -- "zls",           -- ZIG
                 },
                 automatic_installation = true,
             })
@@ -41,6 +41,8 @@ return {
             require("hlargs").setup({})
         end,
         dependencies = {
+            -- Zig
+            -- { "ziglang/zig.vim" },
             -- LSP Support
             { "neovim/nvim-lspconfig" },
             { "williamboman/mason.nvim" },

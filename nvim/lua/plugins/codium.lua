@@ -9,7 +9,7 @@ return {
         "Exafunction/codeium.vim",
         commit = "a1c3d6b369a18514d656dac149de807becacbdf7",
         keys = { "<Leader>u" },
-        ft = { "pest", "rust", "python", "lua", "ocamllsp", "dune", "toml" },
+        ft = { "pest", "rust", "python", "lua", "toml" },
         event = "InsertEnter",
         dependencies = {
             "nvim-lua/plenary.nvim",
