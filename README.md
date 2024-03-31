@@ -33,3 +33,5 @@
 - [Learning Rust in 2023](https://apollolabsblog.hashnode.dev/58-rust-resources-every-learner-should-know-in-2023)
 - [Rust design patterns](https://rust-unofficial.github.io/patterns/intro.html)
 - [Sealed Traits in Rust](https://predr.ag/blog/definitive-guide-to-sealed-traits-in-rust/)
+- [Faster Compiles](https://www.coderemote.dev/blog/faster-rust-compiler-macro-expansion-caching/)
+- [Why not threads](https://notgull.net/why-not-threads/)
