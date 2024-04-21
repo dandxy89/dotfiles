@@ -41,8 +41,8 @@ return {
             require("hlargs").setup({})
         end,
         dependencies = {
-            -- Zig
-            -- { "ziglang/zig.vim" },
+            -- Rust
+            { 'vxpm/ferris.nvim' },
             -- LSP Support
             { "neovim/nvim-lspconfig" },
             { "williamboman/mason.nvim" },
