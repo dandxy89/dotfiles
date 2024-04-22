@@ -4,6 +4,7 @@
 
 ## Interesting
 
+- [Rust Phantom Data](https://aayushyavajpayee.substack.com/p/coming-soon?utm_medium=ios)
 - [Frecency Algorithm](https://web.archive.org/web/20210421120120/https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm)
 - Show VSCode Extensions: `cat extensions.txt | xargs code --list-extensions {}`
 - [Rust Perf Book](https://github.com/nnethercote/perf-book)
@@ -35,3 +36,6 @@
 - [Sealed Traits in Rust](https://predr.ag/blog/definitive-guide-to-sealed-traits-in-rust/)
 - [Faster Compiles](https://www.coderemote.dev/blog/faster-rust-compiler-macro-expansion-caching/)
 - [Why not threads](https://notgull.net/why-not-threads/)
+- [Load Testing Rust](https://www.balterloadtesting.com/)
+- [What is blocking?](https://ryhl.io/blog/async-what-is-blocking/)
+- [Without boats blogs](https://without.boats/)
