@@ -39,3 +39,4 @@
 - [Load Testing Rust](https://www.balterloadtesting.com/)
 - [What is blocking?](https://ryhl.io/blog/async-what-is-blocking/)
 - [Without boats blogs](https://without.boats/)
+- [LLMs in Finance](https://thegradient.pub/financial-market-applications-of-llms/)
