@@ -142,9 +142,5 @@ return {
                 },
             })
         end,
-    },
-    {
-        "chrisgrieser/nvim-genghis", 
-        dependencies = "stevearc/dressing.nvim"
     }
 }
