@@ -33,7 +33,6 @@ return {
                     "ruff_lsp",      -- PYTHON
                     "rust_analyzer", -- RUST
                     "pest_ls",       -- PEST
-                    -- "zls",           -- ZIG
                 },
                 automatic_installation = true,
             })

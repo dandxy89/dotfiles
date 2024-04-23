@@ -53,6 +53,13 @@ vim.api.nvim_create_autocmd("BufLeave", {
     end,
 })
 
+-- No Autocomment newline
+vim.api.nvim_create_autocmd({ "BufEnter", "FileType" }, {
+    desc = "don't auto comment new line",
+    pattern = "*",
+    command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
+})
+
 -- Turn off paste mode when leaving insert
 vim.api.nvim_create_autocmd("InsertLeave", {
     pattern = "*",
