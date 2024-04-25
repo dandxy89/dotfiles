@@ -4,6 +4,7 @@
 
 ## Interesting
 
+- [Improve compile times](https://corrode.dev/blog/tips-for-faster-rust-compile-times/)
 - [Rust Phantom Data](https://aayushyavajpayee.substack.com/p/coming-soon?utm_medium=ios)
 - [Frecency Algorithm](https://web.archive.org/web/20210421120120/https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm)
 - Show VSCode Extensions: `cat extensions.txt | xargs code --list-extensions {}`
