@@ -43,3 +43,7 @@
 - [What is blocking?](https://ryhl.io/blog/async-what-is-blocking/)
 - [Without boats blogs](https://without.boats/)
 - [LLMs in Finance](https://thegradient.pub/financial-market-applications-of-llms/)
+
+## Youtubes
+
+- [Lifetimes alternative explanation](https://www.youtube.com/watch?v=gRAVZv7V91Q)

@@ -44,12 +44,6 @@ function OpenTelescope()
     end
 end
 
-function FindAndReplaceFile()
-    local cmd = ":%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Left>"
-    local keys = vim.api.nvim_replace_termcodes(cmd, true, false, true)
-    vim.api.nvim_feedkeys(keys, "n", false)
-end
-
 local keymap = vim.keymap.set
 local genghis = require("genghis")
 keymap("n", "<leader>yp", genghis.copyFilepath)
@@ -64,7 +58,6 @@ keymap("n", "<leader>df", genghis.trashFile)
 keymap("x", "<leader>x", genghis.moveSelectionToNewFile)
 
 -- NORMAL MODE
-nnoremap("S", function() FindAndReplaceFile() end)                                -- Press 'S' for quick find/replace for the word under the cursor
 nnoremap("<Leader>w", ":w<CR>")                                                   -- Faster Saving
 nnoremap("<Space>", "Nop>")                                                       -- Nop Space bar
 nnoremap("<Leader>n", ":15Lex<CR>")                                               -- Netrw
