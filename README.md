@@ -4,6 +4,8 @@
 
 ## Interesting
 
+- [Concurrency Primer](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
+- [Efficient Memory Layout](https://alonely0.github.io/blog/unions/)
 - [Improve compile times](https://corrode.dev/blog/tips-for-faster-rust-compile-times/)
 - [Rust Phantom Data](https://aayushyavajpayee.substack.com/p/coming-soon?utm_medium=ios)
 - [Frecency Algorithm](https://web.archive.org/web/20210421120120/https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm)
