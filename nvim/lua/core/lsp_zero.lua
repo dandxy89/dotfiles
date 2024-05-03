@@ -42,6 +42,7 @@ local kind_icons = {
     Operator = "󰆕",
     TypeParameter = " ",
     Misc = " ",
+    Codeium = "",
 }
 
 -- LSP Zero
@@ -67,6 +68,9 @@ cmp.setup({
                 luasnip = "[Snippet]",
                 buffer = "[Buffer]",
                 path = "[Path]",
+                codeium = "[Codeium]",
+                spell = "[Spell]",
+                rg = "[RG]",
             })[entry.source.name]
             return vim_item
         end,
@@ -102,12 +106,7 @@ cmp.setup({
         { name = "nvim_lsp" }, -- nvim_lsp
         { name = "buffer" },   -- cmp-buffer
         { name = "path" },
-        {
-            name = 'omni',
-            option = {
-                disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' }
-            }
-        },
+        { name = 'omni', option = { disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' } }},
         { name = "rg",      keyword_length = 2 },
         { name = "crates" },
         { name = "nvim-lsp" },
@@ -213,14 +212,21 @@ require("lspconfig").rust_analyzer.setup({
                 enable = true,
             },
             inlayHints = {
-                locationLinks = true,
+                enable = false,
+                locationLinks = false,
                 parameter_hints_prefix = "  <-  ",
                 other_hints_prefix = "  =>  ",
                 highlight = "LspCodeLens",
                 lifetimeElisionHints = {
-                    enable = true,
+                    enable = false,
                     useParameterNames = true
                 },
+            },
+            lens = {
+                enable = true,
+                methodReferences = true,
+                references = true,
+                implementations = false,
             },
             interpret = {
                 tests = true
@@ -252,14 +258,6 @@ require("lspconfig").pest_ls.setup({
     capabilities = capabilities,
     flags = { debounce_text_changes = 150 },
 })
-
--- Zig
--- require("lspconfig").zls.setup({
---     capabilities = capabilities,
---     flags = { debounce_text_changes = 150 },
---     cmd = { "zls" },
---     filetypes = { "zig", "zon" },
--- })
 
 -- Typescript
 require("lspconfig").tsserver.setup({
@@ -319,21 +317,27 @@ local diagnosticIcons = {
     Debug = " ",
     Trace = "✎",
 }
--- Diagnostic signs.
-vim.fn.sign_define("DiagnosticSignError", { text = diagnosticIcons.Error, texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = diagnosticIcons.Warning, texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = diagnosticIcons.Information, texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = diagnosticIcons.Hint, texthl = "DiagnosticSignHint" })
 
 -- Diagnostics
 -- https://github.com/VonHeikemen/lsp-zero.nvim#diagnostics
+local signs = {
+    { name = "DiagnosticSignError", text = diagnosticIcons.Error },
+    { name = "DiagnosticSignWarn",  text = diagnosticIcons.Warning },
+    { name = "DiagnosticSignHint",  text = diagnosticIcons.Hint },
+    { name = "DiagnosticSignInfo",  text = diagnosticIcons.Information },
+}
+for _, sign in ipairs(signs) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+end
 vim.diagnostic.config({
-    signs = true,
+    signs = {
+        active = signs,
+    },
     update_in_insert = true,
     underline = true,
     severity_sort = true,
     float = true,
-    virtual_text = { spacing = 4, prefix = "●" },
+    virtual_text = { spacing = 4, prefix = "●" }
 })
 
 -- opens a float window for diagnostics when you keep cursor on them, including full text

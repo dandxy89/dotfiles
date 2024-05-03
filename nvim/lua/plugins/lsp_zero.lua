@@ -55,7 +55,7 @@ return {
             { "lukas-reineke/cmp-rg" },                -- Rg completions
             { "lukas-reineke/cmp-under-comparator" },  -- Sort completion
             { "hrsh7th/cmp-nvim-lsp-signature-help" }, -- LSP signature
-            { "f3fora/cmp-spell" },
+            { "f3fora/cmp-spell" },                    -- Spelling
             { "m-demare/hlargs.nvim" },                -- Highlight arguments
             { "RRethy/vim-illuminate" },               -- Highlight word under cursor
             { "pest-parser/pest.vim" },                -- Pest Grammar

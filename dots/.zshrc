@@ -17,10 +17,10 @@ fi
 tmx () {
     # Use -d to allow the rest of the function to run
     tmux new-session -d -s RustDev
-    tmux new-window -n Win1
+    tmux new-window -n Terminal
     # -d to prevent current window from changing
-    tmux new-window -d -n Win2
-    tmux new-window -d -n Win3
+    tmux new-window -d -n Nvim
+    tmux new-window -d -n Lazygit
     # -d to detach any other client (which there shouldn't be, since you just created the session).
     tmux attach-session -d -t RustDev
 }
@@ -129,7 +129,7 @@ alias f1n="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://ww
 alias htn="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://www.newsnow.co.uk/h/Hot+Topics"
 
 # ~~~~~~~~~~~~~~~ Neovim ~~~~~~~~~~~~~~~~~~~
-## brew nvim: `cd /Users/sigma-dan/Library/Caches/Homebrew/neovim--git`
+## brew nvim: `cd /Users/XYZ/Library/Caches/Homebrew/neovim--git`
 alias brew_nvim="brew install --HEAD neovim"
 alias v="source .venv/bin/activate; nvim -n"
 alias vim="source .venv/bin/activate; nvim -n"
@@ -146,7 +146,7 @@ export POETRY_VIRTUALENVS_IN_PROJECT=true
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
     source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-	source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
     autoload -Uz compinit
     compinit
@@ -159,21 +159,16 @@ alias update_pip_friends="pip3 list --outdated | gawk -F ' ' 'NR>2{print$1}' | x
 # brew install --cask alacritty
 
 # ~~~~~~~~~~~~~~~ Other ~~~~~~~~~~~~~~~~
+# https://github.com/atuinsh/atuin
 eval "$(atuin init zsh)"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# bun completions
-[ -s "/Users/sigma-dan/.bun/_bun" ] && source "/Users/sigma-dan/.bun/_bun"
 
 # Init pyenv
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
