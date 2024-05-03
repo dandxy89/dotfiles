@@ -4,6 +4,7 @@
 
 ## Interesting
 
+- [Code Sample](https://www.tsurucapital.com/en/code-sample.html)
 - [Concurrency Primer](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
 - [Efficient Memory Layout](https://alonely0.github.io/blog/unions/)
 - [Improve compile times](https://corrode.dev/blog/tips-for-faster-rust-compile-times/)
