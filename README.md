@@ -47,3 +47,5 @@
 ## Youtubes
 
 - [Lifetimes alternative explanation](https://www.youtube.com/watch?v=gRAVZv7V91Q)
+- [UUID v7 vs. v4 ](https://www.youtube.com/watch?v=zIebRwU0FOw)
+
