@@ -4,6 +4,7 @@
 
 ## Interesting
 
+- [Dan luu blog](https://danluu.com/)
 - [DoA](https://xlinux.nist.gov/dads/)
 - [TimescaleDB + SQLx](https://blog.exein.io/sqlx_testing-blog-post-by-bogdan/)
 - [Code Sample](https://www.tsurucapital.com/en/code-sample.html)
