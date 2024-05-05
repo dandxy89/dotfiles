@@ -13,14 +13,14 @@ fi
 
 # ~~~~~~~~~~~~~~~ Tmux ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Alias to spawn a new tmux session with 3 windows
+# Alias to spawn a new tmux session with 2 windows
 tmx () {
     # Use -d to allow the rest of the function to run
     tmux new-session -d -s RustDev
-    tmux new-window -n Terminal
+    tmux new-window -n terminal
     # -d to prevent current window from changing
-    tmux new-window -d -n Nvim
-    tmux new-window -d -n Lazygit
+    tmux new-window -d -n nvim
+    tmux new-window -d -n lazygit
     # -d to detach any other client (which there shouldn't be, since you just created the session).
     tmux attach-session -d -t RustDev
 }
@@ -66,12 +66,28 @@ alias zshconfig="subl ~/.zshrc"
 alias ohmyzsh="subl ~/.oh-my-zsh"
 
 alias weather="curl -4 https://wttr.in/durham"
+alias weatherDubai="curl -4 https://wttr.in/Dubai"
+
 alias reloadshell="source $HOME/.zshrc"
 alias ll='ls -all'
 
 alias ..='cd ..'
 alias ls='ls --color=auto'
 alias e='exit'
+
+alias top="htop"
+alias rg='rg -uuu'
+
+alias du='du -csh'
+alias df='df -h'
+alias grep='grep --color=auto'
+alias diff="colordiff -ru"
+
+# Default options for fd, a faster find.
+alias fd='fd --one-file-system --hidden'
+
+# Replace netstat command on macOS to find ports used by apps
+alias netstat="sudo lsof -i -P"
 
 alias ez='v ~/.zshrc'
 alias eb='v ~/.bashrc'
@@ -85,12 +101,61 @@ alias urlEncode="sh $SCRIPTS/urlencode"
 alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'" # use fp to do a fzf search and preview the files
 alias vf='v $(fp)' # search for a file with fzf and open it in vim
 
+# Changing "ls" to "eza"
+alias ls='eza -al --color=always --group-directories-first' # my preferred listing
+alias la='eza -a --color=always --group-directories-first'  # all files and dirs
+alias ll='eza -l --color=always --group-directories-first'  # long format
+alias lt='eza -aT --color=always --group-directories-first' # tree listing
+
+### ARCHIVE EXTRACTION
+# usage: ex <file>
+function ex {
+     if [ -z "$1" ]; then
+        # display usage if no parameters given
+        echo "Usage: ex <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
+        echo "       extract <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]"
+     else
+        for n in "$@"
+        do
+          if [ -f "$n" ] ; then
+              case "${n%,}" in
+                *.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
+                             tar xvf "$n"       ;;
+                *.lzma)      unlzma ./"$n"      ;;
+                *.bz2)       bunzip2 ./"$n"     ;;
+                *.cbr|*.rar)       unrar x -ad ./"$n" ;;
+                *.gz)        gunzip ./"$n"      ;;
+                *.cbz|*.epub|*.zip)       unzip ./"$n"       ;;
+                *.z)         uncompress ./"$n"  ;;
+                *.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
+                             7z x ./"$n"        ;;
+                *.xz)        unxz ./"$n"        ;;
+                *.exe)       cabextract ./"$n"  ;;
+                *.cpio)      cpio -id < ./"$n"  ;;
+                *.cba|*.ace)      unace x ./"$n"      ;;
+                *)
+                             echo "ex: '$n' - unknown archive method"
+                             return 1
+                             ;;
+              esac
+          else
+              echo "'$n' - file does not exist"
+              return 1
+          fi
+        done
+    fi
+}
+
+# history search using fzf
+h(){
+    $(cat ~/.zsh_history | awk -F ';' '{ $1="" ; print }' | fzf --tac )
+}
+
 # ~~~~~~~~~~~~~~~ Neofetch ~~~~~~~~~~~~~~~~~~~~~~~~~
 # brew install neofetch
 
 # ~~~~~~~~~~~~~~~ Rust ~~~~~~~~~~~~~~~~~~~~~~~~~
 # export CARGO_INCREMENTAL=1
-export CARGO_REGISTRY_TOKEN=""
 export RUST_LOG=info
 alias rust_analyzer_update="cd ~/Dan/rust-analyzer && git pull && cargo xtask install" # Update rust-analyzer && rebuild the LSP
 
@@ -129,15 +194,17 @@ alias f1n="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://ww
 alias htn="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://www.newsnow.co.uk/h/Hot+Topics"
 
 # ~~~~~~~~~~~~~~~ Neovim ~~~~~~~~~~~~~~~~~~~
-## brew nvim: `cd /Users/XYZ/Library/Caches/Homebrew/neovim--git`
+## brew nvim: `cd /Users/sigma-dan/Library/Caches/Homebrew/neovim--git`
 alias brew_nvim="brew install --HEAD neovim"
 alias v="source .venv/bin/activate; nvim -n"
 alias vim="source .venv/bin/activate; nvim -n"
 alias dd="source .venv/bin/activate; nvim -n"
 
 # ~~~~~~~~~~~~~~~ Datadog ~~~~~~~~~~~~~~~~~~~ OMIT ME
-
 # ~~~~~~~~~~~~~~~ Telegram F1 Bot ~~~~~~~~~~~ OMIT ME
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # ~~~~~~~~~~~~~~~ Python ~~~~~~~~~~~~~~~~~~~
 export POETRY_VIRTUALENVS_IN_PROJECT=true
@@ -161,9 +228,6 @@ alias update_pip_friends="pip3 list --outdated | gawk -F ' ' 'NR>2{print$1}' | x
 # ~~~~~~~~~~~~~~~ Other ~~~~~~~~~~~~~~~~
 # https://github.com/atuinsh/atuin
 eval "$(atuin init zsh)"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Init pyenv
 if command -v pyenv 1>/dev/null 2>&1; then

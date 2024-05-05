@@ -125,11 +125,9 @@ vnoremap("<space>", "<Nop>")                           -- Disable Space bar sinc
 -- vnoremap()
 
 -- TERMINAL MODE
--- tnoremap("<esc>", [[<C-\><C-n>]])
-tnoremap("jj", [[<C-\><C-n>]])
 tnoremap("<C-h>", [[<Cmd>wincmd h<CR>]]) -- Window navigation from terminal
 tnoremap("<C-j>", [[<Cmd>wincmd j<CR>]]) -- Window navigation from terminal
 tnoremap("<C-k>", [[<Cmd>wincmd k<CR>]]) -- Window navigation from terminal
 tnoremap("<C-l>", [[<Cmd>wincmd l<CR>]]) -- Window navigation from terminal
+tnoremap("<C-Space>", [[<C-\><C-n>]]) -- Escape
 -- tnoremap()
-
