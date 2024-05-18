@@ -4,6 +4,7 @@
 --       ╏                                                               ╏
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 --
+-- <Ctrl> + s - is reserved for Tmux navigation
 --
 -- Useful links:
 --  1. https://vim.fandom.com/wiki/Search_and_replace_in_a_visual_selection
@@ -37,6 +38,7 @@ local tnoremap = bind("t")
 
 -- Open Telescope. If in a git repo, use git_files, otherwise use find_files
 function OpenTelescope()
+    -- require('telescope.builtin').find_files()
     if os.execute('git rev-parse --is-inside-work-tree 2> /dev/null') == 0 then
         require('telescope.builtin').git_files()
     else
@@ -44,26 +46,11 @@ function OpenTelescope()
     end
 end
 
-local keymap = vim.keymap.set
-local genghis = require("genghis")
-keymap("n", "<leader>yp", genghis.copyFilepath)
-keymap("n", "<leader>yn", genghis.copyFilename)
-keymap("n", "<leader>cx", genghis.chmodx)
-keymap("n", "<leader>rf", genghis.renameFile)
-keymap("n", "<leader>mf", genghis.moveAndRenameFile)
-keymap("n", "<leader>mc", genghis.moveToFolderInCwd)
-keymap("n", "<leader>nf", genghis.createNewFile)
-keymap("n", "<leader>yf", genghis.duplicateFile)
-keymap("n", "<leader>df", genghis.trashFile)
-keymap("x", "<leader>x", genghis.moveSelectionToNewFile)
-
 -- NORMAL MODE
-nnoremap("<Leader>w", ":w<CR>")                                                   -- Faster Saving
-nnoremap("<Space>", "Nop>")                                                       -- Nop Space bar
-nnoremap("<Leader>n", ":15Lex<CR>")                                               -- Netrw
-nnoremap("<Leader>nb", vim.cmd.Explore)                                           -- Netrw as a Buffer
-nnoremap("<Leader>cf", "<cmd>let @+ = expand(\"%\")<CR>")                         -- Copy File Name
-nnoremap("<Leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>")                       -- Copy File Path
+nnoremap("<Leader>w", ":w<CR>") -- Faster Saving
+nnoremap("<Space>", "Nop>")     -- Nop Space bar
+-- nnoremap("<Leader>n", ":15Lex<CR>")                                               -- Netrw
+-- nnoremap("<Leader>nb", vim.cmd.Explore)                                           -- Netrw as a Buffer
 nnoremap("<Leader>lz", ":Lazy<CR>")                                               -- Open Lazy
 nnoremap("<Tab>", ":bNext<CR>")                                                   -- Next Buffer
 nnoremap("<S-Tab>", ":bprevious<CR>")                                             -- Previous Buffer
@@ -110,7 +97,17 @@ nnoremap("gY", ":Glance type_definitions<CR>")                                  
 nnoremap("<Leader>e", ":lua vim.diagnostic.open_float()<CR>")                     -- Open Diagnostics Float
 nnoremap("<Leader>tt", ":vnew term://zsh<CR>")                                    -- Open Terminal
 nnoremap("<Leader>gg", ":LazyGit<CR>")                                            -- LazyGit Command Shell
-nnoremap("<BS>", "<C-o>")                                                         -- Backspace Cnrl+O"
+nnoremap("<BS>", "<C-o>")                                                         -- Backspace Ctrl+O"
+local genghis = require("genghis")
+nnoremap("<leader>yp", genghis.copyFilepath)
+nnoremap("<leader>yn", genghis.copyFilename)
+nnoremap("<leader>cx", genghis.chmodx)
+nnoremap("<leader>rf", genghis.renameFile)
+nnoremap("<leader>mf", genghis.moveAndRenameFile)
+nnoremap("<leader>mc", genghis.moveToFolderInCwd)
+nnoremap("<leader>nf", genghis.createNewFile)
+nnoremap("<leader>yf", genghis.duplicateFile)
+nnoremap("<leader>x", genghis.moveSelectionToNewFile)
 -- nnoremap()
 
 -- VISUAL MODE
@@ -129,5 +126,5 @@ tnoremap("<C-h>", [[<Cmd>wincmd h<CR>]]) -- Window navigation from terminal
 tnoremap("<C-j>", [[<Cmd>wincmd j<CR>]]) -- Window navigation from terminal
 tnoremap("<C-k>", [[<Cmd>wincmd k<CR>]]) -- Window navigation from terminal
 tnoremap("<C-l>", [[<Cmd>wincmd l<CR>]]) -- Window navigation from terminal
-tnoremap("<C-Space>", [[<C-\><C-n>]]) -- Escape
+tnoremap("<C-Space>", [[<C-\><C-n>]])    -- Escape
 -- tnoremap()

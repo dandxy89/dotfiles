@@ -21,7 +21,7 @@ g.loaded_python3_provider = 0
 vim.g.netrw_liststyle = 3 -- tree style view in netrw
 
 -- -- [[ Lazy Plugins ]]
-require("lazy").setup {
+require("lazy").setup({
     change_detection = {
         enabled = false,
         notify = false,
@@ -76,7 +76,7 @@ require("lazy").setup {
 
         },
     },
-}
+})
 
 require("core.keys")
 require("core.opts")

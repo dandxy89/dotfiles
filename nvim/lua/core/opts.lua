@@ -44,7 +44,7 @@ local arr = {
     { "laststatus",     3 },
     { "background",     "dark" },
     { "compatible",     false },
-    { "scrolloff",      8 },
+    { "scrolloff",      10 },
     { "updatetime",     50 },
     { "signcolumn",     "yes:1" },
     { "pumheight",      25 },

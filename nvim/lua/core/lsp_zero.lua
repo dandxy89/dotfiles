@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter, param-type-mismatch, undefined-field
 -- --       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 -- --       ╏                                                               ╏
 -- --       ╏                            LSP Config                         ╏
@@ -48,7 +49,19 @@ local kind_icons = {
 -- LSP Zero
 lsp_zero.on_attach(function(_, bufnr)
     lsp_zero.default_keymaps({ buffer = bufnr })
+    -- Show references in Telescope
     vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", { buffer = bufnr })
+    -- Toggle inlay hints
+    vim.keymap.set("n", "<leader>lh", function()
+        if vim.fn.has "nvim-0.10" == 1 then
+            local ok = pcall(vim.lsp.inlay_hint.enable, vim.lsp.inlay_hint.is_enabled())
+            if ok then
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            else
+                vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+            end
+        end
+    end, { desc = "LSP | Toggle Inlay Hints", silent = true })
 end)
 
 -- Autocompletion
@@ -106,8 +119,8 @@ cmp.setup({
         { name = "nvim_lsp" }, -- nvim_lsp
         { name = "buffer" },   -- cmp-buffer
         { name = "path" },
-        { name = 'omni', option = { disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' } }},
-        { name = "rg",      keyword_length = 2 },
+        { name = 'omni',                   option = { disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' } } },
+        { name = "rg",                     keyword_length = 2 },
         { name = "crates" },
         { name = "nvim-lsp" },
         {
@@ -161,6 +174,9 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("lspconfig").lua_ls.setup({
     settings = {
         Lua = {
+            hint = {
+                enable = true,
+            },
             format = {
                 enable = true,
             },
@@ -266,13 +282,20 @@ require("lspconfig").tsserver.setup({
 })
 
 -- Python
-require("lspconfig").ruff_lsp.setup({
+require('lspconfig').ruff.setup({
     settings = {
         organizeImports = false,
     },
     capabilities = capabilities,
     flags = { debounce_text_changes = 150 },
 })
+-- require("lspconfig").ruff_lsp.setup({
+--     settings = {
+--         organizeImports = false,
+--     },
+--     capabilities = capabilities,
+--     flags = { debounce_text_changes = 150 },
+-- })
 require("lspconfig").pylsp.setup({
     settings = {
         pylsp = {

@@ -30,7 +30,7 @@ return {
                     "dockerls",      -- DOCKER
                     "lua_ls",        -- LUA
                     "pylsp",         -- PYTHON
-                    "ruff_lsp",      -- PYTHON
+                    "ruff",          -- PYTHON
                     "rust_analyzer", -- RUST
                     "pest_ls",       -- PEST
                 },
@@ -55,6 +55,7 @@ return {
             { "lukas-reineke/cmp-rg" },                -- Rg completions
             { "lukas-reineke/cmp-under-comparator" },  -- Sort completion
             { "hrsh7th/cmp-nvim-lsp-signature-help" }, -- LSP signature
+            -- { "ray-x/lsp_signature.nvim" }          -- LSP signature hint as you type
             { "f3fora/cmp-spell" },                    -- Spelling
             { "m-demare/hlargs.nvim" },                -- Highlight arguments
             { "RRethy/vim-illuminate" },               -- Highlight word under cursor

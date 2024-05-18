@@ -5,9 +5,22 @@
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 return {
+    -- brew install ranger
+    {
+        "kelly-lin/ranger.nvim",
+        event = "VeryLazy",
+        config = function()
+            require("ranger-nvim").setup({ replace_netrw = true })
+            vim.api.nvim_set_keymap("n", "<leader>ef", "", {
+                noremap = true,
+                callback = function()
+                    require("ranger-nvim").open(true)
+                end,
+            })
+        end,
+    },
     {
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.5",
         cmd = "Telescope",
         event = "BufReadPre",
         dependencies = {
@@ -33,6 +46,10 @@ return {
             end, { desc = "Search for the exact word under cursor" })
             -- Setup
             telescope.setup({
+                defaults = {
+                    prompt_prefix = "󰼛 ",
+                    selection_caret = "󱞩 ",
+                },
                 -- Previews
                 file_previewer = require("telescope.previewers").vim_buffer_cat.new,
                 grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
@@ -54,6 +71,7 @@ return {
                     whaler = {
                         -- Whaler configuration
                         directories = {
+                            -- TODO Update on new machines..
                             "/Users/sigma-dan/Sigma",
                             "/Users/sigma-dan/.config/",
                             "/Users/sigma-dan/Dan"

@@ -24,4 +24,10 @@ return {
             vim.cmd [[colorscheme tokyodark]]
         end,
     },
+    {
+        "eoh-bse/minintro.nvim",
+        config = true,
+        lazy = false,
+        opts = { color = "#98c379" },
+    },
 }
