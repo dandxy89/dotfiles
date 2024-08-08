@@ -281,6 +281,30 @@ require("lspconfig").tsserver.setup({
     flags = { debounce_text_changes = 150 },
 })
 
+-- harper-ls
+require("lspconfig").harper_ls.setup {
+  settings = {
+    ["harper-ls"] = {
+      linters = {
+        userDictPath = "~/harper_ls.txt",
+        spell_check = true,
+        spelled_numbers = false,
+        an_a = true,
+        sentence_capitalization = true,
+        unclosed_quotes = true,
+        wrong_quotes = false,
+        long_sentences = true,
+        repeated_words = true,
+        spaces = true,
+        matcher = true,
+        correct_number_suffix = true,
+        number_suffix_capitalization = true,
+        multiple_sequential_pronouns = true
+      }
+    }
+  },
+}
+
 -- Python
 require('lspconfig').ruff.setup({
     settings = {
@@ -289,13 +313,6 @@ require('lspconfig').ruff.setup({
     capabilities = capabilities,
     flags = { debounce_text_changes = 150 },
 })
--- require("lspconfig").ruff_lsp.setup({
---     settings = {
---         organizeImports = false,
---     },
---     capabilities = capabilities,
---     flags = { debounce_text_changes = 150 },
--- })
 require("lspconfig").pylsp.setup({
     settings = {
         pylsp = {

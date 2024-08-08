@@ -5,6 +5,7 @@
 --       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
 return {
+    -- cargo install harper-ls --locked
     {
         "VonHeikemen/lsp-zero.nvim",
         branch = "v3.x",
@@ -33,6 +34,7 @@ return {
                     "ruff",          -- PYTHON
                     "rust_analyzer", -- RUST
                     "pest_ls",       -- PEST
+                    "harper-ls",     -- HARPER
                 },
                 automatic_installation = true,
             })

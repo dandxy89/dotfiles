@@ -48,8 +48,8 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export BROWSER="firefox"
 
-export REPOS="$HOME/Sigma"
-alias sigma='cd $REPOS'
+export REPOS="$HOME/Work"
+alias workr='cd $REPOS'
 
 export DOTFILES="$HOME/Dan/dotfiles"
 alias dot='cd $DOTFILES'
@@ -191,7 +191,7 @@ alias ct="cargo nextest run --all-features --no-fail-fast" # alias ct="cargo tes
 alias cr="cargo build --release --all-features"
 alias cc="cargo check --all-features"
 alias cf="cargo +nightly fmt"
-alias sweep_target="cargo sweep --recursive --time 0 ~/Sigma" # cargo install cargo-sweep
+alias sweep_target="cargo sweep --recursive --time 0 ~/Work" # cargo install cargo-sweep
 
 # ~~~~~~~~~~~~~~~ AWS ~~~~~~~~~~~~~~~~~~~~~~~~ OMIT ME
 
@@ -200,7 +200,7 @@ alias f1n="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://ww
 alias htn="/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://www.newsnow.co.uk/h/Hot+Topics"
 
 # ~~~~~~~~~~~~~~~ Neovim ~~~~~~~~~~~~~~~~~~~
-## brew nvim: `cd /Users/sigma-dan/Library/Caches/Homebrew/neovim--git`
+## brew nvim: `cd /Users/enzymex/Library/Caches/Homebrew/neovim--git`
 alias brew_nvim="brew install --HEAD neovim"
 alias v="source .venv/bin/activate; nvim -n"
 alias vim="source .venv/bin/activate; nvim -n"

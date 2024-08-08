@@ -72,9 +72,8 @@ return {
                         -- Whaler configuration
                         directories = {
                             -- TODO Update on new machines..
-                            "/Users/sigma-dan/Sigma",
-                            "/Users/sigma-dan/.config/",
-                            "/Users/sigma-dan/Dan"
+                            "/Users/enzymex/.config/",
+                            "/Users/enzymex/Dan"
                         },
                         auto_file_explorer = false, -- Do not open file explorer
                         auto_cwd = true,            -- But change working directory

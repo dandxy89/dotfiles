@@ -1,12 +1,12 @@
 [user]
-	email = Dan@sigmafinancial.ai
+	email = Dan@gmail.com
 	name = Dan Dixey
 	signingkey = XYZ
 [init]
     defaultBranch = main
 [core]
 	autocrlf = input
-	excludesfile = /Users/sigma-dan/.gitignore
+	excludesfile = /Users/enzymex/.gitignore
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
