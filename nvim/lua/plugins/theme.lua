@@ -1,33 +1,21 @@
---       ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
---       ╏                                                               ╏
---       ╏                            Colour Schemes                     ╏
---       ╏                                                               ╏
---       ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
+---@diagnostic disable: undefined-global
 return {
-    -- {
-    --     "projekt0n/github-nvim-theme",
-    --     priority = 1000,
-    --     lazy = false,
-    --     config = function()
-    --         require('github-theme').setup({})
-    --         vim.cmd.colorscheme("github_dark_colorblind")
-    --     end,
-    -- },
-    {
-        "tiagovla/tokyodark.nvim",
-        priority = 1000,
-        lazy = false,
-        opts = {},
-        config = function(_, opts)
-            require("tokyodark").setup(opts) -- calling setup is optional
-            vim.cmd [[colorscheme tokyodark]]
-        end,
-    },
-    {
-        "eoh-bse/minintro.nvim",
-        config = true,
-        lazy = false,
-        opts = { color = "#98c379" },
-    },
+	-- {
+	-- 	"projekt0n/github-nvim-theme",
+	-- 	priority = 1000,
+	-- 	lazy = false,
+	-- 	config = function()
+	-- 		require("github-theme").setup({})
+	-- 		vim.cmd.colorscheme("github_dark_colorblind")
+	-- 	end,
+	-- },
+	{
+		"HoNamDuong/hybrid.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = {},
+		config = function()
+			vim.cmd("colorscheme hybrid")
+		end
+	}
 }
