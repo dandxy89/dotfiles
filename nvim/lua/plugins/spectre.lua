@@ -2,8 +2,8 @@
 return {
 	{
 		"nvim-pack/nvim-spectre",
-		keys = { "<Leader>u" },
-		ft = { "pest", "rust", "python", "lua", "toml" },
+        lazy = true,
+        event = "BufReadPre",
 		opts = function()
 			vim.keymap.set("n", "<Leader>S", '<cmd>lua require("spectre").toggle()<CR>', { desc = "Toggle Spectre" })
 			vim.keymap.set(

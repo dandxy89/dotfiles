@@ -60,3 +60,13 @@ vim.opt.guicursor = {
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
 vim.opt.diffopt:append('algorithm:histogram')
+
+-- This is global settings for diagnostics
+vim.o.updatetime = 250
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+})

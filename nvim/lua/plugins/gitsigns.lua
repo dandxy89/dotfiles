@@ -1,8 +1,8 @@
 return {
 	{
 		"lewis6991/gitsigns.nvim",
-		keys = { "<Leader>u" },
-		ft = { "pest", "rust", "python", "lua", "toml" },
+        lazy = true,
+        event = "BufReadPre",
 		config = function()
 			local gitIcons = {
 				LineAdded = " ",

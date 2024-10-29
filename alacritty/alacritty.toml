@@ -24,6 +24,5 @@ multiplier=3 # Default: 3
 save_to_clipboard=true
 
 [window]
-# decorations="But"
 dimensions = { columns = 500, lines = 180 }
 padding = { x = 10, y = 10 }

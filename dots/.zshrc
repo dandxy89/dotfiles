@@ -105,7 +105,7 @@ alias urlEncode="sh $SCRIPTS/urlencode"
 
 # fzf aliases
 alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'" # use fp to do a fzf search and preview the files
-alias vf='v $(fp)' # search for a file with fzf and open it in vim
+alias vf='nvim $(fp)' # search for a file with fzf and open it in vim
 
 # Changing "ls" to "eza"
 alias ls='eza -al --color=always --group-directories-first' # my preferred listing

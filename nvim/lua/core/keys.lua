@@ -31,17 +31,19 @@ nnoremap("<Leader>=", ":vertical resize +10<CR>") -- Resize - thinner buffer
 nnoremap("<Leader>-", ":vertical resize -10<CR>") -- Resize - widen buffer
 nnoremap("<Leader>rh", ":nohl<CR>") -- Remove search highlighting
 nnoremap("<F9>", ":!python %<CR>") -- Run Python Script in Buffer
-nnoremap("<Leader>gs", ":Telescope git_status<CR>") -- Telescope: Git Status
-nnoremap("<Leader>op", ":Telescope whaler<CR>") -- Known Projects
-nnoremap("<Leader>nc", ":Telescope find_files cwd=~/.config/nvim<CR>") -- Edit Nvim Config
-nnoremap("<Leader>lg", ":Telescope live_grep<CR>") -- Live grep
-nnoremap("<Leader>bl", ":Telescope buffers<CR>") -- Buffer list
-nnoremap("<Leader>ws", ":Telescope lsp_workspace_symbols<CR>") -- LSP Workspace Symbols
-nnoremap("<Leader>ds", ":Telescope lsp_document_symbols<CR>") -- Document Symbols
-nnoremap("<Leader>di", ":Telescope diagnostics<CR>") -- LSP Diagnostics
-nnoremap("<Leader><tab>", "<Cmd>lua require('telescope.builtin').commands()<CR>") -- Options in Telescope
+
+nnoremap("<Leader>f", ":lua require('fzf-lua').files()<CR>") -- File list
+nnoremap("<Leader>lg", ":lua require('fzf-lua').live_grep()<CR>") -- Live Grep
+nnoremap("<Leader>bl", ":lua require('fzf-lua').buffers()<CR>") -- Buffer list
+nnoremap("<Leader>di", ":lua require('fzf-lua').diagnostics_workspace({ fzf_opts = { ['--wrap'] = true }})<CR>")
+nnoremap("<Leader>ca", ":lua require('fzf-lua').lsp_code_actions({ winopts = {relative='cursor',row=1.01, col=0, height=0.2, width=0.4} })<CR>")
+
+nnoremap("<Leader>nn", ":lua require('quicknote').NewNoteAtCWD()<CR>")
+nnoremap("<Leader>on", ":lua require('quicknote').OpenNoteAtCWD()<CR>")
+
 nnoremap("<C-a>", "gg<S-v>G") -- Select all
 nnoremap("x", '"_x') -- No map x
+
 nnoremap("<Leader>nf", "<cmd>enew<cr>") -- New file
 nnoremap("<Leader>ca", ":lua vim.lsp.buf.code_action()<CR>") -- Code Action
 nnoremap("H", "_") -- H to go the start of line(n)

@@ -1,1 +1,1 @@
--- require('pest-vim').setup({})
+require('pest-vim').setup({})

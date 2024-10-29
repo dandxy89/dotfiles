@@ -1,6 +1,7 @@
 return {
 	{
 		"mbbill/undotree",
-		ft = { "pest", "rust", "python", "lua", "toml" },
+        lazy = true,
+        event = "BufReadPre",
 	},
 }

@@ -1,18 +1,21 @@
 return {
 	{
 		"L3MON4D3/LuaSnip",
+        lazy = true,
+        event = "InsertEnter",
 		dependencies = {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
 		},
 	},
 	{
-		-- "hrsh7th/nvim-cmp",
 		"iguanacucumber/magazine.nvim",
 		name = "nvim-cmp",
+        lazy = true,
+        event = "InsertEnter",
 		dependencies = {
 			{ "neovim/nvim-lspconfig" },
-			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "iguanacucumber/mag-nvim-lsp" },
 			{ "hrsh7th/cmp-nvim-lsp-signature-help" },
 			{ "RRethy/vim-illuminate" },
 			{ "hrsh7th/cmp-omni" },
@@ -22,16 +25,15 @@ return {
 			{ "hrsh7th/cmp-path" },
 			{ "hrsh7th/cmp-cmdline" },
 			{ "hrsh7th/nvim-cmp" },
-			{ "hrsh7th/cmp-buffer" },
+			{ "iguanacucumber/mag-buffer" },
 			{ "ray-x/cmp-treesitter" },
+			{ "pest-parser/pest.vim", ft = "pest" },
 		},
 		config = function()
 			local luasnip = require("luasnip")
-			-- local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 			local cmp = require("cmp")
 			require("luasnip.loaders.from_vscode").lazy_load()
 			require("hlargs").setup()
-			-- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 			cmp.setup({
 				preselect = cmp.PreselectMode.Item,
 				snippet = {
@@ -77,7 +79,7 @@ return {
 				}),
 				completion = {
 					keyword_length = 1,
-					completeopt = "menu,noselect",
+					completeopt = "menu,noselect,noinsert",
 				},
 				sources = cmp.config.sources({
 					{ name = "vim-illuminate" },

@@ -57,6 +57,7 @@ require("lazy").setup({
 				"bugreport",
 				"ftplugin",
 				"osc52",
+                "netrwPlugin",
 			},
 		},
 	},

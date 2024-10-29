@@ -1,8 +1,7 @@
 return {
 	{
 		"dnlhc/glance.nvim",
-		keys = { "<Leader>u" },
-		ft = { "pest", "rust", "python", "lua", "toml" },
+        lazy = true,
 		event = "InsertEnter",
 		config = function()
 			require("glance").setup({
