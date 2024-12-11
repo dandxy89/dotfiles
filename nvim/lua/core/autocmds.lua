@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank()
 	end,
-	group = augroup("TextYankPostGrp")
+	group = augroup("TextYankPostGrp"),
 })
 
 -- Resize splits if window got resized
@@ -47,6 +47,55 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 	group = augroup("FormattingGrp"),
 })
+
+-- Create an async function to run pytest
+local function run_pytest()
+	-- Create a new terminal buffer
+	vim.cmd("new")
+
+	-- Get the terminal job ID
+	local buf = vim.api.nvim_get_current_buf()
+
+	-- Run pytest asynchronously
+	local job_id = vim.fn.jobstart("pytest", {
+		on_stdout = function(_, data)
+			if data then
+				vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+			end
+		end,
+		on_stderr = function(_, data)
+			if data then
+				vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+			end
+		end,
+		on_exit = function(_, code)
+			vim.api.nvim_buf_set_lines(buf, -1, -1, false, { "", "Pytest finished with exit code: " .. code })
+		end,
+		stdout_buffered = true,
+		stderr_buffered = true,
+	})
+
+	-- Set buffer options
+	vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+	vim.api.nvim_buf_set_option(buf, "swapfile", false)
+	vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe") -- This ensures buffer is deleted when closed
+	vim.api.nvim_buf_set_name(buf, "Pytest Output")
+	vim.api.nvim_buf_set_option(buf, "filetype", "pytest-output")
+
+	-- Add keymapping to close the buffer with 'q'
+	vim.api.nvim_buf_set_keymap(buf, "n", "q", ":bdelete!<CR>", {
+		noremap = true,
+		silent = true,
+		nowait = true,
+	})
+
+	-- Set buffer local options for easy closing
+	vim.api.nvim_buf_set_option(buf, "buflisted", false)
+	vim.api.nvim_buf_set_option(buf, "modifiable", false)
+end
+
+-- Create a command to run pytest
+vim.api.nvim_create_user_command("PyTest", run_pytest, {})
 
 -- close some filetypes with <esc>
 vim.api.nvim_create_autocmd("FileType", {

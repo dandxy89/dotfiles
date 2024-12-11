@@ -1,7 +1,7 @@
 return {
 	{
 		"echasnovski/mini.nvim",
-        lazy = true,
+		lazy = true,
 		version = false,
 	},
 }

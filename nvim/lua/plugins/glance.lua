@@ -1,7 +1,7 @@
 return {
 	{
 		"dnlhc/glance.nvim",
-        lazy = true,
+		lazy = true,
 		event = "InsertEnter",
 		config = function()
 			require("glance").setup({

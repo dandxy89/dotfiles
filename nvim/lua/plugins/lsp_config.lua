@@ -28,10 +28,7 @@ return {
                 ensure_installed = {
                     "lua_ls",
                     "rust_analyzer",
-                    "pylsp",
-                    "yamlls",
-                    "jsonls",
-                    "zls",
+                    "pyright",
                     "marksman",
                     "harper_ls",
                 },
@@ -65,7 +62,7 @@ return {
             lspconfig.eslint.setup({
                 capabilities = capabilities,
             })
-            require("lspconfig").clangd.setup({
+            lspconfig.clangd.setup({
                 cmd = {
                     "clangd",
                     "--background-index",
@@ -84,27 +81,18 @@ return {
                 init_option = { fallbackFlags = { "-std=c++2a" } },
                 capabilities = capabilities,
             })
-            -- Install with: pip install "python-lsp-server[all]"
-            lspconfig.pylsp.setup({
-                capabilities = capabilities,
+            -- Language Server: 'npm install -g pyright'
+            lspconfig.pyright.setup({
                 settings = {
-                    pylsp = {
-                        plugins = {
-                            -- Install: pip install `pylsp-mypy`
-                            pylsp_mypy = { enabled = true },
-                            mccabe = { enabled = true },
-                            rope = { enabled = true },
-                            jedi_completion = { fuzzy = true },
-                            rope_autoimport = { enabled = true },
-                            -- Delegated to ruff-lsp
-                            pycodestyle = { enabled = false },
-                            pyflakes = { enabled = false },
-                            autopep8 = { enabled = false },
-                            yapf = { enabled = false },
-                            pylint = { enabled = false },
-                            ruff = { enabled = false },
-                            black = { enabled = false },
-                            ipyls_isort = { enabled = false },
+                    pyright = {
+                        -- Use ruff instead
+                        disableOrganizeImports = true,
+                        pythonPath = vim.fn.exepath("python3"),
+                    },
+                    -- Use ruff only for linting, just use pyright for LSP feat
+                    python = {
+                        analysis = {
+                            ignore = { "*" },
                         },
                     },
                     telemetry = {
@@ -180,8 +168,8 @@ return {
             })
             lspconfig.harper_ls.setup({
                 settings = {
-                    linters = {
-                        userDictPath = "~/harper_ls.txt",
+                    ["harper-ls"] = {
+                        userDictPath = "~/dict.txt",
                         spell_check = true,
                         spelled_numbers = false,
                         an_a = true,
@@ -198,19 +186,20 @@ return {
                     },
                 },
             })
+            -- Custom Diagnostic Icons
             local signs = {
                 Error = "󰅚 ",
                 Warn = "󰳦 ",
                 Hint = "󱡄 ",
-                Info = " "
+                Info = " ",
             }
             for type, icon in pairs(signs) do
                 local hl = "DiagnosticSign" .. type
                 vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = nil })
             end
 
-            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
-                {
+            vim.lsp.handlers["textDocument/publishDiagnostics"] =
+                vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
                     virtual_text = true,
                     signs = true,
                     underline = true,

@@ -1,7 +1,7 @@
 return {
 	{
 		"mbbill/undotree",
-        lazy = true,
-        event = "BufReadPre",
+		lazy = true,
+		event = "BufReadPre",
 	},
 }

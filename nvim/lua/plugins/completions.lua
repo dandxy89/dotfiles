@@ -1,27 +1,16 @@
 return {
 	{
-		"L3MON4D3/LuaSnip",
-        lazy = true,
-        event = "InsertEnter",
-		dependencies = {
-			"saadparwaiz1/cmp_luasnip",
-			"rafamadriz/friendly-snippets",
-		},
-	},
-	{
 		"iguanacucumber/magazine.nvim",
 		name = "nvim-cmp",
-        lazy = true,
-        event = "InsertEnter",
+		lazy = true,
+		event = "InsertEnter",
 		dependencies = {
 			{ "neovim/nvim-lspconfig" },
 			{ "iguanacucumber/mag-nvim-lsp" },
 			{ "hrsh7th/cmp-nvim-lsp-signature-help" },
 			{ "RRethy/vim-illuminate" },
-			{ "hrsh7th/cmp-omni" },
 			{ "lukas-reineke/cmp-rg" },
 			{ "vxpm/ferris.nvim" },
-			{ "m-demare/hlargs.nvim" },
 			{ "hrsh7th/cmp-path" },
 			{ "hrsh7th/cmp-cmdline" },
 			{ "hrsh7th/nvim-cmp" },
@@ -30,17 +19,9 @@ return {
 			{ "pest-parser/pest.vim", ft = "pest" },
 		},
 		config = function()
-			local luasnip = require("luasnip")
 			local cmp = require("cmp")
-			require("luasnip.loaders.from_vscode").lazy_load()
-			require("hlargs").setup()
 			cmp.setup({
 				preselect = cmp.PreselectMode.Item,
-				snippet = {
-					expand = function(args)
-						require("luasnip").lsp_expand(args.body)
-					end,
-				},
 				matching = {
 					disallow_fuzzy_matching = true,
 					disallow_fullfuzzy_matching = true,
@@ -61,8 +42,6 @@ return {
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
-						elseif luasnip.expand_or_jumpable() then
-							luasnip.expand_or_jump()
 						else
 							fallback()
 						end
@@ -70,8 +49,6 @@ return {
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
-						elseif luasnip.jumpable(-1) then
-							luasnip.jump(-1)
 						else
 							fallback()
 						end
@@ -88,7 +65,6 @@ return {
 					{ name = "cmdline" },
 					{ name = "buffer" },
 					{ name = "nvim_lsp" },
-					{ name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" } } },
 					{ name = "treesitter" },
 					{ name = "nvim_lsp_signature_help" },
 				}),
