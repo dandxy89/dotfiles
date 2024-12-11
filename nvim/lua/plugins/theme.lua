@@ -6,6 +6,7 @@ return {
 		priority = 1010,
 		opts = {},
 		config = function()
+
 			vim.cmd("colorscheme hybrid")
 		end
 	}

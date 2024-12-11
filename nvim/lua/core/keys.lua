@@ -18,14 +18,11 @@ nnoremap("<Space>", "Nop>") -- Nop Space bar
 nnoremap("<Leader>lz", ":Lazy<CR>") -- Open Lazy
 nnoremap("<Tab>", ":bNext<CR>") -- Next Buffer
 nnoremap("<S-Tab>", ":bprevious<CR>") -- Previous Buffer
-nnoremap("<Leader>d", ":bd! <CR>") -- Delete Buffer
+-- nnoremap("<Leader>d", ":bd! <CR>") -- Delete Buffer
 nnoremap("<F5>", ":UndotreeToggle<CR>") -- Toggle UndoTree Plugin
 nnoremap("<Leader>sr", ":vs<CR>") -- Split Right
 nnoremap("<Leader>wh", ":wincmd h<CR>") -- Switch Window - Left
 nnoremap("<Leader>wl", ":wincmd l<CR>") -- Switch Window - Right
-nnoremap("<Leader>mt", ":terminal make test<CR>") -- Run Make Test
-nnoremap("<Leader>gf", ":!black %<CR>") -- Run the Black formatter
-nnoremap("<Leader>gfl", ":!stylua %<CR>") -- Run the Stylua formatter
 nnoremap("<Leader>fj", ":%!jq .<CR>") -- Format Json
 nnoremap("<Leader>=", ":vertical resize +10<CR>") -- Resize - thinner buffer
 nnoremap("<Leader>-", ":vertical resize -10<CR>") -- Resize - widen buffer
@@ -57,8 +54,6 @@ nnoremap("gD", ":Glance definitions<CR>") -- Show definitions
 nnoremap("gM", ":Glance implementations<CR>") -- Show implementations
 nnoremap("gY", ":Glance type_definitions<CR>") -- Show type definitions
 nnoremap("<Leader>e", ":lua vim.diagnostic.open_float()<CR>") -- Open Diagnostics Float
-nnoremap("<Leader>tt", ":vnew term://zsh<CR>") -- Open Terminal
-nnoremap("<Leader>gg", ":LazyGit<CR>") -- LazyGit Command Shell
 nnoremap("<BS>", "<C-o>") -- Backspace Ctrl+O"
 nnoremap("<F3>", ":lua vim.lsp.buf.rename()<CR>") -- Rename
 nnoremap("K", ":lua vim.lsp.buf.hover()<CR>") -- Hover

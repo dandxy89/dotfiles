@@ -7,11 +7,4 @@ return {
 			require("lsp_lines").setup()
 		end,
 	},
-	{
-		"RutaTang/quicknote.nvim",
-		config = function()
-			require("quicknote").setup({})
-		end,
-		dependencies = { "nvim-lua/plenary.nvim" },
-	},
 }

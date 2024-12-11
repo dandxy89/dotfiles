@@ -24,6 +24,10 @@ require("lazy").setup({
 	spec = {
 		{ import = "plugins" },
 	},
+	defaults = {
+		lazy = false,
+		version = false, -- always use the latest git commit
+	},
 	checker = { enabled = true },
 	install = { missing = false },
 	performance = {
@@ -38,8 +42,6 @@ require("lazy").setup({
 				"getscriptPlugin",
 				"gzip",
 				"logipat",
-				"matchit",
-				"matchparen",
 				"tar",
 				"tarPlugin",
 				"rrhelper",
@@ -57,7 +59,7 @@ require("lazy").setup({
 				"bugreport",
 				"ftplugin",
 				"osc52",
-                "netrwPlugin",
+				"netrwPlugin",
 			},
 		},
 	},
