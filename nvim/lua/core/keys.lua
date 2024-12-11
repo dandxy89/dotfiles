@@ -33,7 +33,10 @@ nnoremap("<Leader>f", ":lua require('fzf-lua').files()<CR>") -- File list
 nnoremap("<Leader>lg", ":lua require('fzf-lua').live_grep()<CR>") -- Live Grep
 nnoremap("<Leader>bl", ":lua require('fzf-lua').buffers()<CR>") -- Buffer list
 nnoremap("<Leader>di", ":lua require('fzf-lua').diagnostics_workspace({ fzf_opts = { ['--wrap'] = true }})<CR>")
-nnoremap("<Leader>ca", ":lua require('fzf-lua').lsp_code_actions({ winopts = {relative='cursor',row=1.01, col=0, height=0.2, width=0.4} })<CR>")
+nnoremap(
+	"<Leader>ca",
+	":lua require('fzf-lua').lsp_code_actions({ winopts = {relative='cursor',row=1.01, col=0, height=0.2, width=0.4} })<CR>"
+)
 
 nnoremap("<Leader>nn", ":lua require('quicknote').NewNoteAtCWD()<CR>")
 nnoremap("<Leader>on", ":lua require('quicknote').OpenNoteAtCWD()<CR>")

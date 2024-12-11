@@ -1,6 +1,6 @@
 ---@diagnostic disable: undefined-global
 local arr = {
-    -- Brew install --cask font-geist-mono-nerd-font
+	-- Brew install --cask font-geist-mono-nerd-font
 	{ "guifont", "GeistMono Nerd Font" },
 	{ "backup", false },
 	{ "writebackup", false },
@@ -49,24 +49,24 @@ end
 
 -- Cursor shape
 vim.opt.guicursor = {
-    "n-v-c:block",                                  -- Normal, visual, command-line: block cursor
-    "i-ci-ve:ver25",                                -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
-    "r-cr:hor20",                                   -- Replace, command-line replace: horizontal bar cursor with 20% height
-    "o:hor50",                                      -- Operator-pending: horizontal bar cursor with 50% height
-    "a:blinkwait700-blinkoff400-blinkon250",        -- All modes: blinking settings
-    "sm:block-blinkwait175-blinkoff150-blinkon175", -- Showmatch: block cursor with specific blinking settings
+	"n-v-c:block", -- Normal, visual, command-line: block cursor
+	"i-ci-ve:ver25", -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
+	"r-cr:hor20", -- Replace, command-line replace: horizontal bar cursor with 20% height
+	"o:hor50", -- Operator-pending: horizontal bar cursor with 50% height
+	"a:blinkwait700-blinkoff400-blinkon250", -- All modes: blinking settings
+	"sm:block-blinkwait175-blinkoff150-blinkon175", -- Showmatch: block cursor with specific blinking settings
 }
 
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
-vim.opt.diffopt:append('algorithm:histogram')
+vim.opt.diffopt:append("algorithm:histogram")
 
 -- This is global settings for diagnostics
 vim.o.updatetime = 250
 vim.diagnostic.config({
-  virtual_text = false,
-  signs = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = false,
+	virtual_text = false,
+	signs = true,
+	underline = true,
+	update_in_insert = false,
+	severity_sort = false,
 })

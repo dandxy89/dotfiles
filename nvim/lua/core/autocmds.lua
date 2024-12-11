@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank()
 	end,
-	group = augroup("TextYankPostGrp")
+	group = augroup("TextYankPostGrp"),
 })
 
 -- Resize splits if window got resized

@@ -1,8 +1,8 @@
 return {
 	{
 		"L3MON4D3/LuaSnip",
-        lazy = true,
-        event = "InsertEnter",
+		lazy = true,
+		event = "InsertEnter",
 		dependencies = {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
@@ -11,8 +11,8 @@ return {
 	{
 		"iguanacucumber/magazine.nvim",
 		name = "nvim-cmp",
-        lazy = true,
-        event = "InsertEnter",
+		lazy = true,
+		event = "InsertEnter",
 		dependencies = {
 			{ "neovim/nvim-lspconfig" },
 			{ "iguanacucumber/mag-nvim-lsp" },

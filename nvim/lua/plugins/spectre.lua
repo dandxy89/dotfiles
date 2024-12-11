@@ -2,8 +2,8 @@
 return {
 	{
 		"nvim-pack/nvim-spectre",
-        lazy = true,
-        event = "BufReadPre",
+		lazy = true,
+		event = "BufReadPre",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim" },
 		},
