@@ -39,9 +39,10 @@ return {
         "neovim/nvim-lspconfig",
         lazy = true,
         event = { "VeryLazy", "BufReadPre", "BufNewFile" },
+        dependencies = { 'saghen/blink.cmp' },
         config = function()
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
-            local lspconfig = require("lspconfig")
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            local lspconfig = require('lspconfig')
             lspconfig.zls.setup({
                 capabilities = capabilities,
                 cmd = { "zls" },

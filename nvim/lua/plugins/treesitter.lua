@@ -8,12 +8,6 @@ return {
 	dependencies = {
 		{ "nvim-treesitter/nvim-treesitter-textobjects" },
 		{
-			"andymass/vim-matchup",
-			init = function()
-				vim.g.matchup_matchparen_offscreen = {}
-			end,
-		},
-		{
 			"nvim-treesitter/nvim-treesitter-context",
 			opts = function()
 				require("treesitter-context").setup({

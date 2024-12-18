@@ -1,7 +1,4 @@
 ---@diagnostic disable: undefined-global
--- Import ferris.nvim 🦀
-require("ferris")
-
 -- Keymaps
 local keymap = vim.keymap.set
 keymap("n", "<Leader>ml", ':lua require("ferris.methods.view_memory_layout")()<CR>')
