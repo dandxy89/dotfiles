@@ -1,9 +1,10 @@
----@diagnostic disable: undefined-global, undefined-doc-name
+---@diagnostic disable: undefined-global
 return {
     {
         "folke/snacks.nvim",
         priority = 1000,
         lazy = false,
+        ---@diagnostic disable-next-line: undefined-doc-name
         ---@type snacks.Config
         opts = {
             animate = { enabled = false },
@@ -20,7 +21,7 @@ return {
                     backdrop = {
                         transparent = false,
                     },
-                }
+                },
             },
             quickfile = { enabled = false },
             scroll = { enabled = false },
@@ -29,9 +30,9 @@ return {
             styles = {
                 notifier = {
                     wo = {
-                        spell = false
-                    }
-                }
+                        spell = false,
+                    },
+                },
             },
         },
         keys = {

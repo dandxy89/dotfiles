@@ -1,4 +1,3 @@
----@diagnostic disable: lowercase-global, undefined-global
 return {
     {
         "j-hui/fidget.nvim",
@@ -39,10 +38,10 @@ return {
         "neovim/nvim-lspconfig",
         lazy = true,
         event = { "VeryLazy", "BufReadPre", "BufNewFile" },
-        dependencies = { 'saghen/blink.cmp' },
+        dependencies = { "saghen/blink.cmp" },
         config = function()
-            local capabilities = require('blink.cmp').get_lsp_capabilities()
-            local lspconfig = require('lspconfig')
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
+            local lspconfig = require("lspconfig")
             lspconfig.zls.setup({
                 capabilities = capabilities,
                 cmd = { "zls" },
