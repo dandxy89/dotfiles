@@ -1,14 +1,4 @@
----@diagnostic disable: lowercase-global, undefined-global
 return {
-    {
-        "j-hui/fidget.nvim",
-        tag = "v1.0.0",
-        lazy = true,
-        event = "InsertEnter",
-        config = function()
-            require("fidget").setup({})
-        end,
-    },
     {
         "williamboman/mason.nvim",
         lazy = true,
@@ -36,13 +26,25 @@ return {
         end,
     },
     {
+        "MysticalDevil/inlay-hints.nvim",
+        event = "LspAttach",
+        dependencies = { "neovim/nvim-lspconfig" },
+        config = function()
+            require("inlay-hints").setup()
+        end
+    },
+    {
         "neovim/nvim-lspconfig",
         lazy = true,
         event = { "VeryLazy", "BufReadPre", "BufNewFile" },
-        dependencies = { 'saghen/blink.cmp' },
+        dependencies = {
+            "saghen/blink.cmp",
+            "j-hui/fidget.nvim",
+        },
         config = function()
-            local capabilities = require('blink.cmp').get_lsp_capabilities()
-            local lspconfig = require('lspconfig')
+            require("fidget").setup({})
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
+            local lspconfig = require("lspconfig")
             lspconfig.zls.setup({
                 capabilities = capabilities,
                 cmd = { "zls" },
@@ -82,8 +84,17 @@ return {
                 init_option = { fallbackFlags = { "-std=c++2a" } },
                 capabilities = capabilities,
             })
+            lspconfig.basedpyright.setup({
+                capabilities = capabilities,
+                settings = {
+                    basedpyright = {
+                        typeCheckingMode = "standard",
+                    },
+                },
+            })
             -- Language Server: 'npm install -g pyright'
             lspconfig.pyright.setup({
+                capabilities = capabilities,
                 settings = {
                     pyright = {
                         -- Use ruff instead

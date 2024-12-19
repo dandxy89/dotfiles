@@ -1,21 +1,26 @@
----@diagnostic disable: undefined-global
 return {
-
     {
         "ibhagwan/fzf-lua",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
         lazy = true,
         event = "BufReadPost",
+        opts = {
+            fzf_opts = { ["--ansi"] = false },
+        },
         config = function()
             require("fzf-lua").setup({
                 grep = {
                     rg_glob = true,
-                    -- @return string, string?
+                    glob_flag = "--iglob",
+                    glob_separator = "%s%-%-",
                     rg_glob_fn = function(query, _)
                         local regex, flags = query:match("^(.-)%s%-%-(.*)$")
-                        -- If no separator is detected will return the original query
                         return (regex or query), flags
                     end,
+                },
+                previewers = {
+                    builtin = {
+                        syntax_limit_b = 1024 * 200, -- 200KB
+                    },
                 },
                 keymap = {
                     fzf = {
@@ -36,6 +41,7 @@ return {
                     },
                 },
             })
+            require("fzf-lua").register_ui_select()
         end,
     },
     {

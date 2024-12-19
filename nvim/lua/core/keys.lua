@@ -1,11 +1,10 @@
----@diagnostic disable: undefined-global
 local function bind(op, outer_opts)
-	outer_opts = vim.tbl_extend("force", { noremap = true, silent = true, nowait = true }, outer_opts or {})
+    outer_opts = vim.tbl_extend("force", { noremap = true, silent = true, nowait = true }, outer_opts or {})
 
-	return function(lhs, rhs, opts)
-		opts = vim.tbl_extend("force", outer_opts, opts or {})
-		vim.keymap.set(op, lhs, rhs, opts)
-	end
+    return function(lhs, rhs, opts)
+        opts = vim.tbl_extend("force", outer_opts, opts or {})
+        vim.keymap.set(op, lhs, rhs, opts)
+    end
 end
 
 local nnoremap = bind("n")
@@ -42,8 +41,8 @@ nnoremap("<Leader>lg", ":lua require('fzf-lua').live_grep()<CR>") -- Live Grep
 nnoremap("<Leader>bl", ":lua require('fzf-lua').buffers()<CR>") -- Buffer list
 nnoremap("<Leader>di", ":lua require('fzf-lua').diagnostics_workspace({ fzf_opts = { ['--wrap'] = true }})<CR>")
 nnoremap(
-	"<Leader>ca",
-	":lua require('fzf-lua').lsp_code_actions({ winopts = {relative='cursor',row=1.01, col=0, height=0.2, width=0.4} })<CR>"
+    "<Leader>ca",
+    ":lua require('fzf-lua').lsp_code_actions({ winopts = {relative='cursor',row=1.01, col=0, height=0.2, width=0.4} })<CR>"
 )
 
 nnoremap("<C-a>", "gg<S-v>G") -- Select all
@@ -60,14 +59,13 @@ nnoremap("<C-Z>", "<Cmd>undo<CR>") -- Undo
 nnoremap("<C-Y>", "<Cmd>redo<CR>") -- Redo
 nnoremap("<Leader>fl", ":lua vim.lsp.buf.format()<CR>") -- Format Code
 
--- FIXME: Remove and use quickfix
 nnoremap("gR", ":Glance references<CR>") -- Show references
 nnoremap("gD", ":Glance definitions<CR>") -- Show definitions
 nnoremap("gM", ":Glance implementations<CR>") -- Show implementations
 nnoremap("gY", ":Glance type_definitions<CR>") -- Show type definitions
 
 nnoremap("<Leader>e", ":lua vim.diagnostic.open_float()<CR>") -- Open Diagnostics Float
-nnoremap("<BS>", "<C-o>") -- Backspace Ctrl+O"
+nnoremap("<BS>", "<C-o>") -- Backspace `Ctrl+O`
 nnoremap("<F3>", ":lua vim.lsp.buf.rename()<CR>") -- Rename
 nnoremap("K", ":lua vim.lsp.buf.hover()<CR>") -- Hover
 nnoremap("<Leader>gd", ":lua vim.lsp.buf.declaration()<CR>") -- Declaration
@@ -75,8 +73,6 @@ nnoremap("<Leader>gd", ":lua vim.lsp.buf.declaration()<CR>") -- Declaration
 nnoremap("<M-k>", "<Cmd>cnext<CR>") -- Quickfix next
 nnoremap("<M-j>", "<Cmd>cprevious<CR>") -- Quickfix previous
 
-vnoremap("<Tab>", ">gv") -- Tab/Shift+tab to indent/dedent
-vnoremap("<S-Tab>", "<<") -- Tab/Shift+tab to indent/dedent
 vnoremap("H", "_") -- H to go the start of line(n)
 vnoremap("L", "$") -- L to go to the end of line(n)
 vnoremap("K", ":m '>-2<CR>gv=gv") -- Move current line up
