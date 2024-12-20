@@ -25,6 +25,8 @@ return {
             })
         end,
     },
+    -- <https://github.com/artemave/workspace-diagnostics.nvim>
+    {"artemave/workspace-diagnostics.nvim"},
     {
         "MysticalDevil/inlay-hints.nvim",
         event = "LspAttach",
