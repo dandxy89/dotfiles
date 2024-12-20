@@ -3,24 +3,8 @@ return {
         "lewis6991/gitsigns.nvim",
         lazy = true,
         event = "BufReadPre",
-        config = function()
-            local gitIcons = {
-                LineAdded = " ",
-                LineModified = " ",
-                LineRemoved = " ",
-                FileDeleted = " ",
-                FileIgnored = "◌",
-                FileRenamed = " ",
-                FileStaged = "S",
-                FileUnmerged = "",
-                FileUnstaged = "",
-                FileUntracked = "U",
-                Diff = " ",
-                Repo = " ",
-                Octoface = " ",
-                Copilot = " ",
-                Branch = "",
-            }
+        opts = function()
+            local gitIcons = { LineAdded = " ", LineModified = " ", LineRemoved = " " }
             require("gitsigns").setup({
                 signs = {
                     add = { text = gitIcons.LineAdded },

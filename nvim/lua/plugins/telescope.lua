@@ -4,8 +4,19 @@ return {
         lazy = true,
         event = "BufReadPost",
         opts = {
-            fzf_opts = { ["--ansi"] = false },
+            fzf_opts = {
+                ["--ansi"] = false,
+                ["--no-scrollbar"] = true,
+            },
         },
+        cmd = "FzfLua",
+        init = function()
+            vim.ui.select = function(...)
+                require("lazy").load({ plugins = { "fzf-lua" } })
+                require("fzf-lua").register_ui_select()
+                return vim.ui.select(...)
+            end
+        end,
         config = function()
             require("fzf-lua").setup({
                 grep = {
@@ -23,12 +34,12 @@ return {
                     },
                 },
                 keymap = {
+                    builtin = { true, ["<Esc>"] = "hide" },
                     fzf = {
                         ["ctrl-q"] = "select-all+accept",
                     },
                 },
                 defaults = {
-                    file_icons = "mini",
                     formatter = "path.filename_first",
                     path_shorten = 5,
                     git_icons = true,
@@ -46,9 +57,10 @@ return {
     },
     {
         "kelly-lin/ranger.nvim",
+        enabled = false,
         lazy = true,
         event = "VeryLazy",
-        config = function()
+        opts = function()
             require("ranger-nvim").setup({ replace_netrw = true })
             vim.api.nvim_set_keymap("n", "<leader>ef", "", {
                 noremap = true,

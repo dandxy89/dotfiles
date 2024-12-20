@@ -1,13 +1,11 @@
 return {
     "stevearc/oil.nvim",
-    dependencies = { { "echasnovski/mini.icons", opts = {} } },
-    lazy = true,
-    event = "VeryLazy",
-    config = function()
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = function()
         require("oil").setup({
+            delete_to_trash = true,
             default_file_explorer = true,
             view_options = {
-                -- Show files and directories that start with "."
                 show_hidden = true,
             },
             skip_confirm_for_simple_edits = true,

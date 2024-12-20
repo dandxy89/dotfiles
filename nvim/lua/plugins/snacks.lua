@@ -11,29 +11,18 @@ return {
             bigfile = { enabled = true },
             dashboard = { enabled = true },
             debug = { enabled = false },
-            dim = { enabled = true },
+            dim = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
             notifier = {
                 enabled = true,
                 timeout = 1000,
-                win = {
-                    backdrop = {
-                        transparent = false,
-                    },
-                },
+                win = { backdrop = { transparent = false } },
             },
             quickfile = { enabled = false },
             scroll = { enabled = false },
             statuscolumn = { enabled = true },
             words = { enabled = true },
-            styles = {
-                notifier = {
-                    wo = {
-                        spell = false,
-                    },
-                },
-            },
         },
         keys = {
             {
@@ -149,7 +138,6 @@ return {
             vim.api.nvim_create_autocmd("User", {
                 pattern = "VeryLazy",
                 callback = function()
-                    -- Create some toggle mappings
                     Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
                     Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
                     Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")

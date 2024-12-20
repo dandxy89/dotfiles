@@ -1,3 +1,4 @@
+---@diagnostic disable: no-unknown
 local function augroup(name)
     return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
@@ -39,9 +40,9 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 
 -- Format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*.rs",
-    callback = function()
-        vim.lsp.buf.format({ async = false })
+    pattern = { "*.rs" },
+    callback = function(ev)
+        vim.lsp.buf.format()
     end,
     group = augroup("FormattingGrp"),
 })
