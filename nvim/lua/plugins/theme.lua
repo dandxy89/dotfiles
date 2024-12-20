@@ -1,10 +1,19 @@
 return {
+    -- {
+    --     "rockyzhang24/arctic.nvim",
+    --     branch = "v2",
+    --     dependencies = { "rktjmp/lush.nvim" },
+    --     config = function()
+    --         vim.cmd("colorscheme arctic")
+    --     end,
+    -- },
     {
-        "rockyzhang24/arctic.nvim",
-        branch = "v2",
-        dependencies = { "rktjmp/lush.nvim" },
+        "ricardoraposo/nightwolf.nvim",
+        lazy = false,
+        priority = 1000,
         config = function()
-            vim.cmd("colorscheme arctic")
+            vim.opt.background = "dark"
+            vim.cmd.colorscheme("nightwolf")
         end,
     },
 }
