@@ -1,34 +1,63 @@
 return {
-    -- <https://github.com/RRethy/vim-illuminate>
+    {
+        "pest-parser/pest.vim",
+        ft = "pest",
+        lazy = true,
+    },
+    {
+        "ziglang/zig.vim",
+        ft = "zig",
+        lazy = true,
+    },
     {
         "saghen/blink.cmp",
-        version = "0.7.6",
-        lazy = true,
-        event = "InsertEnter",
+        version = "0.10.0",
+        -- lazy = true,
         dependencies = {
             { "rafamadriz/friendly-snippets" },
             { "mikavilpas/blink-ripgrep.nvim" },
-            { "vxpm/ferris.nvim", ft = "rust" },
-            { "pest-parser/pest.vim", ft = "pest" },
+            { "Kaiser-Yang/blink-cmp-dictionary" },
         },
+        ---@module 'blink.cmp'
+        ---@type blink.cmp.Config
         opts = {
+            appearance = {
+                use_nvim_cmp_as_default = true,
+            },
             completion = {
-                list = {
-                    selection = "preselect",
-                },
+                ghost_text = { enabled = false },
                 menu = {
+                    auto_show = true,
                     border = "rounded",
-                    winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
                 },
                 documentation = {
-                    window = {
-                        border = "rounded",
-                    },
+                    auto_show = true,
+                    window = { border = "rounded" },
+                },
+                trigger = {
+                    prefetch_on_insert = true,
+                    show_on_trigger_character = true,
                 },
             },
             keymap = { preset = "enter" },
+            signature = { enabled = true, window = { border = "rounded" } },
             sources = {
-                default = { "lsp", "path", "buffer", "ripgrep" },
+                min_keyword_length = 0,
+                default = { "lsp", "path", "buffer", "snippets", "ripgrep", "dictionary" },
+                providers = {
+                    ripgrep = {
+                        module = "blink-ripgrep",
+                        name = "Ripgrep",
+                    },
+                    dictionary = {
+                        module = "blink-cmp-dictionary",
+                        name = "Dict",
+                    },
+                    {
+                        name = "LSP",
+                        module = "blink.cmp.sources.lsp",
+                    },
+                },
             },
         },
     },
