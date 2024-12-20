@@ -13,8 +13,7 @@ local vnoremap = bind("v")
 -- NORMAL MODE
 nnoremap("<Leader>w", ":w<CR>") -- Faster Saving
 
-nnoremap("<Space>", "Nop>") -- Nop Space bar
-nnoremap("<space>", "<Nop>") -- Nop Space bar
+nnoremap("<Space>", "<Nop>") -- Nop Space bar
 
 nnoremap("<Leader>lz", ":Lazy<CR>") -- Open Lazy
 
@@ -39,10 +38,10 @@ nnoremap("<F9>", ":!python %<CR>") -- Run Python Script in Buffer
 nnoremap("<Leader>f", ":lua require('fzf-lua').files()<CR>") -- File list
 nnoremap("<Leader>lg", ":lua require('fzf-lua').live_grep()<CR>") -- Live Grep
 nnoremap("<Leader>bl", ":lua require('fzf-lua').buffers()<CR>") -- Buffer list
-nnoremap("<Leader>di", ":lua require('fzf-lua').diagnostics_workspace({ fzf_opts = { ['--wrap'] = true }})<CR>")
+nnoremap("<Leader>di", ":lua require('fzf-lua').diagnostics_workspace({})<CR>")
 nnoremap(
     "<Leader>ca",
-    ":lua require('fzf-lua').lsp_code_actions({ winopts = {relative='cursor',row=1.01, col=0, height=0.2, width=0.4} })<CR>"
+    ":lua require('fzf-lua').lsp_code_actions({ winopts = { relative = 'cursor', row = 1.01, col = 0, height = 0.2, width = 0.4} })<CR>"
 )
 
 nnoremap("<C-a>", "gg<S-v>G") -- Select all
@@ -50,6 +49,7 @@ nnoremap("x", '"_x') -- No map x
 
 nnoremap("<Leader>nf", "<cmd>enew<cr>") -- New file
 nnoremap("<Leader>ca", ":lua vim.lsp.buf.code_action()<CR>") -- Code Action
+nnoremap("<Leader>cn", ":lua vim.lsp.buf.rename()<CR>") -- Rename
 
 nnoremap("H", "_") -- H to go the start of line(n)
 nnoremap("L", "$") -- L to go to the end of line(n)

@@ -3,7 +3,7 @@ return {
         "lewis6991/gitsigns.nvim",
         lazy = true,
         event = "BufReadPre",
-        config = function()
+        opts = function()
             local gitIcons = {
                 LineAdded = " ",
                 LineModified = " ",

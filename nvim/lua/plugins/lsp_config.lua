@@ -25,24 +25,24 @@ return {
             })
         end,
     },
-    -- <https://github.com/artemave/workspace-diagnostics.nvim>
-    {"artemave/workspace-diagnostics.nvim"},
+    {
+        "artemave/workspace-diagnostics.nvim",
+        lazy = true,
+    },
     {
         "MysticalDevil/inlay-hints.nvim",
+        lazy = true,
         event = "LspAttach",
         dependencies = { "neovim/nvim-lspconfig" },
-        config = function()
-            require("inlay-hints").setup()
+        opts = function()
+            require("inlay-hints").setup({})
         end
     },
     {
         "neovim/nvim-lspconfig",
         lazy = true,
         event = { "VeryLazy", "BufReadPre", "BufNewFile" },
-        dependencies = {
-            "saghen/blink.cmp",
-            "j-hui/fidget.nvim",
-        },
+        dependencies = { "j-hui/fidget.nvim" },
         config = function()
             require("fidget").setup({})
             local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -65,6 +65,9 @@ return {
                 },
             })
             lspconfig.eslint.setup({
+                capabilities = capabilities,
+            })
+            lspconfig.gopls.setup({
                 capabilities = capabilities,
             })
             lspconfig.clangd.setup({

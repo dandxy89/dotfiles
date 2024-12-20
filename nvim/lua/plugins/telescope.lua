@@ -4,7 +4,10 @@ return {
         lazy = true,
         event = "BufReadPost",
         opts = {
-            fzf_opts = { ["--ansi"] = false },
+            fzf_opts = {
+                ["--ansi"] = false,
+                ["--no-scrollbar"] = true
+            },
         },
         config = function()
             require("fzf-lua").setup({
@@ -28,7 +31,6 @@ return {
                     },
                 },
                 defaults = {
-                    file_icons = "mini",
                     formatter = "path.filename_first",
                     path_shorten = 5,
                     git_icons = true,
@@ -48,7 +50,7 @@ return {
         "kelly-lin/ranger.nvim",
         lazy = true,
         event = "VeryLazy",
-        config = function()
+        opts = function()
             require("ranger-nvim").setup({ replace_netrw = true })
             vim.api.nvim_set_keymap("n", "<leader>ef", "", {
                 noremap = true,

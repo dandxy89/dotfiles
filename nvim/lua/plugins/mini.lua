@@ -3,7 +3,7 @@ return {
         "echasnovski/mini.comment",
         version = false,
         event = "InsertEnter",
-        config = function()
+        opts = function()
             require("mini.comment").setup()
         end,
     },
