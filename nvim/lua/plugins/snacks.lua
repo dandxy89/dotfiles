@@ -4,7 +4,6 @@ return {
         "folke/snacks.nvim",
         priority = 1000,
         lazy = false,
-        ---@diagnostic disable-next-line: undefined-doc-name
         ---@type snacks.Config
         opts = {
             animate = { enabled = false },
