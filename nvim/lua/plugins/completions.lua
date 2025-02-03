@@ -11,6 +11,7 @@ return {
         dependencies = {
             { "rafamadriz/friendly-snippets" },
             { "mikavilpas/blink-ripgrep.nvim" },
+            { "ribru17/blink-cmp-spell" }
         },
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
@@ -22,7 +23,7 @@ return {
                 keyword = { range = 'prefix' },
                 ghost_text = { enabled = false },
                 list = {
-                    max_items = 10,
+                    max_items = 100,
                 },
                 menu = {
                     auto_show = true,
@@ -41,7 +42,7 @@ return {
             keymap = { preset = "enter" },
             signature = { enabled = true, window = { border = "rounded" } },
             sources = {
-                default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+                default = { "lsp", "path", "snippets", "buffer", "ripgrep", "spell" },
                 min_keyword_length = 0,
                 providers = {
                     ripgrep = {
@@ -54,6 +55,10 @@ return {
                         module = "blink.cmp.sources.lsp",
                         min_keyword_length = 0,
                     },
+                    spell = {
+                        name = "Spell",
+                        module = "blink-cmp-spell"
+                    }
                 }
             }
         },

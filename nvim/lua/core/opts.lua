@@ -42,6 +42,7 @@ local arr = {
     { "updatetime", 50 },
     { "signcolumn", "yes:1" },
     { "pumheight", 25 },
+    { "background", "dark" },
 }
 
 for _, v in pairs(arr) do

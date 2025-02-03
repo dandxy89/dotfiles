@@ -27,7 +27,7 @@ require("lazy").setup({
         version = false,
     },
     checker = { enabled = true },
-    install = { missing = false },
+    install = { missing = true },
     performance = {
         cache = {
             enabled = true,

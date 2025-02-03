@@ -1,11 +1,11 @@
 ---@diagnostic disable: no-unknown
 return {
     {
-        "datsfilipe/vesper.nvim",
+        "miikanissi/modus-themes.nvim",
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd.colorscheme('vesper')
+            vim.cmd.colorscheme('modus')
         end,
     },
     {
@@ -25,9 +25,10 @@ return {
                 ensure_installed = {
                     "lua_ls",
                     "rust_analyzer",
-                    "pyright",
+                    "basedpyright",
                     "marksman",
                     "harper_ls",
+                    "taplo",
                 },
             })
         end,
@@ -54,9 +55,12 @@ return {
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "j-hui/fidget.nvim", "saghen/blink.cmp" },
+        dependencies = {
+            -- "j-hui/fidget.nvim",
+            "saghen/blink.cmp"
+        },
         config = function()
-            require("fidget").setup({})
+            -- require("fidget").setup({})
 
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             local lspconfig = require("lspconfig")
@@ -145,7 +149,9 @@ return {
                 },
             })
             lspconfig.marksman.setup({ capabilities = capabilities })
+            lspconfig.taplo.setup({ capabilities = capabilities })
             lspconfig.harper_ls.setup({
+                capabilities = capabilities,
                 settings = {
                     ["harper-ls"] = {
                         userDictPath = "~/dict.txt",
