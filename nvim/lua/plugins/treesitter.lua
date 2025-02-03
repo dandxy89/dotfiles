@@ -27,8 +27,8 @@ return {
     },
     keys = {
         { "<C-Space>", desc = "Increment Selection" },
-        { "v", desc = "Increment Selection", mode = "x" },
-        { "V", desc = "Shrink Selection", mode = "x" },
+        { "v",         desc = "Increment Selection", mode = "x" },
+        { "V",         desc = "Shrink Selection",    mode = "x" },
     },
     opts = function()
         require("nvim-treesitter.configs").setup({
@@ -55,6 +55,8 @@ return {
             },
             highlight = {
                 enable = true,
+                use_lingua = false,
+                current_word = true,
                 additional_vim_regex_highlighting = false,
                 use_languagetree = false,
                 disable = function(_, bufnr)

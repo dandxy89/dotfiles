@@ -1,11 +1,13 @@
 ---@diagnostic disable: no-unknown
 return {
     {
-        "datsfilipe/vesper.nvim",
+        -- "miikanissi/modus-themes.nvim",
+        "deparr/tairiki.nvim",
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd.colorscheme('vesper')
+            -- vim.cmd.colorscheme('modus')
+            require('tairiki').load()
         end,
     },
     {
@@ -25,9 +27,10 @@ return {
                 ensure_installed = {
                     "lua_ls",
                     "rust_analyzer",
-                    "pyright",
+                    "basedpyright",
                     "marksman",
                     "harper_ls",
+                    "taplo",
                 },
             })
         end,
@@ -54,10 +57,8 @@ return {
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "j-hui/fidget.nvim", "saghen/blink.cmp" },
+        dependencies = { "saghen/blink.cmp" },
         config = function()
-            require("fidget").setup({})
-
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             local lspconfig = require("lspconfig")
 
@@ -145,7 +146,9 @@ return {
                 },
             })
             lspconfig.marksman.setup({ capabilities = capabilities })
+            lspconfig.taplo.setup({ capabilities = capabilities })
             lspconfig.harper_ls.setup({
+                capabilities = capabilities,
                 settings = {
                     ["harper-ls"] = {
                         userDictPath = "~/dict.txt",
@@ -164,21 +167,6 @@ return {
                         multiple_sequential_pronouns = true,
                     },
                 },
-            })
-
-            -- Custom Diagnostic Icons
-            local signs = { Error = "󰅚 ", Warn = "󰳦 ", Hint = "󱡄 ", Info = " " }
-            for type, icon in pairs(signs) do
-                local hl = "DiagnosticSign" .. type
-                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = nil })
-            end
-
-            local lsp = vim.lsp
-            lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
-                virtual_text = true,
-                signs = true,
-                underline = true,
-                update_on_insert = false,
             })
         end,
     },

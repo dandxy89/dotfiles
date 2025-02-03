@@ -1,4 +1,17 @@
 return {
+    -- {
+    --     "zbirenbaum/copilot.lua",
+    --     lazy = true,
+    --     disabled = true,
+    --     cmd = "Copilot",
+    --     event = "LspAttach",
+    --     config = function()
+    --         require("copilot").setup({
+    --             suggestion = { enabled = false },
+    --             panel = { enabled = false }
+    --         })
+    --     end
+    -- },
     {
         "pest-parser/pest.vim",
         ft = "pest",
@@ -11,6 +24,8 @@ return {
         dependencies = {
             { "rafamadriz/friendly-snippets" },
             { "mikavilpas/blink-ripgrep.nvim" },
+            { "ribru17/blink-cmp-spell" },
+            -- { "giuxtaposition/blink-cmp-copilot" }
         },
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
@@ -22,7 +37,7 @@ return {
                 keyword = { range = 'prefix' },
                 ghost_text = { enabled = false },
                 list = {
-                    max_items = 10,
+                    max_items = 100,
                 },
                 menu = {
                     auto_show = true,
@@ -41,7 +56,11 @@ return {
             keymap = { preset = "enter" },
             signature = { enabled = true, window = { border = "rounded" } },
             sources = {
-                default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+                default = {
+                    "lsp", "path", "snippets",
+                    "buffer", "ripgrep", "spell",
+                    -- "copilot"
+                },
                 min_keyword_length = 0,
                 providers = {
                     ripgrep = {
@@ -54,6 +73,16 @@ return {
                         module = "blink.cmp.sources.lsp",
                         min_keyword_length = 0,
                     },
+                    spell = {
+                        name = "Spell",
+                        module = "blink-cmp-spell"
+                    },
+                    -- copilot = {
+                    --     name = "copilot",
+                    --     module = "blink-cmp-copilot",
+                    --     score_offset = 100,
+                    --     async = true,
+                    -- }
                 }
             }
         },
