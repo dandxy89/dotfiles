@@ -25,10 +25,11 @@ return {
             { "rafamadriz/friendly-snippets" },
             { "mikavilpas/blink-ripgrep.nvim" },
             { "ribru17/blink-cmp-spell" },
-            -- { "giuxtaposition/blink-cmp-copilot" }
+            {
+                "giuxtaposition/blink-cmp-copilot",
+                enabled = false
+            }
         },
-        ---@module 'blink.cmp'
-        ---@type blink.cmp.Config
         opts = {
             appearance = { use_nvim_cmp_as_default = true },
             completion = {

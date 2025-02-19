@@ -1,12 +1,11 @@
 ---@diagnostic disable: no-unknown
 return {
     {
-        -- "miikanissi/modus-themes.nvim",
         "deparr/tairiki.nvim",
         lazy = false,
+        branch = "v2",
         priority = 1000,
         config = function()
-            -- vim.cmd.colorscheme('modus')
             require('tairiki').load()
         end,
     },
