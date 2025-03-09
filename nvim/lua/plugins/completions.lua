@@ -16,10 +16,11 @@ return {
         "pest-parser/pest.vim",
         ft = "pest",
         lazy = true,
+        enabled = false,
     },
     {
         "saghen/blink.cmp",
-        version = "0.12.3",
+        version = "0.13.1",
         lazy = true,
         dependencies = {
             { "rafamadriz/friendly-snippets" },
@@ -47,7 +48,7 @@ return {
             signature = { enabled = true, window = { border = "rounded" } },
             sources = {
                 default = {
-                    "lsp", "path", "snippets", "omni",
+                    "lsp", "path", "snippets", "cmdline", --"omni",
                     "buffer", "ripgrep", "spell",
                     -- "copilot"
                 },

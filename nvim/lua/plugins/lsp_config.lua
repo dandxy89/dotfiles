@@ -1,15 +1,6 @@
 ---@diagnostic disable: no-unknown
 return {
     {
-        "deparr/tairiki.nvim",
-        lazy = false,
-        branch = "v2",
-        priority = 1000,
-        config = function()
-            require('tairiki').load()
-        end,
-    },
-    {
         "williamboman/mason.nvim",
         event = "LspAttach",
         lazy = true,
