@@ -27,8 +27,8 @@ return {
     },
     keys = {
         { "<C-Space>", desc = "Increment Selection" },
-        { "v",         desc = "Increment Selection", mode = "x" },
-        { "V",         desc = "Shrink Selection",    mode = "x" },
+        { "v", desc = "Increment Selection", mode = "x" },
+        { "V", desc = "Shrink Selection", mode = "x" },
     },
     opts = function()
         require("nvim-treesitter.configs").setup({

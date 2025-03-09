@@ -40,7 +40,6 @@ nnoremap("<C-Y>", "<Cmd>redo<CR>") -- Redo
 nnoremap("<Leader>fl", ":lua vim.lsp.buf.format()<CR>") -- Format Code
 nnoremap("<Leader>de", ":lua vim.diagnostic.open_float()<CR>") -- Open Diagnostics Float
 nnoremap("<BS>", "<C-o>") -- Backspace `Ctrl+O`
-nnoremap("<F3>", ":lua vim.lsp.buf.rename()<CR>") -- Rename
 nnoremap("K", ":lua vim.lsp.buf.hover()<CR>") -- Hover
 nnoremap("<Leader>gd", ":lua vim.lsp.buf.declaration()<CR>") -- Declaration
 nnoremap("<M-k>", "<Cmd>cnext<CR>") -- Quickfix next
@@ -51,4 +50,4 @@ vnoremap("L", "$") -- L to go to the end of line(n)
 vnoremap("K", ":m '>-2<CR>gv=gv") -- Move current line up
 vnoremap("J", ":m '>+1<CR>gv=gv") -- Move current line down
 vnoremap("<Leader>r", '"hy:%s/<C-r>h//g<left><left>') -- Replace Selected
-vnoremap("<space>", "<Nop>") -- Disable Space bar since it'll be used as the leader key
+vnoremap("<space>", "<Nop>") -- Disable Space bar since it'll be used as the Leader key
