@@ -1,163 +1,159 @@
----@diagnostic disable: no-unknown
 return {
     {
-        "williamboman/mason.nvim",
-        event = "LspAttach",
-        lazy = true,
-        config = function()
-            require("mason").setup({ PATH = "prepend" })
-        end,
-    },
-    {
-        "williamboman/mason-lspconfig.nvim",
-        event = "LspAttach",
-        lazy = true,
-        config = function()
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "lua_ls",
-                    "rust_analyzer",
-                    "basedpyright",
-                    "marksman",
-                    "harper_ls",
-                    "taplo",
-                },
-            })
-        end,
-    },
-    {
-        "artemave/workspace-diagnostics.nvim",
-        event = "LspAttach",
-        lazy = true,
-    },
-    {
-        "MysticalDevil/inlay-hints.nvim",
-        lazy = true,
-        event = "LspAttach",
-        dependencies = { "neovim/nvim-lspconfig" },
-        opts = function()
-            require("inlay-hints").setup({})
-        end,
-    },
-    {
-        "vxpm/ferris.nvim",
-        ft = "rust",
-        lazy = true,
-    },
-    {
-        "neovim/nvim-lspconfig",
+        'neovim/nvim-lspconfig',
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "saghen/blink.cmp" },
-        config = function()
-            local capabilities = require("blink.cmp").get_lsp_capabilities()
-            local lspconfig = require("lspconfig")
+        dependencies = {
+            { 'williamboman/mason.nvim' }, { 'williamboman/mason-lspconfig.nvim' },
+            { "chrisgrieser/nvim-lsp-endhints", event = "LspAttach", opts = {} },
+            {
+                "pest-parser/pest.vim",
+                event = "LspAttach",
+                ft = "pest",
+                lazy = true,
+                enabled = false
+            }, { "vxpm/ferris.nvim" }, {
+            'saghen/blink.cmp',
+            lazy = true,
+            event = "LspAttach",
+            version = '1.*',
+            dependencies = {
+                { "mikavilpas/blink-ripgrep.nvim" },
+                { "ribru17/blink-cmp-spell" },
+                { "giuxtaposition/blink-cmp-copilot", enabled = true }
+            },
+            opts = {
+                appearance = { use_nvim_cmp_as_default = true },
+                completion = {
+                    keyword = { range = "prefix" },
+                    ghost_text = { enabled = true },
+                    list = {
+                        selection = { preselect = false, auto_insert = true }
+                    },
+                    menu = {
+                        auto_show = true,
+                        border = "rounded",
+                        draw = { treesitter = { "lsp" } }
+                    },
+                    documentation = {
+                        auto_show = true,
+                        window = { border = "rounded" },
+                        treesitter_highlighting = true,
+                        auto_show_delay_ms = 200
+                    },
+                    trigger = { show_on_insert_on_trigger_character = true }
+                },
+                fuzzy = { implementation = "rust" },
+                keymap = { preset = "enter" },
+                signature = { enabled = true, window = { border = "rounded" } },
+                sources = {
+                    default = {
+                        "lsp", "path", "snippets", "cmdline", "buffer",
+                        "ripgrep", "spell", "copilot"
+                    },
+                    providers = {
+                        ripgrep = {
+                            module = "blink-ripgrep",
+                            name = "Ripgrep",
+                            min_keyword_length = 1
+                        },
+                        lsp = {
+                            name = "LSP",
+                            module = "blink.cmp.sources.lsp",
+                            min_keyword_length = 0
+                        },
+                        spell = { name = "Spell", module = "blink-cmp-spell" },
+                        omni = {
+                            name = "Omni",
+                            module = "blink.cmp.sources.complete_func"
+                        },
+                        copilot = {
+                            name = "copilot",
+                            module = "blink-cmp-copilot",
+                            score_offset = 100,
+                            async = true
+                        }
+                    }
+                }
+            }
+        }
+        },
+        config = function(_, _)
+            -- require("inlay-hints").setup({})
+            require("lsp-endhints").setup({})
+            vim.lsp.config("*", {
+                capabilities = vim.lsp.protocol.make_client_capabilities()
+            })
 
-            lspconfig.zls.setup({
-                capabilities = capabilities,
-                cmd = { "zls" },
+            local servers = {}
+            local lsp_servers_path = vim.fn.stdpath("config") .. "/after/lsp"
+
+            for file in vim.fs.dir(lsp_servers_path) do
+                local name = file:match("(.+)%.lua$")
+                if name then servers[name] = true end
+            end
+
+            require('mason').setup({
+                PATH = "prepend",
+                registries = {
+                    "github:crashdummyy/mason-registry",
+                    "github:mason-org/mason-registry"
+                }
             })
-            lspconfig.lua_ls.setup({
-                capabilities = capabilities,
+            require("mason-lspconfig").setup({
+                ensure_installed = vim.tbl_keys(servers or {})
             })
-            lspconfig.ts_ls.setup({
-                capabilities = capabilities,
-                filetypes = {
-                    "javascript",
-                    "javascriptreact",
-                    "typescript",
-                    "typescriptreact",
-                    "html",
-                },
-            })
-            lspconfig.basedpyright.setup({
-                capabilities = capabilities,
-                settings = {
-                    basedpyright = {
-                        typeCheckingMode = "standard",
+
+            vim.diagnostic.config({
+                signs = {
+                    numhl = {
+                        [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+                        [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+                        [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+                        [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn"
                     },
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = "",
+                        [vim.diagnostic.severity.HINT] = "",
+                        [vim.diagnostic.severity.INFO] = "",
+                        [vim.diagnostic.severity.WARN] = ""
+                    }
                 },
+                update_in_insert = true,
+                virtual_text = true,
+                underline = true,
+                severity_sort = true
             })
-            -- Install with: pip install "ruff-lsp"
-            lspconfig.ruff.setup({
-                capabilities = capabilities,
-                settings = {
-                    organizeImports = false,
-                },
-            })
-            lspconfig.pest_ls.setup({
-                capabilities = capabilities,
-                settings = {
-                    organizeImports = false,
-                },
-            })
-            lspconfig.rust_analyzer.setup({
-                capabilities = capabilities,
-                settings = {
-                    ["rust-analyzer"] = {
-                        cargo = {
-                            features = "all",
-                            buildScripts = {
-                                enable = true,
-                            },
-                        },
-                        checkOnSave = {
-                            command = "check",
-                        },
-                        diagnostics = {
-                            enable = true,
-                        },
-                        inlayHints = {
-                            enable = true,
-                            locationLinks = false,
-                            parameter_hints_prefix = "  <-  ",
-                            other_hints_prefix = "  =>  ",
-                            highlight = "LspCodeLens",
-                            lifetimeElisionHints = {
-                                enable = true,
-                                useParameterNames = true,
-                            },
-                        },
-                        lens = {
-                            enable = true,
-                            methodReferences = true,
-                            references = true,
-                            implementations = false,
-                        },
-                        interpret = {
-                            tests = true,
-                        },
-                        rustfmt = {
-                            overrideCommand = "cargo +nightly fmt",
-                        },
-                        procMacro = {
-                            enable = true,
-                        },
-                    },
-                },
-            })
-            lspconfig.marksman.setup({ capabilities = capabilities })
-            lspconfig.taplo.setup({ capabilities = capabilities })
-            lspconfig.harper_ls.setup({
-                capabilities = capabilities,
-                settings = {
-                    ["harper-ls"] = {
-                        userDictPath = "~/dict.txt",
-                        spell_check = true,
-                        spelled_numbers = false,
-                        an_a = true,
-                        sentence_capitalization = true,
-                        unclosed_quotes = true,
-                        wrong_quotes = false,
-                        long_sentences = true,
-                        repeated_words = true,
-                        spaces = true,
-                        matcher = true,
-                        correct_number_suffix = true,
-                        number_suffix_capitalization = true,
-                        multiple_sequential_pronouns = true,
-                    },
-                },
-            })
-        end,
-    },
+
+            local icons = {
+                Class = " ",
+                Color = " ",
+                Constant = " ",
+                Constructor = " ",
+                Enum = " ",
+                EnumMember = " ",
+                Event = " ",
+                Field = " ",
+                File = " ",
+                Folder = " ",
+                Function = "󰊕 ",
+                Interface = " ",
+                Keyword = " ",
+                Method = "ƒ ",
+                Module = "󰏗 ",
+                Property = " ",
+                Snippet = " ",
+                Struct = " ",
+                Text = " ",
+                Unit = " ",
+                Value = " ",
+                Variable = " "
+            }
+
+            local completion_kinds = vim.lsp.protocol.CompletionItemKind
+            for i, kind in ipairs(completion_kinds) do
+                completion_kinds[i] = icons[kind] and icons[kind] .. kind or
+                    kind
+            end
+        end
+    }
 }

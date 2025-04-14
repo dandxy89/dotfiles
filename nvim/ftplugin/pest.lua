@@ -1,1 +1,0 @@
--- require("pest-vim").setup({})
