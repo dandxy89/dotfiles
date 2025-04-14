@@ -7,19 +7,16 @@ return {
         event = "LspAttach",
         config = function()
             require("copilot").setup({
-                suggestion = { enabled = false },
-                panel = { enabled = false },
+                suggestion = {enabled = false},
+                panel = {enabled = false}
             })
-        end,
-    },
-    {
+        end
+    }, {
         "CopilotC-Nvim/CopilotChat.nvim",
         lazy = true,
         event = "LspAttach",
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-        },
+        dependencies = {"nvim-lua/plenary.nvim"},
         build = "make tiktoken",
-        opts = {},
-    },
+        opts = {}
+    }
 }

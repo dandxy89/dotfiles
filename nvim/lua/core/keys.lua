@@ -1,5 +1,7 @@
 local function bind(op, outer_opts)
-    outer_opts = vim.tbl_extend("force", { noremap = true, silent = true, nowait = true }, outer_opts or {})
+    outer_opts = vim.tbl_extend("force",
+                                {noremap = true, silent = true, nowait = true},
+                                outer_opts or {})
 
     return function(lhs, rhs, opts)
         opts = vim.tbl_extend("force", outer_opts, opts or {})
@@ -7,12 +9,20 @@ local function bind(op, outer_opts)
     end
 end
 
-local nnoremap = bind("n")
-local vnoremap = bind("v")
+-- Quality of Life stuff --
+local multiremap = bind({"n", "s", "v"})
+multiremap("<Leader>yy", '"+y')
+multiremap("<Leader>yY", '"+yy')
+multiremap("<Leader>yp", '"+p')
+multiremap("<Leader>yd", '"+d')
+multiremap("<Space>", "<Nop>")
 
 -- NORMAL MODE
-nnoremap("<Leader>w", ":w<CR>") -- Faster Saving
-nnoremap("<Space>", "<Nop>") -- Nop Space bar
+local nnoremap = bind("n")
+nnoremap("<Leader>w", function()
+    vim.cmd("silent! write!")
+    vim.notify("File saved")
+end) -- Faster Saving
 nnoremap("<Leader>lz", ":Lazy<CR>") -- Open Lazy
 nnoremap("<Tab>", ":bNext<CR>") -- Next Buffer
 nnoremap("<S-Tab>", ":bprevious<CR>") -- Previous Buffer
@@ -45,9 +55,18 @@ nnoremap("<Leader>gd", ":lua vim.lsp.buf.declaration()<CR>") -- Declaration
 nnoremap("<M-k>", "<Cmd>cnext<CR>") -- Quickfix next
 nnoremap("<M-j>", "<Cmd>cprevious<CR>") -- Quickfix previous
 
+-- VISUAL MODE
+local vnoremap = bind("v")
 vnoremap("H", "_") -- H to go the start of line(n)
 vnoremap("L", "$") -- L to go to the end of line(n)
 vnoremap("K", ":m '>-2<CR>gv=gv") -- Move current line up
 vnoremap("J", ":m '>+1<CR>gv=gv") -- Move current line down
 vnoremap("<Leader>r", '"hy:%s/<C-r>h//g<left><left>') -- Replace Selected
-vnoremap("<space>", "<Nop>") -- Disable Space bar since it'll be used as the Leader key
+
+-- INSERT MODE
+local inoremap = bind("i")
+inoremap("<C-s>", "<Esc>:w<CR>") -- Save file in insert mode
+
+-- TERMINAL MODE
+local tnoremap = bind("t")
+tnoremap("<Esc>", "<C-\\><C-n>") -- Exit terminal mode
