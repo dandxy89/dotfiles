@@ -1,0 +1,47 @@
+---@meta
+
+---@class snacks.Config
+---@field animate? {enabled: boolean}
+---@field bigfile? {enabled: boolean}
+---@field dashboard? {enabled: boolean}
+---@field debug? {enabled: boolean}
+---@field dim? {enabled: boolean}
+---@field explorer? {enabled: boolean, replace_netrw: boolean}
+---@field indent? {enabled: boolean}
+---@field input? {enabled: boolean}
+---@field notifier? {enabled: boolean, timeout: number, win: table}
+---@field picker? {enabled: boolean}
+---@field quickfile? {enabled: boolean}
+---@field scope? {enabled: boolean}
+---@field scroll? {enabled: boolean}
+---@field statuscolumn? {enabled: boolean}
+---@field words? {enabled: boolean}
+
+---@class LazySpec
+---@field [1]? string
+---@field name? string
+---@field dir? string
+---@field url? string
+---@field dependencies? LazySpec[]
+---@field enabled? boolean|fun():boolean
+---@field cond? boolean|fun():boolean
+---@field lazy? boolean
+---@field priority? number
+---@field dev? boolean
+---@field branch? string
+---@field tag? string
+---@field commit? string
+---@field version? string|false
+---@field pin? boolean
+---@field submodules? boolean
+---@field event? string|string[]|fun(self:LazyPlugin, event:string):string|string[]
+---@field cmd? string|string[]
+---@field ft? string|string[]
+---@field keys? string|string[]|LazyKeysSpec[]
+---@field module? false
+---@field init? fun(self:LazyPlugin)
+---@field opts? table|fun(self:LazyPlugin, opts:table):table?
+---@field config? fun(self:LazyPlugin, opts:table)|true
+---@field main? string
+---@field build? string|fun(self:LazyPlugin)
+---@field specs? LazySpec[]

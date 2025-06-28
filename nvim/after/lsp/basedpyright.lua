@@ -9,10 +9,14 @@ return {
     -- ]
     -- venvPath = "."
     -- venv = ".venv"
-    cmd = {"basedpyright"},
-    filetypes = {"python"},
+    cmd = { "basedpyright" },
+    filetypes = { "python" },
     root_markers = {
-        ".git", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"
+        ".git",
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
     },
     settings = {
         basedpyright = {
@@ -27,10 +31,9 @@ return {
                     variableTypes = true,
                     callArgumentNames = true,
                     functionReturnTypes = true,
-                    genericTypes = false
-                }
-            }
-        }
-    }
+                    genericTypes = false,
+                },
+            },
+        },
+    },
 }
-

@@ -1,7 +1,7 @@
 return {
     {
         "nvim-lualine/lualine.nvim",
-        dependencies = {"nvim-tree/nvim-web-devicons"},
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         event = "VeryLazy",
         init = function()
             vim.g.qf_disable_statusline = true
@@ -13,7 +13,7 @@ return {
             end
         end,
         opts = function()
-            require("lualine").setup({options = {icons_enabled = false}})
-        end
-    }
+            require("lualine").setup({ options = { icons_enabled = false } })
+        end,
+    },
 }
