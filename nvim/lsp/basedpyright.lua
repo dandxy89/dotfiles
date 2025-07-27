@@ -1,14 +1,4 @@
----@type vim.lsp.Config
 return {
-    -- :!echo $VIRTUAL_ENV
-    -- :!which python
-    --
-    -- [tool.basedpyright] # replace with pyright if using that
-    -- exclude = [
-    --   ".venv"
-    -- ]
-    -- venvPath = "."
-    -- venv = ".venv"
     cmd = { "basedpyright" },
     filetypes = { "python" },
     root_markers = {
