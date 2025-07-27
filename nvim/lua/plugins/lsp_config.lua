@@ -5,7 +5,7 @@ return {
         dependencies = {
             { "williamboman/mason.nvim" },
             { "williamboman/mason-lspconfig.nvim" },
-            { "chrisgrieser/nvim-lsp-endhints", event = "LspAttach", opts = {} },
+            { "chrisgrieser/nvim-lsp-endhints",   event = "LspAttach", opts = {} },
             {
                 "pest-parser/pest.vim",
                 event = "LspAttach",
@@ -93,27 +93,19 @@ return {
             })
 
             local servers = {}
-            local lsp_servers_path = vim.fn.stdpath("config") .. "/after/lsp"
+            local lsp_servers_path = vim.fn.stdpath("config") .. "/lsp"
 
-            -- Check if LSP config directory exists
-            if vim.fn.isdirectory(lsp_servers_path) == 1 then
-                for file in vim.fs.dir(lsp_servers_path) do
-                    local name = file:match("(.+)%.lua$")
-                    if name then
-                        servers[name] = true
-                    end
+            for file in vim.fs.dir(lsp_servers_path) do
+                local name = file:match("(.+)%.lua$")
+                if name then
+                    servers[name] = true
+                    vim.lsp.enable(name)
                 end
-            else
-                vim.notify("LSP config directory not found: " .. lsp_servers_path, vim.log.levels.WARN)
             end
 
-            require("mason").setup({
-                PATH = "prepend",
-                -- Using default registry for better stability
-            })
+            require("mason").setup({})
             require("mason-lspconfig").setup({
-                ensure_installed = vim.tbl_keys(servers),
-                automatic_installation = true,
+                ensure_installed = vim.tbl_keys(servers or {}),
             })
 
             vim.diagnostic.config({

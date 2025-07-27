@@ -1,15 +1,9 @@
----@type vim.lsp.Config
 return {
     filetypes = { "rust" },
     root_markers = { "Cargo.toml" },
     settings = {
         ["rust-analyzer"] = {
-            cargo = {
-                features = "all",
-                allFeatures = true,
-                buildScripts = { enable = true },
-                loadOutDirsFromCheck = true,
-            },
+            cargo = { features = "all", buildScripts = { enable = true } },
             diagnostics = { enable = true },
             inlayHints = {
                 enable = true,

@@ -15,6 +15,7 @@ return {
     {
         "CopilotC-Nvim/CopilotChat.nvim",
         lazy = true,
+        enabled = true,
         event = "LspAttach",
         dependencies = { "nvim-lua/plenary.nvim" },
         build = "make tiktoken",
