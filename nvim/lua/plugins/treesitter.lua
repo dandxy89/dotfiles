@@ -1,18 +1,19 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    lazy = true,
+    lazy = false,
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     keys = {
         { "<C-Space>", desc = "Increment Selection" },
-        { "v", desc = "Increment Selection", mode = "x" },
-        { "V", desc = "Shrink Selection", mode = "x" },
+        { "v",         desc = "Increment Selection", mode = "x" },
+        { "V",         desc = "Shrink Selection",    mode = "x" },
     },
     opts = function()
         require("nvim-treesitter.configs").setup({
-            auto_install = false,
+            ignore_install = { "" },
+            auto_install = true,
             sync_install = false,
             ensure_installed = {
                 "bash",
