@@ -1,71 +1,18 @@
 {
-  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
   "runtime.version": "LuaJIT",
   "runtime.path": [
     "lua/?.lua",
     "lua/?/init.lua"
   ],
   "diagnostics.globals": [
-    "vim",
-    "require",
-    "use",
-    "love",
-    "Snacks",
-    "LazyVim",
-    "MiniPick",
-    "MiniExtra"
+    "vim"
   ],
-  "diagnostics.disable": [
-    "missing-fields",
-    "inject-field",
-    "undefined-doc-name",
-    "undefined-doc-class",
-    "unknown-cast-variable",
-        "no-unknown"
-  ],
-  "diagnostics.groupSeverity": {
-    "strong": "Warning",
-    "strict": "Warning"
-  },
-  "diagnostics.groupFileStatus": {
-    "ambiguity": "Opened",
-    "await": "Opened",
-    "codestyle": "None",
-    "duplicate": "Opened",
-    "global": "Opened",
-    "luadoc": "Opened",
-    "redefined": "Opened",
-    "strict": "Opened",
-    "strong": "Opened",
-    "type-check": "Opened",
-    "unbalanced": "Opened",
-    "unused": "Opened"
-  },
   "workspace.checkThirdParty": false,
   "workspace.library": [
     "$VIMRUNTIME",
-    "${3rd}/luv/library",
-    "${3rd}/busted/library",
-    "${3rd}/lazy.nvim/library"
+    "~/.local/share/nvim/lazy"
   ],
-  "completion.callSnippet": "Replace",
-  "completion.keywordSnippet": "Replace",
-  "hint.enable": true,
-  "hint.paramType": true,
-  "hint.paramName": "All",
-  "hint.semicolon": "SameLine",
-  "hint.arrayIndex": "Auto",
-  "type.castNumberToInteger": true,
-  "type.weakUnionCheck": true,
-  "type.weakNilCheck": true,
-  "format.enable": true,
-  "format.defaultConfig": {
-    "indent_style": "space",
-    "indent_size": "4",
-    "max_line_length": "120"
-  },
-  "semantic.enable": true,
-  "semantic.variable": true,
-  "semantic.annotation": true,
-  "semantic.keyword": false
+  "diagnostics.disable": [
+    "undefined-global"
+  ]
 }
