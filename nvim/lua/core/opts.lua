@@ -1,5 +1,5 @@
 local arr = {
-    { "guifont",        "Iosevka Term" },
+    { "guifont",        "JetBrains Mono" },
     { "backup",         false },
     { "writebackup",    false },
     { "swapfile",       false },
