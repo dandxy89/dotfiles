@@ -1,0 +1,2 @@
+require("tairiki").load()
+

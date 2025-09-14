@@ -1,9 +1,8 @@
----@diagnostic disable: no-unknown
-require("config.lazy")
+vim.keymap.set("", "<Space>", "<Nop>", { silent = true })
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+require("config.pack")
 require("core.opts")
 require("core.autocmds")
 require("core.keys")
-
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_perl_provider = 0
-vim.g.have_nerd_font = false

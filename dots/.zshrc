@@ -126,6 +126,7 @@ alias htn='/Applications/Firefox.app/Contents/MacOS/firefox --new-tab https://ww
 export CARGO_REGISTRY_TOKEN=TODO
 
 # Rust aliases for development workflow
+# alias cargo="RUSTFLAGS='-Z threads=8' cargo"
 alias clippy='cargo clippy --all-targets --all-features -- -D warnings'
 alias ct='cargo nextest run --all-features --no-fail-fast'
 alias cr='cargo build --release --all-features'
@@ -150,3 +151,9 @@ tmx() {
         tmux attach-session -d -t "$session_name"
     fi
 }
+
+alias claude="/Users/dan/.claude/local/claude"
+export PATH=$PATH:$(go env GOPATH)/bin
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform

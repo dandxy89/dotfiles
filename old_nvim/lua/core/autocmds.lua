@@ -1,5 +1,6 @@
+---@diagnostic disable: no-unknown, undefined-field, param-type-mismatch
 local function augroup(name)
-    return vim.api.nvim_create_augroup("custom_" .. name, { clear = true })
+    return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
 
 -- Automatically reload files when they change
@@ -12,24 +13,20 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
     end,
 })
 
--- Format Rust files on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*.rs",
-    callback = function()
-        if not vim.g.disable_autoformat then
-            vim.lsp.buf.format({ async = true })
-        end
-    end,
-    group = augroup("FormatRust"),
-})
-
--- Strip trailing whitespace on save
+-- Strips unwanted trailing whitespace
+-- Format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
-    callback = function()
-        vim.cmd([[ %s/\s\+$//e ]])
+    callback = function(ev)
+        if vim.g.disable_autoformat then
+            return
+        end
+        if ev.match == "*.rs" then
+            vim.lsp.buf.format({ async = true })
+        end
+        vim.cmd([[ %s/\s\+$//e ]]) -- Strip trailing whitespace
     end,
-    group = augroup("StripWhitespace"),
+    group = augroup("BufWritePreGrp"),
 })
 
 -- Highlight yanked text
