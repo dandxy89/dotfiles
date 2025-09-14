@@ -1,10 +1,5 @@
 ---@diagnostic disable: no-unknown
-
-vim.keymap.set("", "<Space>", "<Nop>", { silent = true })
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
-require("config.pack")
+require("config.lazy")
 require("core.opts")
 require("core.autocmds")
 require("core.keys")

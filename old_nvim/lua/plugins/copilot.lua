@@ -2,7 +2,7 @@ return {
     {
         "zbirenbaum/copilot.lua",
         lazy = true,
-        enabled = true,
+        enabled = false,
         cmd = "Copilot",
         event = "LspAttach",
         config = function()
@@ -15,7 +15,7 @@ return {
     {
         "CopilotC-Nvim/CopilotChat.nvim",
         lazy = true,
-        enabled = true,
+        enabled = false,
         event = "LspAttach",
         dependencies = { "nvim-lua/plenary.nvim" },
         build = "make tiktoken",

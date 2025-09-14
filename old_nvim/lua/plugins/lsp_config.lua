@@ -5,15 +5,9 @@ return {
         dependencies = {
             { "williamboman/mason.nvim" },
             { "williamboman/mason-lspconfig.nvim" },
-            { "chrisgrieser/nvim-lsp-endhints",   event = "LspAttach", opts = {} },
-            {
-                "pest-parser/pest.vim",
-                event = "LspAttach",
-                ft = "pest",
-                lazy = true,
-                enabled = false,
-            },
+            { "chrisgrieser/nvim-lsp-endhints" },
             { "vxpm/ferris.nvim" },
+            { "code-biscuits/nvim-biscuits" },
             {
                 "saghen/blink.cmp",
                 lazy = true,
@@ -22,7 +16,7 @@ return {
                 dependencies = {
                     { "mikavilpas/blink-ripgrep.nvim" },
                     { "ribru17/blink-cmp-spell" },
-                    { "giuxtaposition/blink-cmp-copilot", enabled = true },
+                    { "giuxtaposition/blink-cmp-copilot", enabled = false  },
                 },
                 opts = {
                     appearance = { use_nvim_cmp_as_default = true },
@@ -57,7 +51,7 @@ return {
                             "buffer",
                             "ripgrep",
                             "spell",
-                            "copilot",
+                            -- "copilot",
                         },
                         providers = {
                             ripgrep = {
@@ -88,6 +82,8 @@ return {
         },
         config = function(_, _)
             require("lsp-endhints").setup({})
+            require('nvim-biscuits').setup({})
+            
             vim.lsp.config("*", {
                 capabilities = vim.lsp.protocol.make_client_capabilities(),
             })
