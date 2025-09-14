@@ -1,6 +1,5 @@
----@diagnostic disable: no-unknown, undefined-field, param-type-mismatch
 local function augroup(name)
-    return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+    return vim.api.nvim_create_augroup("custom_" .. name, { clear = true })
 end
 
 -- Automatically reload files when they change
@@ -13,26 +12,42 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
     end,
 })
 
--- Strips unwanted trailing whitespace
--- Format on save
+-- Format Rust files on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*",
-    callback = function(ev)
-        if vim.g.disable_autoformat then
-            return
-        end
-        if ev.match == "*.rs" then
+    pattern = "*.rs",
+    callback = function()
+        if not vim.g.disable_autoformat then
             vim.lsp.buf.format({ async = true })
         end
-        vim.cmd([[ %s/\s\+$//e ]]) -- Strip trailing whitespace
     end,
-    group = augroup("BufWritePreGrp"),
+    group = augroup("FormatRust"),
+})
+
+-- Strip trailing whitespace on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function()
+        vim.cmd([[ %s/\s\+$//e ]])
+    end,
+    group = augroup("StripWhitespace"),
+})
+
+-- Syntax highlighting for dotenv files
+vim.api.nvim_create_autocmd("BufRead", {
+    group = vim.api.nvim_create_augroup("dotenv_ft", { clear = true }),
+    pattern = { ".env", ".env.*" },
+    callback = function()
+        vim.bo.filetype = "dosini"
+    end,
 })
 
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    pattern = "*",
+    desc = "highlight selection on yank",
     callback = function()
-        vim.highlight.on_yank()
+        vim.highlight.on_yank({ timeout = 200, visual = true })
     end,
 })
 
