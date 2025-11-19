@@ -1,60 +1,109 @@
 -- FZF-Lua setup
-require("fzf-lua").setup({
-    winopts = {
-        height = 0.85,
-        width = 0.80,
-        row = 0.35,
-        col = 0.50,
-        border = "rounded",
-        preview = {
-            default = "bat",
-            border = "border",
-            wrap = "nowrap",
-            hidden = "nohidden",
-            vertical = "down:45%",
-            horizontal = "right:60%",
-            layout = "flex",
-            flip_columns = 120,
-        },
+local fzf_lua = require('fzf-lua')
+fzf_lua.setup({
+  { 'default-title' },
+  fzf_bin = 'fzf',
+  defaults = { git_icons = false, file_icons = false },
+  winopts = {
+    height = 0.85,
+    width = 0.80,
+    row = 0.35,
+    col = 0.50,
+    border = 'rounded',
+    treesitter = false,
+    preview = {
+      default = 'bat',
+      border = 'border',
+      wrap = 'nowrap',
+      hidden = 'nohidden',
+      vertical = 'down:45%',
+      horizontal = 'right:60%',
+      layout = 'flex',
+      flip_columns = 120,
     },
-    fzf_opts = {
-        ["--cycle"] = true,
-        ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-history",
-        ["--history-size"] = "10000"
+  },
+  fzf_opts = {
+    ['--cycle'] = true,
+    ['--history'] = vim.fn.stdpath('data') .. '/fzf-lua-history',
+    ['--history-size'] = '10000',
+    ['--tiebreak'] = 'end',
+  },
+  files = {
+    fd_opts = '--color=never --type f --hidden --follow --exclude .git',
+    sort_lastused = true,
+    fzf_opts = { ['--tiebreak'] = 'end' },
+    actions = {
+      ['ctrl-q'] = require('fzf-lua.actions').file_edit_or_qf,
     },
-    files = {
-        cmd = "fd --type f --hidden --follow --exclude .git"
+  },
+  buffers = {
+    sort_lastused = true,
+    actions = {
+      ['ctrl-q'] = require('fzf-lua.actions').file_edit_or_qf,
+      ['ctrl-x'] = { fn = require('fzf-lua.actions').buf_del, reload = true },
     },
-    live_grep = {
-        rg_opts = "--hidden --follow --smart-case --column --glob '!.git/*'",
+  },
+  grep = {
+    rg_opts = '--color=never --column --line-number --no-heading --smart-case --max-columns=4096 -e',
+    actions = {
+      ['ctrl-q'] = require('fzf-lua.actions').file_edit_or_qf,
+      ['ctrl-g'] = require('fzf-lua.actions').grep_lgrep,
     },
-    keymap = {
-        fzf = {
-            ["ctrl-q"] = "select-all+accept",
-        },
+  },
+  lsp = { code_actions = { previewer = 'codeactio' } },
+  manpages = { previewer = 'man_native' },
+  helptags = { previewer = 'help_native' },
+  tags = { previewer = 'bat' },
+  btags = { previewer = 'bat' },
+  keymap = {
+    builtin = {
+      ['<C-d>'] = 'preview-page-down',
+      ['<C-u>'] = 'preview-page-up',
+      ['<C-/>'] = 'toggle-preview',
     },
+    fzf = {
+      ['ctrl-q'] = 'select-all+accept',
+      ['ctrl-a'] = 'toggle-all',
+      ['ctrl-d'] = 'preview-page-down',
+      ['ctrl-u'] = 'preview-page-up',
+      ['ctrl-/'] = 'toggle-preview',
+    },
+  },
 })
+fzf_lua.register_ui_select()
 
-local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<Leader><space>", "<cmd>FzfLua files<cr>", opts)
-vim.keymap.set("n", "<Leader>/", "<cmd>FzfLua live_grep<cr>", opts)
-vim.keymap.set("n", "<Leader>,", "<cmd>FzfLua buffers<cr>", opts)
-vim.keymap.set("n", "<Leader>ff", "<cmd>FzfLua files<cr>", opts)
-vim.keymap.set("n", "<Leader>fg", "<cmd>FzfLua git_files<cr>", opts)
-vim.keymap.set("n", "<Leader>fb", "<cmd>FzfLua buffers<cr>", opts)
-vim.keymap.set("n", "<Leader>fr", "<cmd>FzfLua oldfiles<cr>", opts)
-vim.keymap.set("n", "<Leader>fc", function() require("fzf-lua").files({ cwd = vim.fn.stdpath("config") }) end, opts)
-vim.keymap.set("n", "<Leader>sf", "<cmd>FzfLua resume<cr>", opts)
-vim.keymap.set("n", "<Leader>ss", "<cmd>FzfLua lsp_workspace_symbols<cr>", opts)
-vim.keymap.set("n", "<Leader>sd", "<cmd>FzfLua lsp_workspace_diagnostics<cr>", opts)
+local keymap = require('util.keymap')
+local nnoremap = keymap.bind('n')
 
-vim.keymap.set("n", "<Leader>gs", "<cmd>FzfLua git_status<cr>", opts)
-vim.keymap.set("n", "<Leader>gl", "<cmd>FzfLua git_commits<cr>", opts)
+-- Keymap configuration: { key, command or function }
+local keymaps = {
+  { '<Leader><space>', 'files' },
+  { '<Leader>/', 'live_grep' },
+  { '<Leader>,', 'buffers' },
+  { '<Leader>ff', 'files' },
+  { '<Leader>fg', 'git_files' },
+  { '<Leader>fb', 'buffers' },
+  { '<Leader>fr', 'oldfiles' },
+  { '<Leader>sf', 'resume' },
+  { '<Leader>ss', 'lsp_workspace_symbols' },
+  { '<Leader>sd', 'lsp_workspace_diagnostics' },
+  { '<Leader>gs', 'git_status' },
+  { '<Leader>gl', 'git_commits' },
+  { 'gd', 'lsp_definitions' },
+  { 'gD', 'lsp_declarations' },
+  { 'gr', 'lsp_references' },
+  { 'gI', 'lsp_implementations' },
+  { 'gy', 'lsp_typedefs' },
+  { '<Leader>ca', 'lsp_code_actions' },
+  { '<Leader>p', 'registers' },
+  { '<Leader>ch', 'changes' },
+}
 
-vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions<cr>", opts)
-vim.keymap.set("n", "gD", "<cmd>FzfLua lsp_declarations<cr>", opts)
-vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references<cr>", opts)
-vim.keymap.set("n", "gI", "<cmd>FzfLua lsp_implementations<cr>", opts)
-vim.keymap.set("n", "gy", "<cmd>FzfLua lsp_typedefs<cr>", opts)
-vim.keymap.set("n", "<Leader>ca", "<cmd>FzfLua lsp_code_actions<cr>", opts)
+for _, map in ipairs(keymaps) do
+  nnoremap(map[1], '<cmd>FzfLua ' .. map[2] .. '<cr>')
+end
 
+-- Special keymap for config files
+nnoremap('<Leader>fc', function()
+  require('fzf-lua').files({ cwd = vim.fn.stdpath('config') })
+end)

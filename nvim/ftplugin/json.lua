@@ -1,8 +1,14 @@
 vim.opt_local.wrap = true
 vim.opt_local.spell = false
 
-vim.keymap.set('n', '<leader>fl', function()
-    vim.cmd('write')
-    vim.cmd('!jq . % > /tmp/jq_temp && mv /tmp/jq_temp %')
-    vim.cmd('edit')
-end, { desc = 'Save, format, and reload' })
+local function format_reload(cmd)
+  vim.api.nvim_create_autocmd('BufWritePost', {
+    buffer = 0,
+    callback = function()
+      vim.cmd(cmd)
+      vim.cmd('edit!')
+    end,
+  })
+end
+
+format_reload('!jq . % > /tmp/jq_temp && mv /tmp/jq_temp %')
