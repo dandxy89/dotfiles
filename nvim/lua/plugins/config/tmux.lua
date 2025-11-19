@@ -1,16 +1,16 @@
 -- Tmux Navigator keymaps
-local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>", opts)
-vim.keymap.set("n", "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>", opts)
-vim.keymap.set("n", "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>", opts)
-vim.keymap.set("n", "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>", opts)
-vim.keymap.set("n", "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>", opts)
+local keymap = require('util.keymap')
+local nnoremap = keymap.bind('n')
+
+for key, direction in pairs({ h = 'Left', j = 'Down', k = 'Up', l = 'Right' }) do
+  nnoremap('<c-' .. key .. '>', '<cmd><C-U>TmuxNavigate' .. direction .. '<cr>')
+end
+nnoremap('<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>')
 
 -- Vim Test setup
-vim.keymap.set("n", "<Leader>t", ":TestNearest<CR>", {})
-vim.keymap.set("n", "<Leader>T", ":TestFile<CR>", {})
-vim.keymap.set("n", "<Leader>a", ":TestSuite<CR>", {})
-vim.keymap.set("n", "<Leader>l", ":TestLast<CR>", {})
-vim.keymap.set("n", "<Leader>g", ":TestVisit<CR>", {})
+nnoremap('<Leader>t', ':TestNearest<CR>')
+nnoremap('<Leader>T', ':TestFile<CR>')
+nnoremap('<Leader>a', ':TestSuite<CR>')
+nnoremap('<Leader>tl', ':TestLast<CR>')
+nnoremap('<Leader>tv', ':TestVisit<CR>')
 vim.cmd("let test#strategy = 'vimux'")
-

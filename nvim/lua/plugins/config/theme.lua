@@ -1,3 +1,1 @@
--- require("tairiki").load()
-vim.cmd.colorscheme("anysphere")
-
+vim.cmd.colorscheme('anysphere')

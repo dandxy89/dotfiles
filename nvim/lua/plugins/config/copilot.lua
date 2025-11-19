@@ -1,6 +1,1 @@
--- Note: Copilot plugins are disabled
--- require("copilot").setup({
---     suggestion = { enabled = false },
---     panel = { enabled = false },
--- })
-
+-- Copilot is currently disabled

@@ -1,36 +1,56 @@
-local arr = {
-    { "guifont",  "JetBrains Mono" }, { "backup", false }, { "writebackup", false }, { "swapfile", false },
-    { "undofile", true }, { "ruler", false }, { "number", true }, { "relativenumber", true },
-    { "encoding",    "utf8" }, { "fileencoding", "utf8" }, { "expandtab", true }, { "shiftwidth", 4 },
-    { "softtabstop", 4 }, { "tabstop", 4 }, { "incsearch", true }, { "splitright", true }, { "splitbelow", true },
-    { "autoindent",  true }, { "smartindent", true }, { "autowrite", true }, { "termguicolors", true },
-    { "ttimeoutlen", 0 }, { "timeoutlen", 300 }, { "wrap", false }, { "completeopt", "menu,menuone,noselect" },
-    { "autoread", true }, { "belloff", "all" }, { "mouse", "a" }, { "history", 50 }, { "title", true },
-    { "spell",    true }, { "smoothscroll", true }, { "spelllang", "en_gb" }, { "background", "dark" },
-    { "compatible", false }, { "scrolloff", 10 }, { "updatetime", 50 }, { "signcolumn", "yes:1" },
-    { "pumheight",  25 }, { "numberwidth", 3 }, { "statuscolumn", "%l%s" }, { "cmdheight", 1 },
-    { "laststatus", 0 }, { "winborder", "rounded" }, { "clipboard", "unnamedplus" }, { "cursorline", true },
-    { "ignorecase", true }, { "smartcase", true }, { "undolevels", 10000 }, { "shortmess", "filnxtToOFWIcC" },
-}
+local opt = vim.opt
 
-vim.o.foldenable = true
-vim.o.foldlevel = 99
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.o.foldtext = ""
-vim.opt.foldcolumn = "0"
-vim.opt.fillchars:append({ fold = " " })
+-- UI & Display
+opt.guifont = 'JetBrains Mono'
+opt.number, opt.relativenumber, opt.cursorline = true, true, true
+opt.ruler, opt.laststatus, opt.cmdheight = false, 0, 1
+opt.signcolumn, opt.numberwidth, opt.statuscolumn = 'yes:1', 3, '%l%s'
+opt.pumheight, opt.winborder = 25, 'rounded'
+opt.termguicolors, opt.background = true, 'dark'
+opt.smoothscroll, opt.title = true, true
 
-for _, v in ipairs(arr) do vim.api.nvim_set_option_value(v[1], v[2], {}) end
+-- Files & Backup
+opt.backup, opt.writebackup, opt.swapfile = false, false, false
+opt.undofile, opt.undolevels = true, 10000
+opt.autoread, opt.autowrite = true, true
+
+-- Editing & Indentation
+opt.encoding, opt.fileencoding = 'utf8', 'utf8'
+opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
+opt.autoindent, opt.smartindent = true, true
+opt.wrap = false
+
+-- Search
+opt.incsearch, opt.ignorecase, opt.smartcase = true, true, true
+
+-- Splits & Windows
+opt.splitright, opt.splitbelow = true, true
+opt.scrolloff = 10
+
+-- Completion & Popups
+opt.completeopt = 'menu,menuone,noselect'
+
+-- Timing
+opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
+
+-- Misc
+opt.mouse, opt.clipboard = 'a', 'unnamedplus'
+opt.belloff, opt.history = 'all', 50
+opt.compatible, opt.spell, opt.spelllang = false, true, 'en_gb'
+opt.shortmess = 'filnxtToOFWIcC'
+
+-- Folding (treesitter-based)
+opt.foldenable, opt.foldlevel, opt.foldcolumn = true, 99, '0'
+opt.foldmethod, opt.foldexpr, opt.foldtext = 'expr', 'v:lua.vim.treesitter.foldexpr()', ''
+opt.fillchars:append({ fold = ' ' })
 
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
-vim.opt.diffopt:append("algorithm:histogram")
+vim.opt.diffopt:append('algorithm:histogram')
 
 -- This is global settings for diagnostics
 vim.filetype.add({
-    filename = { [".env"] = "config" },
-    pattern = { ["gitconf.*"] = "gitconfig" }
+  pattern = { ['gitconf.*'] = 'gitconfig' },
 })
 
 -- Prevent LSP from overwriting treesitter colour settings
