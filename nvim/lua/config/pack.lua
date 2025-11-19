@@ -5,7 +5,7 @@ for _, plugin in ipairs(pack.plugins) do
         (vim.fn.stdpath("data") .. "/site/pack/plugins/start")
     local plugin_path = path .. "/" .. plugin.name
 
-    if not vim.loop.fs_stat(plugin_path) then
+    if not vim.uv.fs_stat(plugin_path) then
         print("Installing " .. plugin.name .. "...")
         local cmd = string.format("git clone --depth=1 %s %s", plugin.url, plugin_path)
         vim.fn.system(cmd)
@@ -20,4 +20,4 @@ for _, plugin in ipairs(pack.plugins) do
 end
 
 pack.setup_lazy_loading()
-require("plugins.config.fzf")
+-- FZF config loaded on-demand via lazy loading (see pack.lua line 376-407)

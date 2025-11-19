@@ -1,9 +1,8 @@
 -- Tmux Navigator keymaps
 local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>", opts)
-vim.keymap.set("n", "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>", opts)
-vim.keymap.set("n", "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>", opts)
-vim.keymap.set("n", "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>", opts)
+for key, direction in pairs({ h = "Left", j = "Down", k = "Up", l = "Right" }) do
+    vim.keymap.set("n", "<c-" .. key .. ">", "<cmd><C-U>TmuxNavigate" .. direction .. "<cr>", opts)
+end
 vim.keymap.set("n", "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>", opts)
 
 -- Vim Test setup

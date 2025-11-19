@@ -1,10 +1,8 @@
-vim.g.qf_disable_statusline = true
-vim.g.lualine_laststatus = vim.o.laststatus
-if vim.fn.argc(-1) > 0 then
-    vim.o.statusline = " "
-else
-    vim.o.laststatus = 0
-end
+require("lualine").setup({
+    options = {
+        icons_enabled = true,
+        theme = "auto",
+    },
+})
 
-require("lualine").setup({ options = { icons_enabled = false } })
 

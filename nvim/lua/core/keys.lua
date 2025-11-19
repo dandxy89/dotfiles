@@ -13,22 +13,22 @@ multiremap("<Leader>yy", '"+y')
 multiremap("<Leader>yY", '"+yy')
 multiremap("<Leader>yp", '"+p')
 multiremap("<Leader>yd", '"+d')
-multiremap("<Space>", "<Nop>")
+
 
 -- NORMAL MODE
 local nnoremap = bind("n")
 nnoremap("<Leader>w", function()
     vim.cmd("silent! write!")
     vim.notify("File saved")
-end)                                                  -- Save file
-nnoremap("<Tab>", "<cmd>bNext<CR>")                   -- Next buffer
-nnoremap("<S-Tab>", "<cmd>bprevious<CR>")             -- Previous buffer
-nnoremap("<F5>", "<cmd>UndotreeToggle<CR>")           -- Toggle UndoTree
-nnoremap("<Leader>sr", "<cmd>vs<CR>")                 -- Split right
-nnoremap("<Leader>wh", "<cmd>wincmd h<CR>")           -- Switch window left
-nnoremap("<Leader>wl", "<cmd>wincmd l<CR>")           -- Switch window right
-nnoremap("<Leader>wj", "<cmd>wincmd j<CR>")           -- Switch window down
-nnoremap("<Leader>wk", "<cmd>wincmd k<CR>")           -- Switch window up
+end)                                        -- Save file
+nnoremap("<Tab>", "<cmd>bnext<CR>")         -- Next buffer
+nnoremap("<S-Tab>", "<cmd>bprevious<CR>")   -- Previous buffer
+nnoremap("<F5>", "<cmd>UndotreeToggle<CR>") -- Toggle UndoTree
+nnoremap("<Leader>sr", "<cmd>vs<CR>")       -- Split right
+-- Window navigation
+for key, direction in pairs({ h = "left", l = "right", j = "down", k = "up" }) do
+    nnoremap("<Leader>w" .. key, "<cmd>wincmd " .. key .. "<CR>")
+end
 nnoremap("<Leader>fj", "<cmd>%!jq .<CR>")             -- Format JSON
 nnoremap("<Leader>=", "<cmd>vertical resize +10<CR>") -- Resize thinner
 nnoremap("<Leader>-", "<cmd>vertical resize -10<CR>") -- Resize wider
@@ -37,10 +37,11 @@ nnoremap("<F9>", "<cmd>!python %<CR>")                -- Run Python
 nnoremap("<C-a>", "gg<S-v>G")                         -- Select all
 nnoremap("x", '"_x')                                  -- No map x
 nnoremap("<Leader>nf", "<cmd>enew<CR>")               -- New file
+nnoremap("<Leader>ec", "<cmd>tabnew ~/.config/nvim/init.lua<CR>", { desc = "Edit Config (init.lua)" })
 nnoremap("<Leader>cn", vim.lsp.buf.rename)            -- Rename
-nnoremap("H", "_")                                    -- Start of line
-nnoremap("L", "$")                                    -- End of line
-nnoremap("J", "}")                                    -- Jump blocks
+                                    -- Start of line
+                                    -- End of line
+                                    -- Jump blocks
 nnoremap("<C-Z>", "<cmd>undo<CR>")                    -- Undo
 nnoremap("<C-Y>", "<cmd>redo<CR>")                    -- Redo
 nnoremap("<Leader>fl", vim.lsp.buf.format)            -- Format code
@@ -62,10 +63,12 @@ end) -- Highlight word under cursor
 
 -- VISUAL MODE
 local vnoremap = bind("v")
-vnoremap("H", "_")                                    -- Start of line
-vnoremap("L", "$")                                    -- End of line
+                                    -- Start of line
+                                    -- End of line
 vnoremap("K", "<cmd>m '>-2<CR>gv=gv")                 -- Move line up
 vnoremap("J", "<cmd>m '>+1<CR>gv=gv")                 -- Move line down
+nnoremap("<M-k>", ":m .-2<CR>==", { desc = "Move line up" })
+nnoremap("<M-j>", ":m .+1<CR>==", { desc = "Move line down" })
 vnoremap("<Leader>r", '"hy:%s/<C-r>h//g<left><left>') -- Replace selection
 -- Better indenting
 vnoremap("<", "<gv")

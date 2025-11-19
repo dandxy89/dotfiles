@@ -36,25 +36,35 @@ require("fzf-lua").setup({
 })
 
 local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<Leader><space>", "<cmd>FzfLua files<cr>", opts)
-vim.keymap.set("n", "<Leader>/", "<cmd>FzfLua live_grep<cr>", opts)
-vim.keymap.set("n", "<Leader>,", "<cmd>FzfLua buffers<cr>", opts)
-vim.keymap.set("n", "<Leader>ff", "<cmd>FzfLua files<cr>", opts)
-vim.keymap.set("n", "<Leader>fg", "<cmd>FzfLua git_files<cr>", opts)
-vim.keymap.set("n", "<Leader>fb", "<cmd>FzfLua buffers<cr>", opts)
-vim.keymap.set("n", "<Leader>fr", "<cmd>FzfLua oldfiles<cr>", opts)
-vim.keymap.set("n", "<Leader>fc", function() require("fzf-lua").files({ cwd = vim.fn.stdpath("config") }) end, opts)
-vim.keymap.set("n", "<Leader>sf", "<cmd>FzfLua resume<cr>", opts)
-vim.keymap.set("n", "<Leader>ss", "<cmd>FzfLua lsp_workspace_symbols<cr>", opts)
-vim.keymap.set("n", "<Leader>sd", "<cmd>FzfLua lsp_workspace_diagnostics<cr>", opts)
 
-vim.keymap.set("n", "<Leader>gs", "<cmd>FzfLua git_status<cr>", opts)
-vim.keymap.set("n", "<Leader>gl", "<cmd>FzfLua git_commits<cr>", opts)
+-- Keymap configuration: { key, command or function }
+local keymaps = {
+    { "<Leader><space>", "files" },
+    { "<Leader>/", "live_grep" },
+    { "<Leader>,", "buffers" },
+    { "<Leader>ff", "files" },
+    { "<Leader>fg", "git_files" },
+    { "<Leader>fb", "buffers" },
+    { "<Leader>fr", "oldfiles" },
+    { "<Leader>sf", "resume" },
+    { "<Leader>ss", "lsp_workspace_symbols" },
+    { "<Leader>sd", "lsp_workspace_diagnostics" },
+    { "<Leader>gs", "git_status" },
+    { "<Leader>gl", "git_commits" },
+    { "gd", "lsp_definitions" },
+    { "gD", "lsp_declarations" },
+    { "gr", "lsp_references" },
+    { "gI", "lsp_implementations" },
+    { "gy", "lsp_typedefs" },
+    { "<Leader>ca", "lsp_code_actions" },
+}
 
-vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions<cr>", opts)
-vim.keymap.set("n", "gD", "<cmd>FzfLua lsp_declarations<cr>", opts)
-vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references<cr>", opts)
-vim.keymap.set("n", "gI", "<cmd>FzfLua lsp_implementations<cr>", opts)
-vim.keymap.set("n", "gy", "<cmd>FzfLua lsp_typedefs<cr>", opts)
-vim.keymap.set("n", "<Leader>ca", "<cmd>FzfLua lsp_code_actions<cr>", opts)
+for _, map in ipairs(keymaps) do
+    vim.keymap.set("n", map[1], "<cmd>FzfLua " .. map[2] .. "<cr>", opts)
+end
+
+-- Special keymap for config files
+vim.keymap.set("n", "<Leader>fc", function()
+    require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })
+end, opts)
 

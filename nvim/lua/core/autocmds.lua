@@ -4,6 +4,7 @@ end
 
 -- Automatically reload files when they change
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+    group = augroup("ReloadOnChange"),
     callback = function()
         if vim.fn.filereadable(vim.fn.expand("%")) == 0 then
             return
@@ -23,6 +24,17 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     group = augroup("FormatRust"),
 })
 
+-- Format Python files on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.py",
+    callback = function()
+        if not vim.g.disable_autoformat then
+            vim.lsp.buf.format({ async = true })
+        end
+    end,
+    group = augroup("FormatPython"),
+})
+
 -- Strip trailing whitespace on save
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
@@ -34,7 +46,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 -- Syntax highlighting for dotenv files
 vim.api.nvim_create_autocmd("BufRead", {
-    group = vim.api.nvim_create_augroup("dotenv_ft", { clear = true }),
+    group = augroup("dotenv_ft"),
     pattern = { ".env", ".env.*" },
     callback = function()
         vim.bo.filetype = "dosini"
@@ -43,7 +55,7 @@ vim.api.nvim_create_autocmd("BufRead", {
 
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
-    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    group = augroup("highlight_yank"),
     pattern = "*",
     desc = "highlight selection on yank",
     callback = function()
@@ -78,61 +90,18 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-local progress = vim.defaulttable()
+-- LSP progress tracking
+local lsp_progress = require("util.lsp_progress")
 vim.api.nvim_create_autocmd("LspProgress", {
+    group = augroup("LspProgressNotifications"),
     callback = function(ev)
-        local client = vim.lsp.get_client_by_id(ev.data.client_id)
-        local value = ev.data.params.value
-        if not client or type(value) ~= "table" then
-            return
-        end
-        local p = progress[client.id]
-
-        for i = 1, #p + 1 do
-            if i == #p + 1 or p[i].token == ev.data.params.token then
-                p[i] = {
-                    token = ev.data.params.token,
-                    msg = ("[%3d%%] %s%s"):format(
-                        value.kind == "end" and 100 or value.percentage or 100,
-                        value.title or "",
-                        value.message and (" **%s**"):format(value.message) or ""
-                    ),
-                    done = value.kind == "end",
-                }
-                break
-            end
-        end
-
-        local msg = {} ---@type string[]
-        progress[client.id] = vim.tbl_filter(function(v)
-            return table.insert(msg, v.msg) or not v.done
-        end, p)
-
-        local spinner = {
-            "⠋",
-            "⠙",
-            "⠹",
-            "⠸",
-            "⠼",
-            "⠴",
-            "⠦",
-            "⠧",
-            "⠇",
-            "⠏",
-        }
-        vim.notify(table.concat(msg, "\n"), "info", {
-            id = "lsp_progress",
-            title = client.name,
-            opts = function(notif)
-                notif.icon = #progress[client.id] == 0 and " "
-                    or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
-            end,
-        })
+        lsp_progress.update(ev.data.client_id, ev.data.params.token, ev.data.params.value)
     end,
 })
 
 -- Auto-resize windows when terminal is resized
 vim.api.nvim_create_autocmd("VimResized", {
+    group = augroup("AutoResizeWindows"),
     callback = function()
         vim.cmd("tabdo wincmd =")
     end,
@@ -140,6 +109,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 
 -- Jump to last position when reopening files
 vim.api.nvim_create_autocmd("BufReadPost", {
+    group = augroup("JumpToLastPosition"),
     callback = function()
         local mark = vim.api.nvim_buf_get_mark(0, '"')
         if mark[1] > 1 and mark[1] <= vim.api.nvim_buf_line_count(0) then
@@ -150,6 +120,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- Auto-create directories when saving files
 vim.api.nvim_create_autocmd("BufWritePre", {
+    group = augroup("AutoCreateDirs"),
     callback = function()
         local dir = vim.fn.expand('<afile>:p:h')
         if vim.fn.isdirectory(dir) == 0 then
