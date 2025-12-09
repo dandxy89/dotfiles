@@ -17,7 +17,7 @@
       "src": "https://github.com/saghen/blink.indent"
     },
     "blink-pairs": {
-      "rev": "685b27c627cdb313b478cf9342d7809ae30c4cd7",
+      "rev": "22ded8a73e15ed936471ebf7a77a065570fc627b",
       "src": "https://github.com/saghen/blink.pairs"
     },
     "blink-ripgrep.nvim": {
@@ -33,11 +33,11 @@
       "src": "https://github.com/vxpm/ferris.nvim"
     },
     "fyler.nvim": {
-      "rev": "16176d6aacd4673f041832fac8ae857c537666c7",
+      "rev": "c4b4add189502e3ef49e5f5f2314b989ffcb21ba",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
-      "rev": "bbff1efa2f72ddd1cb3fed2ca38a9b273aef4a9b",
+      "rev": "0284d640fd88c56f100a43f41103c5b564699e15",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
@@ -65,7 +65,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lsp-endhints": {
-      "rev": "6300d38141e0d883cc5e7d954f1e67c84b97b3e8",
+      "rev": "3a42a05f46d86d767ad3e048de9032307575a7fa",
       "src": "https://github.com/chrisgrieser/nvim-lsp-endhints"
     },
     "nvim-spectre": {
