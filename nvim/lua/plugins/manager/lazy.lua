@@ -96,6 +96,13 @@ function M.setup_lazy_loading(plugins)
     require('spectre').open()
   end)
 
+  create_lazy_command('CodeDiff', 'vscode-diff.nvim', function()
+    require('vscode-diff').setup()
+    vim.cmd('CodeDiff')
+  end)
+
+  vim.keymap.set('n', 'cd', '<cmd>CodeDiff<cr>', { desc = 'VSCode diff' })
+
   create_test_command('TestNearest', 'TestNearest')
   create_test_command('TestFile', 'TestFile')
 

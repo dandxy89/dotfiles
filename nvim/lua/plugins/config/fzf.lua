@@ -1,7 +1,6 @@
 -- FZF-Lua setup
 local fzf_lua = require('fzf-lua')
-fzf_lua.setup({
-  { 'default-title' },
+fzf_lua.setup('default-title', {
   fzf_bin = 'fzf',
   defaults = { git_icons = false, file_icons = false },
   winopts = {
@@ -50,7 +49,7 @@ fzf_lua.setup({
       ['ctrl-g'] = require('fzf-lua.actions').grep_lgrep,
     },
   },
-  lsp = { code_actions = { previewer = 'codeactio' } },
+  lsp = { code_actions = { previewer = 'codeaction' } },
   manpages = { previewer = 'man_native' },
   helptags = { previewer = 'help_native' },
   tags = { previewer = 'bat' },

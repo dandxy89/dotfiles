@@ -106,3 +106,6 @@ nnoremap('<Leader>T', ':TestFile<CR>')
 nnoremap('<Leader>a', ':TestSuite<CR>')
 nnoremap('<Leader>tl', ':TestLast<CR>')
 nnoremap('<Leader>tv', ':TestVisit<CR>')
+
+-- Package management
+nnoremap('<Leader>pu', '<cmd>PackUpdate<CR>', { desc = 'Update plugins' })

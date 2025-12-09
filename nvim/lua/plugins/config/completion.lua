@@ -21,15 +21,19 @@ require('blink.cmp').setup({
   fuzzy = { implementation = 'rust' },
   keymap = { preset = 'enter' },
   signature = { enabled = true, window = { border = 'rounded' } },
+  cmdline = {
+    enabled = true,
+    sources = { 'cmdline', 'path' },
+  },
   sources = {
     default = {
       'lsp',
       'path',
       'snippets',
-      'cmdline',
       'buffer',
       'ripgrep',
       'spell',
+      'datword',
     },
     providers = {
       ripgrep = {
@@ -43,6 +47,13 @@ require('blink.cmp').setup({
         min_keyword_length = 0,
       },
       spell = { name = 'Spell', module = 'blink-cmp-spell' },
+      datword = {
+        name = 'Word',
+        module = 'blink-cmp-dat-word',
+        opts = {
+          paths = { vim.fn.stdpath('data') .. '/google-10000-english.txt' },
+        },
+      },
       omni = {
         name = 'Omni',
         module = 'blink.cmp.sources.complete_func',

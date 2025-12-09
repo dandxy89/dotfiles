@@ -1,6 +1,6 @@
 # Collection of Useful Workspace files
 
-...and Neovim config
+...and Neovim config mainly
 
 ## Interesting
 

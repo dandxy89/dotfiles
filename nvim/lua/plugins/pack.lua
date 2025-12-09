@@ -9,11 +9,13 @@
 local plugins = {
   -- (always loaded)
   -- { src = "https://github.com/deparr/tairiki.nvim", name = "tairiki.nvim", opt = false },
-  { src = 'https://github.com/dapovich/anysphere.nvim', name = 'anysphere.nvim', opt = false },
+  -- { src = 'https://github.com/dapovich/anysphere.nvim', name = 'anysphere.nvim', opt = false },
+  -- { src = 'https://github.com/mistweaverco/vhs-era-theme.nvim', name = 'vhs-era-theme.nvim', opt = false },
+  { src = 'https://github.com/oskarnurm/koda.nvim', name = 'koda.nvim', opt = false },
   { src = 'https://github.com/nvim-lua/plenary.nvim', name = 'plenary.nvim', opt = false },
   { src = 'https://github.com/MunifTanjim/nui.nvim', name = 'nui.nvim', opt = false },
   { src = 'https://github.com/folke/snacks.nvim', name = 'snacks.nvim', opt = false },
-  { src = 'https://github.com/ggandor/leap.nvim', name = 'leap.nvim', opt = false },
+  { src = 'https://codeberg.org/andyg/leap.nvim.git', name = 'leap.nvim', opt = false },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', name = 'nvim-treesitter', opt = false },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects', name = 'nvim-treesitter-textobjects', opt = false },
   { src = 'https://github.com/williamboman/mason.nvim', name = 'mason.nvim', opt = false },
@@ -37,9 +39,17 @@ local plugins = {
     trigger = 'insert',
     build = 'cargo build --release',
   },
-  { src = 'https://github.com/saghen/blink.indent', name = 'blink-indent', opt = true, trigger = 'file' },
   { src = 'https://github.com/mikavilpas/blink-ripgrep.nvim', name = 'blink-ripgrep.nvim', opt = true, trigger = 'insert' },
   { src = 'https://github.com/ribru17/blink-cmp-spell', name = 'blink-cmp-spell', opt = true, trigger = 'insert' },
+  {
+    src = 'https://github.com/xieyonn/blink-cmp-dat-word',
+    name = 'blink-cmp-dat-word',
+    opt = true,
+    trigger = 'insert',
+    build = 'curl -fsSL -o '
+      .. vim.fn.stdpath('data')
+      .. '/google-10000-english.txt https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
+  },
   { src = 'https://github.com/lewis6991/gitsigns.nvim', name = 'gitsigns.nvim', opt = true, trigger = 'file' },
   { src = 'https://github.com/nvim-pack/nvim-spectre', name = 'nvim-spectre', opt = true, trigger = 'command' },
   { src = 'https://github.com/christoomey/vim-tmux-navigator', name = 'vim-tmux-navigator', opt = true, trigger = 'keymap' },
@@ -47,6 +57,7 @@ local plugins = {
   { src = 'https://github.com/preservim/vimux', name = 'vimux', opt = true, trigger = 'command' },
   { src = 'https://github.com/vxpm/ferris.nvim', name = 'ferris.nvim', opt = true, trigger = 'filetype:rust' },
   { src = 'https://github.com/Saecki/crates.nvim', name = 'crates.nvim', opt = true, trigger = 'cargo-toml' },
+  { src = 'https://github.com/esmuellert/vscode-diff.nvim', name = 'vscode-diff.nvim', opt = true, trigger = 'command' },
 }
 
 -- Register all plugins with vim.pack at startup

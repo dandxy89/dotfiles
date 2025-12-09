@@ -5,8 +5,12 @@
       "src": "https://github.com/dapovich/anysphere.nvim"
     },
     "blink-cmp": {
-      "rev": "57d900e6982f63c7cde689aa06d8af76c8da083e",
+      "rev": "4b18c32adef2898f95cdef6192cbd5796c1a332d",
       "src": "https://github.com/saghen/blink.cmp"
+    },
+    "blink-cmp-dat-word": {
+      "rev": "f5623cb7a353d849dbb8904facea5cf7f04a64bd",
+      "src": "https://github.com/xieyonn/blink-cmp-dat-word"
     },
     "blink-cmp-spell": {
       "rev": "2bd0e0d5e7735c047e72b6918a0458f3e8fadaba",
@@ -17,47 +21,55 @@
       "src": "https://github.com/saghen/blink.indent"
     },
     "blink-pairs": {
-      "rev": "22ded8a73e15ed936471ebf7a77a065570fc627b",
+      "rev": "2a7cb15f2c4bbbbe178ebf9f3fdae19aa6d28d39",
       "src": "https://github.com/saghen/blink.pairs"
     },
     "blink-ripgrep.nvim": {
-      "rev": "64e26b597303d9ed175f8ed832df8328731b93cd",
+      "rev": "ed508b013fc63de482c5933d6502774f5b333802",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "crates.nvim": {
       "rev": "ac9fa498a9edb96dc3056724ff69d5f40b898453",
       "src": "https://github.com/Saecki/crates.nvim"
     },
+    "difftastic.nvim": {
+      "rev": "ab97c70ee219b954d77227f78e9224c6434d9841",
+      "src": "https://github.com/clabby/difftastic.nvim"
+    },
     "ferris.nvim": {
       "rev": "275865530d753a205740804f1ce163af2322db57",
       "src": "https://github.com/vxpm/ferris.nvim"
     },
     "fyler.nvim": {
-      "rev": "c4b4add189502e3ef49e5f5f2314b989ffcb21ba",
+      "rev": "a65eaf0db8a84701039bf26c2bd251238cbfaa2f",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
-      "rev": "0284d640fd88c56f100a43f41103c5b564699e15",
+      "rev": "36d60dd59cd9bc0442352119fc0e45e1c9011e03",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "5813e4878748805f1518cee7abb50fd7205a3a48",
+      "rev": "1ce96a464fdbc24208e24c117e2021794259005d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "koda.nvim": {
+      "rev": "dd293575fd9096d8fd0f15d1628d654b84b28682",
+      "src": "https://github.com/oskarnurm/koda.nvim"
+    },
     "leap.nvim": {
-      "rev": "3c49d309d49d66a9feb0dd824353f186b3ee5efa",
-      "src": "https://github.com/ggandor/leap.nvim"
+      "rev": "d7316deae68dc93d6957020cdda6d7bb399218fb",
+      "src": "https://codeberg.org/andyg/leap.nvim.git"
     },
     "mason-lspconfig.nvim": {
-      "rev": "0b9bb925c000ae649ff7e7149c8cd00031f4b539",
+      "rev": "ae609525ddf01c153c39305730b1791800ffe4fe",
       "src": "https://github.com/williamboman/mason-lspconfig.nvim"
     },
     "mason.nvim": {
-      "rev": "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
+      "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.icons": {
-      "rev": "ff2e4f1d29f659cc2bad0f9256f2f6195c6b2428",
+      "rev": "efc85e42262cd0c9e1fdbf806c25cb0be6de115c",
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "nui.nvim": {
@@ -65,7 +77,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lsp-endhints": {
-      "rev": "3a42a05f46d86d767ad3e048de9032307575a7fa",
+      "rev": "b554a53e8c8a039d48ec5e9e581cb62cd1127dcd",
       "src": "https://github.com/chrisgrieser/nvim-lsp-endhints"
     },
     "nvim-spectre": {
@@ -88,17 +100,25 @@
       "rev": "fe7cfe9800a182274d0f868a74b7263b8c0c020b",
       "src": "https://github.com/folke/snacks.nvim"
     },
+    "vhs-era-theme.nvim": {
+      "rev": "d0a864194ab5d7f1a634a88f4406a4f70fcd5db2",
+      "src": "https://github.com/mistweaverco/vhs-era-theme.nvim"
+    },
     "vim-test": {
-      "rev": "1eeb12774a0f251571700ccf68da27789b2f0852",
+      "rev": "c174652ef8e4959628a52e3134f102923b7a6f0d",
       "src": "https://github.com/vim-test/vim-test"
     },
     "vim-tmux-navigator": {
-      "rev": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a",
+      "rev": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432",
       "src": "https://github.com/christoomey/vim-tmux-navigator"
     },
     "vimux": {
       "rev": "614f0bb1fb598f97accdcea71d5f7b18d7d62436",
       "src": "https://github.com/preservim/vimux"
+    },
+    "vscode-diff.nvim": {
+      "rev": "8dc25e4aae6c2570d764ca3877f617d36fb5a73d",
+      "src": "https://github.com/esmuellert/vscode-diff.nvim"
     }
   }
 }

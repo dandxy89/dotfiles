@@ -17,10 +17,7 @@ require('nvim-treesitter.configs').setup({
   },
   highlight = {
     enable = true,
-    use_lingua = false,
-    current_word = true,
     additional_vim_regex_highlighting = false,
-    use_languagetree = false,
     disable = function(_, bufnr)
       local buf_name = vim.api.nvim_buf_get_name(bufnr)
       local file_size = vim.api.nvim_call_function('getfsize', { buf_name })
@@ -28,12 +25,6 @@ require('nvim-treesitter.configs').setup({
     end,
   },
   indent = { enable = false },
-  rainbow = {
-    enable = true,
-    extended_mode = true,
-    max_file_lines = nil,
-  },
-  matchup = { enable = true, include_match_words = true },
   incremental_selection = {
     enable = true,
     keymaps = {
