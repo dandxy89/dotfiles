@@ -27,7 +27,7 @@ for file in vim.fs.dir(lsp_servers_path) do
     if load_ok and type(config) == 'table' then
       server_configs[server_name] = config
     else
-      vim.notify('Failed to load LSP config: ' .. server_name, vim.log.levels.WARN)
+      vim.notify('Failed to load LSP config: ' .. server_name .. ': ' .. tostring(config), vim.log.levels.WARN)
     end
   end
 end
@@ -93,10 +93,8 @@ end, {})
 -- Debug command to check configured LSPs
 vim.api.nvim_create_user_command('LspConfigured', function()
   local lines = { 'Configured LSP servers:\n' }
-  for name, _ in pairs(vim.lsp.config._configs or {}) do
-    if name ~= '*' then
-      table.insert(lines, string.format('  • %s', name))
-    end
+  for name, _ in pairs(server_configs) do
+    table.insert(lines, string.format('  • %s', name))
   end
   vim.notify(table.concat(lines, '\n'), vim.log.levels.INFO)
 end, {})

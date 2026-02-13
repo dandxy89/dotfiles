@@ -43,8 +43,8 @@ opt.ttimeoutlen, opt.timeoutlen, opt.updatetime             = 0, 300, 200
 
 -- Misc
 opt.mouse, opt.clipboard                                    = 'a', 'unnamedplus'
-opt.belloff, opt.history                                    = 'all', 50
-opt.compatible, opt.spell, opt.spelllang                    = false, true, 'en_gb'
+opt.belloff, opt.history                                    = 'all', 1000
+opt.spell, opt.spelllang                                    = true, 'en_gb'
 opt.shortmess                                               = 'filnxtToOFWIcC'
 
 -- Folding (treesitter-based)

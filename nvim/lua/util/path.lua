@@ -49,7 +49,7 @@ function M.get_existing(plugins)
   local existing = {}
   for _, plugin in ipairs(plugins) do
     local plugin_path = M.get_plugin_path(plugin)
-    if vim.fn.isdirectory(plugin_path) == 1 then
+    if vim.uv.fs_stat(plugin_path) then
       table.insert(existing, plugin)
     end
   end

@@ -2,6 +2,6 @@
 return {
   cmd = { 'docker-langserver', '--stdio' },
   filetypes = { 'dockerfile', 'yaml.docker-compose' },
-  root_markers = { '.git', vim.uv.cwd() },
+  root_markers = { '.git' },
   settings = {},
 }

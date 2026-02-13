@@ -297,12 +297,12 @@ function StatusLine.generate_content(win_id, buf_id, width)
   -- C. Calculate Spacer
   local left_len = 0
   for _, c in ipairs(left_components) do
-    left_len = left_len + vim.fn.strdisplaywidth(c.text)
+    left_len = left_len + vim.api.nvim_strwidth(c.text)
   end
 
   local right_len = 0
   for _, c in ipairs(right_components) do
-    right_len = right_len + vim.fn.strdisplaywidth(c.text)
+    right_len = right_len + vim.api.nvim_strwidth(c.text)
   end
 
   local space_len = width - left_len - right_len
@@ -418,15 +418,24 @@ function StatusLine.update()
   -- Debounce updates to avoid excessive redraws
   -- 20ms provides a good balance between responsiveness and performance
   if StatusLine.state.update_timer then
-    vim.fn.timer_stop(StatusLine.state.update_timer)
+    if not StatusLine.state.update_timer:is_closing() then
+      StatusLine.state.update_timer:stop()
+      StatusLine.state.update_timer:close()
+    end
   end
 
-  StatusLine.state.update_timer = vim.fn.timer_start(20, function()
-    vim.schedule(function()
-      -- Clear cache when it grows beyond 100 entries to prevent memory growth
-      -- This rarely happens in practice but prevents edge cases with many windows/buffers
-      if vim.tbl_count(StatusLine.state.cache) > 100 then
-        StatusLine.state.cache = {}
+  local timer = vim.uv.new_timer()
+  StatusLine.state.update_timer = timer
+  timer:start(20, 0, vim.schedule_wrap(function()
+      if not timer:is_closing() then timer:close() end
+      StatusLine.state.update_timer = nil
+      -- Evict arbitrary half of cache when it grows beyond 100 entries
+      local cache_size = vim.tbl_count(StatusLine.state.cache)
+      if cache_size > 100 then
+        local keys = vim.tbl_keys(StatusLine.state.cache)
+        for i = 1, math.floor(cache_size / 2) do
+          StatusLine.state.cache[keys[i]] = nil
+        end
       end
 
       -- Clean up invalid windows
@@ -445,28 +454,27 @@ function StatusLine.update()
           StatusLine.render_window(win, vim.api.nvim_win_get_buf(win))
         end
       end
-    end)
-  end)
+  end))
 end
 
 -- Auto-scroll the window when cursor is at the last line and near the bottom
 -- This prevents the statusline from obscuring the cursor position
 function StatusLine.autoscroll()
+  local current_line = vim.api.nvim_win_get_cursor(0)[1]
+  local last_line = vim.api.nvim_buf_line_count(0)
+
+  -- Early exit: only act when cursor is on the last line (avoids work 99% of the time)
+  if current_line ~= last_line then return end
+
   local win = vim.api.nvim_get_current_win()
   if vim.api.nvim_win_get_config(win).relative ~= '' then
     return
   end
 
-  local current_line = vim.fn.line('.')
-  local last_line = vim.fn.line('$')
-
-  if current_line == last_line then
-    local win_height = vim.api.nvim_win_get_height(win)
-    local cursor_win_line = vim.fn.winline()
-    -- Allow 1 line tolerance to account for the statusline overlay
-    if math.abs(cursor_win_line - win_height) <= 1 then
-      vim.cmd('normal! \5') -- \5 is CTRL-E (Scroll window down one line)
-    end
+  local win_height = vim.api.nvim_win_get_height(win)
+  local cursor_win_line = vim.fn.winline()
+  if math.abs(cursor_win_line - win_height) <= 1 then
+    vim.cmd('normal! \5') -- \5 is CTRL-E (Scroll window down one line)
   end
 end
 

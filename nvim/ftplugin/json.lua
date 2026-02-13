@@ -11,4 +11,5 @@ local function format_reload(cmd)
   })
 end
 
-format_reload('!jq . % > /tmp/jq_temp && mv /tmp/jq_temp %')
+local tmpfile = vim.fn.shellescape(vim.fn.tempname())
+format_reload('!jq . ' .. vim.fn.shellescape(vim.fn.expand('%')) .. ' > ' .. tmpfile .. ' && mv ' .. tmpfile .. ' ' .. vim.fn.shellescape(vim.fn.expand('%')))

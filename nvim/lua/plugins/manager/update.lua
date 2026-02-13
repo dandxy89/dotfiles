@@ -24,14 +24,10 @@ local function handle_builds(plugins_with_builds)
     local plugin_path = path_util.get_plugin_path(plugin)
     print('Building ' .. plugin.name .. '...')
 
-    local result = vim.fn.system({
-      'sh',
-      '-c',
-      'cd ' .. vim.fn.shellescape(plugin_path) .. ' && ' .. plugin.build,
-    })
+    local obj = vim.system({'sh', '-c', plugin.build}, {cwd = plugin_path}):wait()
 
-    if vim.v.shell_error ~= 0 then
-      vim.notify('Build failed for ' .. plugin.name .. ':\n' .. result, vim.log.levels.ERROR)
+    if obj.code ~= 0 then
+      vim.notify('Build failed for ' .. plugin.name .. ':\n' .. (obj.stderr or obj.stdout or ''), vim.log.levels.ERROR)
     else
       print('Built ' .. plugin.name .. ' successfully')
     end
