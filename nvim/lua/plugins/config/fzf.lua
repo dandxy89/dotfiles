@@ -1,4 +1,4 @@
--- FZF-Lua setup
+-- FZF-Lua setup (loaded lazily via plugins.manager.lazy)
 local fzf_lua = require('fzf-lua')
 fzf_lua.setup('default-title', {
   fzf_bin = 'fzf',
@@ -70,39 +70,3 @@ fzf_lua.setup('default-title', {
   },
 })
 fzf_lua.register_ui_select()
-
-local keymap = require('util.keymap')
-local nnoremap = keymap.bind('n')
-
--- Keymap configuration: { key, command or function }
-local keymaps = {
-  { '<Leader><space>', 'files' },
-  { '<Leader>/', 'live_grep' },
-  { '<Leader>,', 'buffers' },
-  { '<Leader>ff', 'files' },
-  { '<Leader>fg', 'git_files' },
-  { '<Leader>fb', 'buffers' },
-  { '<Leader>fr', 'oldfiles' },
-  { '<Leader>sf', 'resume' },
-  { '<Leader>ss', 'lsp_workspace_symbols' },
-  { '<Leader>sd', 'lsp_workspace_diagnostics' },
-  { '<Leader>gs', 'git_status' },
-  { '<Leader>gl', 'git_commits' },
-  { 'gd', 'lsp_definitions' },
-  { 'gD', 'lsp_declarations' },
-  { 'gr', 'lsp_references' },
-  { 'gI', 'lsp_implementations' },
-  { 'gy', 'lsp_typedefs' },
-  { '<Leader>ca', 'lsp_code_actions' },
-  { '<Leader>p', 'registers' },
-  { '<Leader>ch', 'changes' },
-}
-
-for _, map in ipairs(keymaps) do
-  nnoremap(map[1], '<cmd>FzfLua ' .. map[2] .. '<cr>')
-end
-
--- Special keymap for config files
-nnoremap('<Leader>fc', function()
-  require('fzf-lua').files({ cwd = vim.fn.stdpath('config') })
-end)

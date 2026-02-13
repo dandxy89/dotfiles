@@ -6,7 +6,7 @@ opt.number, opt.relativenumber, opt.cursorline              = true, true, true
 opt.ruler, opt.laststatus, opt.cmdheight                    = false, 0, 1
 opt.signcolumn, opt.numberwidth, opt.statuscolumn           = 'yes:1', 3, '%l%s'
 opt.pumheight, opt.winborder                                = 25, 'rounded'
-opt.termguicolors, opt.background                           = true, 'dark'
+opt.background                                              = 'dark'
 opt.smoothscroll, opt.title                                 = true, true
 opt.guicursor                                               = {
     "n-v:block",                                            -- Normal/Visual: Block
@@ -23,7 +23,7 @@ opt.undofile, opt.undolevels                                = true, 10000
 opt.autoread, opt.autowrite                                 = true, true
 
 -- Editing & Indentation
-opt.encoding, opt.fileencoding                              = 'utf8', 'utf8'
+opt.fileencoding                                            = 'utf8'
 opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
 opt.autoindent, opt.smartindent                             = true, true
 opt.wrap                                                    = false
@@ -43,8 +43,8 @@ opt.ttimeoutlen, opt.timeoutlen, opt.updatetime             = 0, 300, 200
 
 -- Misc
 opt.mouse, opt.clipboard                                    = 'a', 'unnamedplus'
-opt.belloff, opt.history                                    = 'all', 50
-opt.compatible, opt.spell, opt.spelllang                    = false, true, 'en_gb'
+opt.belloff, opt.history                                    = 'all', 1000
+opt.spell, opt.spelllang                                    = true, 'en_gb'
 opt.shortmess                                               = 'filnxtToOFWIcC'
 
 -- Folding (treesitter-based)

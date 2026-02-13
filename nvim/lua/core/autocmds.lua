@@ -8,18 +8,22 @@ end
 vim.api.nvim_create_user_command("Realtime",
     function()
         vim.opt.autoread = true
-        api.nvim_create_autocmd("CursorHold", { pattern = "*", command = "checktime" })
-        api.nvim_feedkeys("lh", "n", false) -- Trigger a move to refresh
+        vim.api.nvim_create_autocmd("CursorHold", { pattern = "*", command = "checktime" })
+        vim.api.nvim_feedkeys("lh", "n", false) -- Trigger a move to refresh
     end,
     { desc = "Enable realtime autoread (watch file changes)" }
 )
 
 -- Format files on save (sync to ensure format completes before write)
 vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = { '*.rs', '*.py' },
+    pattern = { '*.rs', '*.py', '*.toml' },
     callback = function()
         if not vim.g.disable_autoformat then
-            vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
+            vim.lsp.buf.format({
+                async = false,
+                timeout_ms = 3000,
+                filter = function(c) return c.name ~= 'basedpyright' end,
+            })
         end
     end,
     group = augroup('FormatOnSave'),
@@ -29,7 +33,9 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 vim.api.nvim_create_autocmd('BufWritePre', {
     pattern = '*',
     callback = function()
+        local pos = vim.api.nvim_win_get_cursor(0)
         vim.cmd([[ %s/\s\+$//e ]])
+        pcall(vim.api.nvim_win_set_cursor, 0, pos)
     end,
     group = augroup('StripWhitespace'),
 })
@@ -49,7 +55,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     pattern = '*',
     desc = 'highlight selection on yank',
     callback = function()
-        vim.highlight.on_yank({ timeout = 200, visual = true })
+        vim.hl.on_yank({ timeout = 200, visual = true })
     end,
 })
 
@@ -114,6 +120,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     group = augroup('AutoCreateDirs'),
     callback = function()
         local dir = vim.fn.expand('<afile>:p:h')
+        if dir:find('://') then return end
         if vim.fn.isdirectory(dir) == 0 then
             vim.fn.mkdir(dir, 'p')
         end

@@ -2,14 +2,10 @@ return {
   cmd = { 'ruff', 'server' },
   filetypes = { 'python' },
   root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml' },
-  settings = {
-    ruff = {
-      lint = {
-        enable = true,
-      },
-      format = {
-        enable = true,
-      },
+  init_options = {
+    settings = {
+      lint = { enable = true },
+      format = { enable = true },
     },
   },
 }

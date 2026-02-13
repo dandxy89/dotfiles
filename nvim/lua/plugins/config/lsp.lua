@@ -1,8 +1,5 @@
----@class LspServerConfig
----@field filetypes? string[]
----@field root_markers? string[]
----@field cmd? string[]
----@field settings? table
+-- LSP configuration using native Neovim 0.11+ vim.lsp.enable()
+-- Server configs are loaded automatically from the lsp/ directory
 
 -- Set global capabilities (merge with blink.cmp if available)
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -15,59 +12,25 @@ vim.lsp.config('*', {
   capabilities = capabilities,
 })
 
--- Load all server configurations from the lsp/ directory
----@type table<string, LspServerConfig>
-local server_configs = {}
-local lsp_servers_path = vim.fn.stdpath('config') .. '/lsp'
-for file in vim.fs.dir(lsp_servers_path) do
-  local server_name = file:match('(.+)%.lua$')
-  if server_name then
-    local config_path = lsp_servers_path .. '/' .. file
-    local load_ok, config = pcall(dofile, config_path)
-    if load_ok and type(config) == 'table' then
-      server_configs[server_name] = config
-    else
-      vim.notify('Failed to load LSP config: ' .. server_name, vim.log.levels.WARN)
-    end
+-- Discover all server names from the lsp/ directory
+local server_names = {}
+local lsp_dir = vim.fn.stdpath('config') .. '/lsp'
+for file in vim.fs.dir(lsp_dir) do
+  local name = file:match('(.+)%.lua$')
+  if name then
+    table.insert(server_names, name)
   end
 end
 
--- Function to start LSP for a buffer
----@param bufnr number
----@param filetype string
-local function start_lsp_for_buffer(bufnr, filetype)
-  for server_name, config in pairs(server_configs) do
-    if config.filetypes and vim.tbl_contains(config.filetypes, filetype) then
-      local lsp_config = vim.tbl_extend('force', {
-        name = server_name,
-        bufnr = bufnr,
-      }, config)
+-- Enable all discovered servers (Neovim loads configs from lsp/ automatically)
+vim.lsp.enable(server_names)
 
-      -- Resolve root_dir from root_markers if provided
-      if config.root_markers then
-        lsp_config.root_dir = vim.fs.root(vim.api.nvim_buf_get_name(bufnr), config.root_markers)
-        lsp_config.root_markers = nil
-      end
-
-      vim.lsp.start(lsp_config)
-    end
-  end
-end
-
--- Create an autocommand to start LSP servers on FileType
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('user_lsp_starter', { clear = true }),
-  callback = function(args)
-    start_lsp_for_buffer(args.buf, args.match)
-  end,
-})
-
--- Attach LSP to any already-open buffers (handles race condition with lazy loading)
+-- Re-trigger FileType for already-open buffers (handles race with lazy loading)
 for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
   if vim.api.nvim_buf_is_loaded(bufnr) then
-    local filetype = vim.bo[bufnr].filetype
-    if filetype and filetype ~= '' then
-      start_lsp_for_buffer(bufnr, filetype)
+    local ft = vim.bo[bufnr].filetype
+    if ft and ft ~= '' then
+      vim.api.nvim_exec_autocmds('FileType', { buffer = bufnr })
     end
   end
 end
@@ -81,7 +44,7 @@ vim.api.nvim_create_user_command('LspInfo', function()
     table.insert(lines, '  No LSP clients attached')
   else
     for _, client in ipairs(clients) do
-      table.insert(lines, string.format('  • %s (ID: %d)', client.name, client.id))
+      table.insert(lines, string.format('  - %s (ID: %d)', client.name, client.id))
       table.insert(lines, string.format('    Root: %s', client.root_dir or 'N/A'))
       table.insert(lines, string.format('    Filetypes: %s', table.concat(client.config.filetypes or {}, ', ')))
     end
@@ -93,10 +56,8 @@ end, {})
 -- Debug command to check configured LSPs
 vim.api.nvim_create_user_command('LspConfigured', function()
   local lines = { 'Configured LSP servers:\n' }
-  for name, _ in pairs(vim.lsp.config._configs or {}) do
-    if name ~= '*' then
-      table.insert(lines, string.format('  • %s', name))
-    end
+  for _, name in ipairs(server_names) do
+    table.insert(lines, string.format('  - %s', name))
   end
   vim.notify(table.concat(lines, '\n'), vim.log.levels.INFO)
 end, {})
@@ -114,7 +75,7 @@ end
 
 vim.diagnostic.config({
   signs = { numhl = numhl, text = text },
-  update_in_insert = false, -- Better performance
+  update_in_insert = false,
   virtual_text = {
     spacing = 4,
     prefix = '●',

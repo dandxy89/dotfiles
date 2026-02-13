@@ -5,11 +5,9 @@ local function set_python_path(command)
     name = 'basedpyright',
   })
   for _, client in ipairs(clients) do
-    if client.settings then
-      client.settings.python = vim.tbl_deep_extend('force', client.settings.python or {}, { pythonPath = path })
-    else
-      client.config.settings = vim.tbl_deep_extend('force', client.config.settings, { python = { pythonPath = path } })
-    end
+    client.settings = vim.tbl_deep_extend('force', client.settings or {}, {
+      python = { pythonPath = path },
+    })
     client:notify('workspace/didChangeConfiguration', { settings = nil })
   end
 end
@@ -18,6 +16,7 @@ end
 return {
   cmd = { 'basedpyright-langserver', '--stdio' },
   filetypes = { 'python' },
+  single_file_support = true,
   root_markers = {
     'pyrightconfig.json',
     'pyproject.toml',
@@ -40,15 +39,8 @@ return {
     end
   end,
   on_attach = function(client, bufnr)
-    vim.api.nvim_buf_create_user_command(bufnr, 'LspPyrightOrganizeImports', function()
-      local params = {
-        command = 'basedpyright.organizeimports',
-        arguments = { vim.uri_from_bufnr(bufnr) },
-      }
-      client.request('workspace/executeCommand', params, nil, bufnr)
-    end, {
-      desc = 'Organize Imports',
-    })
+    -- Disable hover in favour of ruff
+    client.server_capabilities.hoverProvider = false
 
     vim.api.nvim_buf_create_user_command(bufnr, 'LspPyrightSetPythonPath', set_python_path, {
       desc = 'Reconfigure basedpyright with the provided python path',
@@ -63,7 +55,7 @@ return {
         autoImportCompletions = true,
         useLibraryCodeForTypes = true,
         diagnosticMode = 'openFilesOnly',
-        typeCheckingMode = 'strict',
+        typeCheckingMode = 'all',
         inlayHints = {
           variableTypes = true,
           callArgumentNames = true,

@@ -24,14 +24,10 @@ local function handle_builds(plugins_with_builds)
     local plugin_path = path_util.get_plugin_path(plugin)
     print('Building ' .. plugin.name .. '...')
 
-    local result = vim.fn.system({
-      'sh',
-      '-c',
-      'cd ' .. vim.fn.shellescape(plugin_path) .. ' && ' .. plugin.build,
-    })
+    local obj = vim.system({'sh', '-c', plugin.build}, {cwd = plugin_path}):wait()
 
-    if vim.v.shell_error ~= 0 then
-      vim.notify('Build failed for ' .. plugin.name .. ':\n' .. result, vim.log.levels.ERROR)
+    if obj.code ~= 0 then
+      vim.notify('Build failed for ' .. plugin.name .. ':\n' .. (obj.stderr or obj.stdout or ''), vim.log.levels.ERROR)
     else
       print('Built ' .. plugin.name .. ' successfully')
     end
@@ -54,6 +50,13 @@ function M.update_plugins(plugins, opts)
     print('No plugins configured to update!')
     return
   end
+
+  -- Ensure all plugins are registered with vim.pack before updating
+  local specs = {}
+  for _, plugin in ipairs(plugins) do
+    table.insert(specs, { src = plugin.src, name = plugin.name })
+  end
+  vim.pack.add(specs)
 
   -- This provides:
   --   - Built-in confirmation UI (unless force = true)

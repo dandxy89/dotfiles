@@ -35,13 +35,10 @@ local function handle_builds(plugins_with_builds)
         print('Building ' .. plugin.name .. '...')
 
         -- Run build command synchronously
-        local result = vim.fn.system({
-            'sh', '-c',
-            'cd ' .. vim.fn.shellescape(plugin_path) .. ' && ' .. plugin.build
-        })
+        local obj = vim.system({'sh', '-c', plugin.build}, {cwd = plugin_path}):wait()
 
-        if vim.v.shell_error ~= 0 then
-            vim.notify('Build failed for ' .. plugin.name .. ':\n' .. result,
+        if obj.code ~= 0 then
+            vim.notify('Build failed for ' .. plugin.name .. ':\n' .. (obj.stderr or obj.stdout or ''),
                        vim.log.levels.ERROR)
         else
             print('Built ' .. plugin.name .. ' successfully')
@@ -75,9 +72,9 @@ function M.setup_command(plugins)
 
         print('Installing ' .. #missing .. ' missing plugins...')
 
-        -- Use vim.pack.add() to install missing plugins
-        local specs = to_pack_specs(missing)
-        vim.pack.add(specs)
+        -- Register all plugins with vim.pack, then install missing ones
+        local all_specs = to_pack_specs(plugins)
+        vim.pack.add(all_specs)
 
         -- Handle build commands for plugins that need them
         local plugins_with_builds = vim.tbl_filter(function(p)

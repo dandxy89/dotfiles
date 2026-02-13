@@ -31,7 +31,7 @@ end
 ---@param token string|number
 ---@param value LspProgressValue
 function M.update(client_id, token, value)
-  local client = vim.lsp.get_client_by_id(client_id)
+  local client = vim.lsp.get_clients({ id = client_id })[1]
   if not client or type(value) ~= 'table' then
     return
   end

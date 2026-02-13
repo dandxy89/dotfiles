@@ -25,7 +25,7 @@ function M.setup_lazy_loading(plugins)
 
       for _, plugin in ipairs(plugins) do
         if plugin.opt and plugin.trigger == trigger_name then
-          vim.cmd('packadd ' .. plugin.name)
+          vim.cmd.packadd(plugin.name)
         end
       end
 
@@ -42,7 +42,7 @@ function M.setup_lazy_loading(plugins)
   local function create_lazy_command(cmd_name, plugin_names, action)
     vim.api.nvim_create_user_command(cmd_name, function()
       for _, name in ipairs(type(plugin_names) == 'table' and plugin_names or { plugin_names }) do
-        vim.cmd('packadd ' .. name)
+        vim.cmd.packadd(name)
       end
       action()
     end, {})
@@ -53,13 +53,15 @@ function M.setup_lazy_loading(plugins)
   ---@param test_cmd string
   local function create_test_command(cmd_name, test_cmd)
     create_lazy_command(cmd_name, { 'vim-test', 'vimux' }, function()
-      vim.cmd("let test#strategy = 'vimux'")
+      vim.g['test#strategy'] = 'vimux'
+      vim.g['test#python#runner'] = 'pytest'
       vim.cmd(test_cmd)
     end)
   end
 
   -- Setup trigger-based lazy loading
   vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile', 'BufWritePre' }, {
+    once = true,
     callback = create_trigger_loader('file', function()
       vim.defer_fn(function()
         require('plugins.config.treesitter')
@@ -77,6 +79,7 @@ function M.setup_lazy_loading(plugins)
   })
 
   vim.api.nvim_create_autocmd('LspAttach', {
+    once = true,
     callback = create_trigger_loader('lsp', function()
       require('lsp-endhints').setup({})
     end),
@@ -89,6 +92,57 @@ function M.setup_lazy_loading(plugins)
       require('crates').setup()
     end),
   })
+
+  -- FZF-lua: lazy load on first keymap use
+  local function ensure_fzf()
+    if not loaded_groups.fzf then
+      loaded_groups.fzf = true
+      vim.cmd.packadd('fzf-lua')
+      require('plugins.config.fzf')
+    end
+  end
+
+  -- Register fzf keymaps that lazy-load on first use
+  local fzf_keymaps = {
+    { '<Leader><space>', 'files' },
+    { '<Leader>/',       'live_grep' },
+    { '<Leader>,',       'buffers' },
+    { '<Leader>ff',      'files' },
+    { '<Leader>fg',      'git_files' },
+    { '<Leader>fb',      'buffers' },
+    { '<Leader>fr',      'oldfiles' },
+    { '<Leader>sf',      'resume' },
+    { '<Leader>ss',      'lsp_workspace_symbols' },
+    { '<Leader>sd',      'lsp_workspace_diagnostics' },
+    { '<Leader>gs',      'git_status' },
+    { '<Leader>gl',      'git_commits' },
+    { 'gd',              'lsp_definitions' },
+    { 'gD',              'lsp_declarations' },
+    { 'gr',              'lsp_references' },
+    { 'gI',              'lsp_implementations' },
+    { 'gy',              'lsp_typedefs' },
+    { '<Leader>ca',      'lsp_code_actions' },
+    { '<Leader>p',       'registers' },
+    { '<Leader>ch',      'changes' },
+  }
+
+  for _, map in ipairs(fzf_keymaps) do
+    vim.keymap.set('n', map[1], function()
+      ensure_fzf()
+      require('fzf-lua')[map[2]]()
+    end, { silent = true, noremap = true })
+  end
+
+  vim.keymap.set('n', '<Leader>fc', function()
+    ensure_fzf()
+    require('fzf-lua').files({ cwd = vim.fn.stdpath('config') })
+  end, { silent = true, noremap = true })
+
+  -- Fyler: lazy load on command
+  create_lazy_command('Fyler', 'fyler.nvim', function()
+    require('plugins.config.fyler')
+    vim.cmd('Fyler')
+  end)
 
   -- Command-based lazy loading
   create_lazy_command('Spectre', 'nvim-spectre', function()
@@ -105,13 +159,16 @@ function M.setup_lazy_loading(plugins)
 
   create_test_command('TestNearest', 'TestNearest')
   create_test_command('TestFile', 'TestFile')
+  create_test_command('TestSuite', 'TestSuite')
+  create_test_command('TestLast', 'TestLast')
+  create_test_command('TestVisit', 'TestVisit')
 
   -- Keymap-based lazy loading (tmux navigation)
   for _, key in ipairs({ '<C-h>', '<C-j>', '<C-k>', '<C-l>' }) do
     vim.keymap.set('n', key, function()
       if not loaded_groups.keymap then
         loaded_groups.keymap = true
-        vim.cmd('packadd vim-tmux-navigator')
+        vim.cmd.packadd('vim-tmux-navigator')
         require('plugins.config.tmux')
       end
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), 'n', false)
@@ -123,12 +180,12 @@ function M.setup_lazy_loading(plugins)
     pattern = 'rust',
     once = true,
     callback = function()
-      vim.cmd('packadd ferris.nvim')
+      vim.cmd.packadd('ferris.nvim')
       local keymap = require('util.keymap')
       keymap.set_batch('n', {
-        { '<Leader>ml', ':lua require("ferris.methods.view_memory_layout")()<CR>' },
-        { '<Leader>em', ':lua require("ferris.methods.expand_macro")()<CR>' },
-        { '<Leader>od', ':lua require("ferris.methods.open_documentation")()<CR>' },
+        { '<Leader>ml', function() require('ferris.methods.view_memory_layout')() end },
+        { '<Leader>em', function() require('ferris.methods.expand_macro')() end },
+        { '<Leader>od', function() require('ferris.methods.open_documentation')() end },
       })
     end,
   })

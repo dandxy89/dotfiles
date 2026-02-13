@@ -1,29 +1,25 @@
 -- Plugin management system using native vim.pack
 --
 -- Installation path (managed by vim.pack):
---   macOS/Linux: ~/.local/share/nvim/site/pack/core/opt/
+--   macOS/Linux: ~/.local/share/nvim/site/pack/plugins/opt/
 --
--- All plugins are installed to 'opt' by vim.pack and loaded via vim.pack.add()
+-- All plugins are installed to 'opt' by vim.pack and loaded via packadd
 -- Lazy loading is handled by custom triggers (opt = true, trigger = ...)
 
 local plugins = {
   -- (always loaded)
-  -- { src = "https://github.com/deparr/tairiki.nvim", name = "tairiki.nvim", opt = false },
-  -- { src = 'https://github.com/dapovich/anysphere.nvim', name = 'anysphere.nvim', opt = false },
-  -- { src = 'https://github.com/mistweaverco/vhs-era-theme.nvim', name = 'vhs-era-theme.nvim', opt = false },
-  { src = 'https://github.com/oskarnurm/koda.nvim', name = 'koda.nvim', opt = false },
-  { src = 'https://github.com/nvim-lua/plenary.nvim', name = 'plenary.nvim', opt = false },
-  { src = 'https://github.com/MunifTanjim/nui.nvim', name = 'nui.nvim', opt = false },
+  { src = 'https://github.com/vague-theme/vague.nvim', name = 'vague.nvim', opt = false },
   { src = 'https://github.com/folke/snacks.nvim', name = 'snacks.nvim', opt = false },
   { src = 'https://codeberg.org/andyg/leap.nvim.git', name = 'leap.nvim', opt = false },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', name = 'nvim-treesitter', opt = false },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects', name = 'nvim-treesitter-textobjects', opt = false },
   { src = 'https://github.com/williamboman/mason.nvim', name = 'mason.nvim', opt = false },
-  { src = 'https://github.com/ibhagwan/fzf-lua', name = 'fzf-lua', opt = false },
   { src = 'https://github.com/echasnovski/mini.icons', name = 'mini.icons', opt = false },
-  { src = 'https://github.com/A7Lavinraj/fyler.nvim', name = 'fyler.nvim', opt = false },
   -- (lazy)
-  { src = 'https://github.com/williamboman/mason-lspconfig.nvim', name = 'mason-lspconfig.nvim', opt = true, trigger = 'file' },
+  { src = 'https://github.com/nvim-lua/plenary.nvim', name = 'plenary.nvim', opt = true, trigger = 'file' },
+  { src = 'https://github.com/MunifTanjim/nui.nvim', name = 'nui.nvim', opt = true, trigger = 'file' },
+  { src = 'https://github.com/ibhagwan/fzf-lua', name = 'fzf-lua', opt = true, trigger = 'fzf' },
+  { src = 'https://github.com/A7Lavinraj/fyler.nvim', name = 'fyler.nvim', opt = true, trigger = 'command' },
   { src = 'https://github.com/chrisgrieser/nvim-lsp-endhints', name = 'nvim-lsp-endhints', opt = true, trigger = 'lsp' },
   {
     src = 'https://github.com/saghen/blink.cmp',
@@ -60,16 +56,24 @@ local plugins = {
   { src = 'https://github.com/esmuellert/vscode-diff.nvim', name = 'vscode-diff.nvim', opt = true, trigger = 'command' },
 }
 
--- Register all plugins with vim.pack at startup
--- This allows vim.pack.update() to work properly
-local pack_specs = {}
+-- Only add non-opt plugins at startup (vim.pack.add sources plugin/ files)
+-- Opt plugins are loaded on-demand via packadd in the lazy loader
+local start_specs = {}
 for _, plugin in ipairs(plugins) do
-  table.insert(pack_specs, {
-    src = plugin.src,
-    name = plugin.name,
-  })
+  if not plugin.opt then
+    table.insert(start_specs, { src = plugin.src, name = plugin.name })
+  end
 end
-vim.pack.add(pack_specs)
+vim.pack.add(start_specs)
+
+-- Helper to get full specs for management commands
+local function all_pack_specs()
+  local specs = {}
+  for _, plugin in ipairs(plugins) do
+    table.insert(specs, { src = plugin.src, name = plugin.name })
+  end
+  return specs
+end
 
 -- Load manager modules
 local install = require('plugins.manager.install')
@@ -85,11 +89,11 @@ update.setup_command(plugins)
 
 -- Simple status command using vim.pack.get()
 vim.api.nvim_create_user_command('PackStatus', function()
-  ---@type {name: string, src: string}[]
+  ---@type {spec: {name: string, src: string}, path: string, active: boolean}[]
   local all_plugins = vim.pack.get()
   print('Installed plugins managed by vim.pack:')
   for _, plugin in ipairs(all_plugins) do
-    print('  - ' .. plugin.name .. ' [' .. plugin.src .. ']')
+    print('  - ' .. plugin.spec.name .. ' [' .. plugin.spec.src .. ']')
   end
   print('\nTotal: ' .. #all_plugins .. ' plugins')
   print('\nFor detailed info: :lua vim.print(vim.pack.get())')
@@ -100,7 +104,7 @@ end, { desc = 'Show installed plugins' })
 vim.api.nvim_create_user_command('PackDelete', function(opts)
   if opts.args == '' then
     -- Detect orphaned plugins (installed but not in config)
-    ---@type {name: string, src: string}[]
+    ---@type {spec: {name: string, src: string}, path: string, active: boolean}[]
     local installed = vim.pack.get()
     local configured = {}
     for _, plugin in ipairs(plugins) do
@@ -109,13 +113,13 @@ vim.api.nvim_create_user_command('PackDelete', function(opts)
 
     local orphaned = {}
     for _, plugin in ipairs(installed) do
-      if not configured[plugin.name] then
-        table.insert(orphaned, plugin.name)
+      if not configured[plugin.spec.name] then
+        table.insert(orphaned, plugin.spec.name)
       end
     end
 
     if #orphaned == 0 then
-      print('✨ No orphaned plugins found. All clean!')
+      print('No orphaned plugins found. All clean!')
       return
     end
 
@@ -129,15 +133,15 @@ vim.api.nvim_create_user_command('PackDelete', function(opts)
     if confirm == 'y' or confirm == 'yes' then
       local deleted_count = 0
       for _, name in ipairs(orphaned) do
-        local success = pcall(vim.pack.del, name)
+        local success, err = pcall(vim.pack.del, {name})
         if success then
           deleted_count = deleted_count + 1
           print('Deleted: ' .. name)
         else
-          print('Failed to delete: ' .. name)
+          print('Failed to delete: ' .. name .. ': ' .. tostring(err))
         end
       end
-      print('\n✅ Deleted ' .. deleted_count .. ' orphaned plugin(s).')
+      print('\nDeleted ' .. deleted_count .. ' orphaned plugin(s).')
       print('Restart Neovim to complete removal.')
     else
       print('Cancelled.')
@@ -147,23 +151,23 @@ vim.api.nvim_create_user_command('PackDelete', function(opts)
 
   -- Delete specific plugin by name
   local plugin_name = opts.args
-  local success, err = pcall(vim.pack.del, plugin_name)
+  local success, err = pcall(vim.pack.del, {plugin_name})
 
   if success then
-    print('✅ Deleted plugin: ' .. plugin_name)
+    print('Deleted plugin: ' .. plugin_name)
     print('Restart Neovim to complete removal.')
   else
-    print('❌ Failed to delete ' .. plugin_name .. ': ' .. tostring(err))
+    print('Failed to delete ' .. plugin_name .. ': ' .. tostring(err))
   end
 end, {
   nargs = '?',
   desc = 'Delete orphaned plugins (no args) or specific plugin by name',
   complete = function()
-    ---@type {name: string, src: string}[]
+    ---@type {spec: {name: string, src: string}, path: string, active: boolean}[]
     local installed = vim.pack.get()
     local names = {}
     for _, plugin in ipairs(installed) do
-      table.insert(names, plugin.name)
+      table.insert(names, plugin.spec.name)
     end
     return names
   end,
@@ -174,7 +178,5 @@ lazy.setup_lazy_loading(plugins)
 
 return {
   plugins = plugins,
-  setup_lazy_loading = function()
-    lazy.setup_lazy_loading(plugins)
-  end,
+  all_pack_specs = all_pack_specs,
 }
