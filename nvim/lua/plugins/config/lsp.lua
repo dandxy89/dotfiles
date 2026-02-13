@@ -27,7 +27,7 @@ for file in vim.fs.dir(lsp_servers_path) do
     if load_ok and type(config) == 'table' then
       server_configs[server_name] = config
     else
-      vim.notify('Failed to load LSP config: ' .. server_name, vim.log.levels.WARN)
+      vim.notify('Failed to load LSP config: ' .. server_name .. ': ' .. tostring(config), vim.log.levels.WARN)
     end
   end
 end

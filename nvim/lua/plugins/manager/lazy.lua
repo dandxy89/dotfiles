@@ -105,6 +105,9 @@ function M.setup_lazy_loading(plugins)
 
   create_test_command('TestNearest', 'TestNearest')
   create_test_command('TestFile', 'TestFile')
+  create_test_command('TestSuite', 'TestSuite')
+  create_test_command('TestLast', 'TestLast')
+  create_test_command('TestVisit', 'TestVisit')
 
   -- Keymap-based lazy loading (tmux navigation)
   for _, key in ipairs({ '<C-h>', '<C-j>', '<C-k>', '<C-l>' }) do

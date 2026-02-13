@@ -5,7 +5,7 @@
       "src": "https://github.com/dapovich/anysphere.nvim"
     },
     "blink-cmp": {
-      "rev": "4b18c32adef2898f95cdef6192cbd5796c1a332d",
+      "rev": "85666c58d8ed49539794e913fd15f508af2ca8fb",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink-cmp-dat-word": {
@@ -25,7 +25,7 @@
       "src": "https://github.com/saghen/blink.pairs"
     },
     "blink-ripgrep.nvim": {
-      "rev": "ed508b013fc63de482c5933d6502774f5b333802",
+      "rev": "923bc6e64215cbb55492c2b8f39756004473ede3",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "crates.nvim": {
@@ -41,27 +41,27 @@
       "src": "https://github.com/vxpm/ferris.nvim"
     },
     "fyler.nvim": {
-      "rev": "a65eaf0db8a84701039bf26c2bd251238cbfaa2f",
+      "rev": "e8d7391140ecaa76c5ef84d35e385f149cb63ade",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
-      "rev": "36d60dd59cd9bc0442352119fc0e45e1c9011e03",
+      "rev": "739330f48ca64b4283f5228e9dc9c0c8f9a37110",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "1ce96a464fdbc24208e24c117e2021794259005d",
+      "rev": "31217271a7314c343606acb4072a94a039a19fb5",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "koda.nvim": {
-      "rev": "dd293575fd9096d8fd0f15d1628d654b84b28682",
+      "rev": "27b0b65456e47ad5991e08e35dc7fa34768d9ebc",
       "src": "https://github.com/oskarnurm/koda.nvim"
     },
     "leap.nvim": {
-      "rev": "d7316deae68dc93d6957020cdda6d7bb399218fb",
+      "rev": "9a26da7a14c09cd84c05a4e8326890ef0f92a590",
       "src": "https://codeberg.org/andyg/leap.nvim.git"
     },
     "mason-lspconfig.nvim": {
-      "rev": "ae609525ddf01c153c39305730b1791800ffe4fe",
+      "rev": "21c2a84ce368e99b18f52ab348c4c02c32c02fcf",
       "src": "https://github.com/williamboman/mason-lspconfig.nvim"
     },
     "mason.nvim": {
@@ -77,7 +77,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lsp-endhints": {
-      "rev": "b554a53e8c8a039d48ec5e9e581cb62cd1127dcd",
+      "rev": "9b210f760fe8bde5f335f2660ccb2bf19aabad68",
       "src": "https://github.com/chrisgrieser/nvim-lsp-endhints"
     },
     "nvim-spectre": {
@@ -105,7 +105,7 @@
       "src": "https://github.com/mistweaverco/vhs-era-theme.nvim"
     },
     "vim-test": {
-      "rev": "c174652ef8e4959628a52e3134f102923b7a6f0d",
+      "rev": "f881edb21e7a092f5793687d058c257dddb961d3",
       "src": "https://github.com/vim-test/vim-test"
     },
     "vim-tmux-navigator": {

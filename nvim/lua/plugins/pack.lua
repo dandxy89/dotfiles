@@ -8,9 +8,6 @@
 
 local plugins = {
   -- (always loaded)
-  -- { src = "https://github.com/deparr/tairiki.nvim", name = "tairiki.nvim", opt = false },
-  -- { src = 'https://github.com/dapovich/anysphere.nvim', name = 'anysphere.nvim', opt = false },
-  -- { src = 'https://github.com/mistweaverco/vhs-era-theme.nvim', name = 'vhs-era-theme.nvim', opt = false },
   { src = 'https://github.com/oskarnurm/koda.nvim', name = 'koda.nvim', opt = false },
   { src = 'https://github.com/nvim-lua/plenary.nvim', name = 'plenary.nvim', opt = false },
   { src = 'https://github.com/MunifTanjim/nui.nvim', name = 'nui.nvim', opt = false },
@@ -129,12 +126,12 @@ vim.api.nvim_create_user_command('PackDelete', function(opts)
     if confirm == 'y' or confirm == 'yes' then
       local deleted_count = 0
       for _, name in ipairs(orphaned) do
-        local success = pcall(vim.pack.del, name)
+        local success, err = pcall(vim.pack.del, name)
         if success then
           deleted_count = deleted_count + 1
           print('Deleted: ' .. name)
         else
-          print('Failed to delete: ' .. name)
+          print('Failed to delete: ' .. name .. ': ' .. tostring(err))
         end
       end
       print('\n✅ Deleted ' .. deleted_count .. ' orphaned plugin(s).')
@@ -174,7 +171,4 @@ lazy.setup_lazy_loading(plugins)
 
 return {
   plugins = plugins,
-  setup_lazy_loading = function()
-    lazy.setup_lazy_loading(plugins)
-  end,
 }
