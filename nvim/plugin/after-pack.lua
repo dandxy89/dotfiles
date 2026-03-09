@@ -11,5 +11,3 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
     require('plugins.config.statusline')
   end,
 })
-
-pcall(require, 'plugins.config.copilot')

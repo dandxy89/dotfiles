@@ -1,23 +1,23 @@
 ; Keywords
-(sense) @keyword
+(sense) @keyword.directive
 
-(subject_to_keyword) @keyword
+(subject_to_keyword) @keyword.conditional
 
-(bounds_keyword) @keyword
+(bounds_keyword) @keyword.type
 
-(generals_keyword) @keyword
+(generals_keyword) @keyword.type
 
-(integers_keyword) @keyword
+(integers_keyword) @keyword.type
 
-(binaries_keyword) @keyword
+(binaries_keyword) @keyword.type
 
-(semi_continuous_keyword) @keyword
+(semi_continuous_keyword) @keyword.type
 
-(sos_keyword) @keyword
+(sos_keyword) @keyword.type
 
-(end_marker) @keyword
+(end_marker) @keyword.return
 
-(free_keyword) @keyword
+(free_keyword) @keyword.modifier
 
 ; SOS type
 (sos_type) @type

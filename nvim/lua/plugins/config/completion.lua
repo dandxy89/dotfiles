@@ -54,10 +54,6 @@ require('blink.cmp').setup({
           paths = { vim.fn.stdpath('data') .. '/google-10000-english.txt' },
         },
       },
-      omni = {
-        name = 'Omni',
-        module = 'blink.cmp.sources.complete_func',
-      },
     },
   },
 })

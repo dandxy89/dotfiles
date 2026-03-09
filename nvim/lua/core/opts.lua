@@ -1,72 +1,69 @@
-local opt                                                   = vim.opt
+local opt = vim.opt
 
 -- UI & Display
-opt.guifont                                                 = 'JetBrains Mono'
-opt.number, opt.relativenumber, opt.cursorline              = true, true, true
-opt.ruler, opt.laststatus, opt.cmdheight                    = false, 0, 1
-opt.signcolumn, opt.numberwidth, opt.statuscolumn           = 'yes:1', 3, '%l%s'
-opt.pumheight, opt.winborder                                = 25, 'rounded'
-opt.background                                              = 'dark'
-opt.smoothscroll, opt.title                                 = true, true
-opt.guicursor                                               = {
-    "n-v:block",                                            -- Normal/Visual: Block
-    "i-c-ci-ve:ver25",                                      -- Insert/Command: Vertical bar
-    "r-cr:hor20",                                           -- Replace: Horizontal underline
-    "o:hor50",                                              -- Operator-pending: Horizontal underline
-    "i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor", -- Blink settings for Insert
-    "sm:block-blinkwait175-blinkoff150-blinkon175"          -- Showmatch: Fast blink
+opt.guifont = 'JetBrains Mono'
+opt.number, opt.relativenumber, opt.cursorline = true, true, true
+opt.ruler, opt.laststatus, opt.cmdheight = false, 0, 1
+opt.signcolumn, opt.numberwidth, opt.statuscolumn = 'yes:1', 3, '%l%s'
+opt.pumheight, opt.winborder = 25, 'rounded'
+opt.background = 'dark'
+opt.smoothscroll, opt.title = true, true
+opt.guicursor = {
+  'n-v:block', -- Normal/Visual: Block
+  'i-c-ci-ve:ver25', -- Insert/Command: Vertical bar
+  'r-cr:hor20', -- Replace: Horizontal underline
+  'o:hor50', -- Operator-pending: Horizontal underline
+  'i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor', -- Blink settings for Insert
+  'sm:block-blinkwait175-blinkoff150-blinkon175', -- Showmatch: Fast blink
 }
 
 -- Files & Backup
-opt.backup, opt.writebackup, opt.swapfile                   = false, false, false
-opt.undofile, opt.undolevels                                = true, 10000
-opt.autoread, opt.autowrite                                 = true, true
+opt.backup, opt.writebackup, opt.swapfile = false, false, false
+opt.undofile, opt.undolevels = true, 10000
+opt.autoread, opt.autowrite = true, true
 
 -- Editing & Indentation
-opt.fileencoding                                            = 'utf8'
+opt.fileencoding = 'utf8'
 opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
-opt.autoindent, opt.smartindent                             = true, true
-opt.wrap                                                    = false
+opt.smartindent = true
+opt.wrap = false
 
 -- Search
-opt.incsearch, opt.ignorecase, opt.smartcase                = true, true, true
+opt.ignorecase, opt.smartcase = true, true
 
 -- Splits & Windows
-opt.splitright, opt.splitbelow                              = true, true
-opt.scrolloff                                               = 10
-
--- Completion & Popups
-opt.completeopt                                             = 'menu,menuone,noselect'
+opt.splitright, opt.splitbelow = true, true
+opt.scrolloff = 10
 
 -- Timing
-opt.ttimeoutlen, opt.timeoutlen, opt.updatetime             = 0, 300, 200
+opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
 
 -- Misc
-opt.mouse, opt.clipboard                                    = 'a', 'unnamedplus'
-opt.belloff, opt.history                                    = 'all', 1000
-opt.spell, opt.spelllang                                    = true, 'en_gb'
-opt.shortmess                                               = 'filnxtToOFWIcC'
+opt.clipboard = 'unnamedplus'
+opt.belloff, opt.history = 'all', 1000
+opt.spell, opt.spelllang = true, 'en_gb'
+opt.shortmess = 'filnxtToOFWIcC'
 
 -- Folding (treesitter-based)
-opt.foldenable, opt.foldlevel, opt.foldcolumn               = true, 99, '0'
-opt.foldmethod, opt.foldexpr, opt.foldtext                  = 'expr', 'v:lua.vim.treesitter.foldexpr()', ''
+opt.foldenable, opt.foldlevel, opt.foldcolumn = true, 99, '0'
+opt.foldmethod, opt.foldexpr, opt.foldtext = 'expr', 'v:lua.vim.treesitter.foldexpr()', ''
 opt.fillchars:append({ fold = ' ' })
 
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
 vim.opt.diffopt:append('algorithm:histogram')
 
--- This is global settings for diagnostics
+-- Filetype associations
 vim.filetype.add({
-    pattern = { ['gitconf.*'] = 'gitconfig' },
+  pattern = { ['gitconf.*'] = 'gitconfig' },
 })
 
 -- Prevent LSP from overwriting treesitter colour settings
 vim.hl.priorities.semantic_tokens = 95
 
 -- Disable unused providers
-vim.g.loaded_python_provider      = 0                   -- Disable Python 2 (Deprecated)
-vim.g.loaded_ruby_provider        = 0                   -- Disable Ruby
-vim.g.loaded_node_provider        = 0                   -- Disable Node
-vim.g.loaded_perl_provider        = 0                   -- Disable Perl
-vim.g.have_nerd_font              = false
+vim.g.loaded_python_provider = 0 -- Disable Python provider
+vim.g.loaded_ruby_provider = 0 -- Disable Ruby
+vim.g.loaded_node_provider = 0 -- Disable Node
+vim.g.loaded_perl_provider = 0 -- Disable Perl
+vim.g.have_nerd_font = false

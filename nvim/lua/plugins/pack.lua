@@ -1,7 +1,7 @@
 -- Plugin management system using native vim.pack
 --
 -- Installation path (managed by vim.pack):
---   macOS/Linux: ~/.local/share/nvim/site/pack/plugins/opt/
+--   macOS/Linux: ~/.local/share/nvim/site/pack/core/opt/
 --
 -- All plugins are installed to 'opt' by vim.pack and loaded via packadd
 -- Lazy loading is handled by custom triggers (opt = true, trigger = ...)
@@ -24,6 +24,7 @@ local plugins = {
   {
     src = 'https://github.com/saghen/blink.cmp',
     name = 'blink-cmp',
+    branch = 'v1',
     opt = true,
     trigger = 'insert',
     build = 'cargo build --release',
@@ -31,6 +32,7 @@ local plugins = {
   {
     src = 'https://github.com/saghen/blink.pairs',
     name = 'blink-pairs',
+    branch = 'v1',
     opt = true,
     trigger = 'insert',
     build = 'cargo build --release',
@@ -47,7 +49,7 @@ local plugins = {
       .. '/google-10000-english.txt https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
   },
   { src = 'https://github.com/lewis6991/gitsigns.nvim', name = 'gitsigns.nvim', opt = true, trigger = 'file' },
-  { src = 'https://github.com/nvim-pack/nvim-spectre', name = 'nvim-spectre', opt = true, trigger = 'command' },
+  { src = 'https://github.com/MagicDuck/grug-far.nvim', name = 'grug-far.nvim', opt = true, trigger = 'command' },
   { src = 'https://github.com/christoomey/vim-tmux-navigator', name = 'vim-tmux-navigator', opt = true, trigger = 'keymap' },
   { src = 'https://github.com/vim-test/vim-test', name = 'vim-test', opt = true, trigger = 'command' },
   { src = 'https://github.com/preservim/vimux', name = 'vimux', opt = true, trigger = 'command' },
@@ -56,32 +58,45 @@ local plugins = {
   { src = 'https://github.com/esmuellert/vscode-diff.nvim', name = 'vscode-diff.nvim', opt = true, trigger = 'command' },
 }
 
--- Only add non-opt plugins at startup (vim.pack.add sources plugin/ files)
--- Opt plugins are loaded on-demand via packadd in the lazy loader
+-- Register all plugins with vim.pack
+-- Non-opt: loaded normally. Opt: registered but not loaded (lazy loader handles it)
 local start_specs = {}
+local opt_specs = {}
 for _, plugin in ipairs(plugins) do
-  if not plugin.opt then
-    table.insert(start_specs, { src = plugin.src, name = plugin.name })
+  local spec = { src = plugin.src, name = plugin.name, branch = plugin.branch }
+  if plugin.opt then
+    table.insert(opt_specs, spec)
+  else
+    table.insert(start_specs, spec)
   end
 end
 vim.pack.add(start_specs)
+vim.pack.add(opt_specs, { load = function() end })
 
--- Helper to get full specs for management commands
-local function all_pack_specs()
-  local specs = {}
-  for _, plugin in ipairs(plugins) do
-    table.insert(specs, { src = plugin.src, name = plugin.name })
-  end
-  return specs
-end
+-- Auto-run build commands when plugins are installed or updated
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    for _, plugin in ipairs(plugins) do
+      if plugin.build and plugin.name == ev.data.spec.name and (ev.data.kind == 'install' or ev.data.kind == 'update') then
+        local path = require('util.path').get_plugin_path(plugin)
+        vim.notify('Building ' .. plugin.name .. '...', vim.log.levels.INFO)
+        vim.system({ 'sh', '-c', plugin.build }, { cwd = path }, function(obj)
+          if obj.code ~= 0 then
+            vim.notify('Build failed for ' .. plugin.name, vim.log.levels.ERROR)
+          else
+            vim.notify('Built ' .. plugin.name, vim.log.levels.INFO)
+          end
+        end)
+        break
+      end
+    end
+  end,
+})
 
 -- Load manager modules
 local install = require('plugins.manager.install')
 local update = require('plugins.manager.update')
 local lazy = require('plugins.manager.lazy')
-
--- Check for missing plugins on startup
-install.ensure_plugins_startup(plugins)
 
 -- Setup commands
 install.setup_command(plugins)
@@ -127,13 +142,12 @@ vim.api.nvim_create_user_command('PackDelete', function(opts)
     for _, name in ipairs(orphaned) do
       print('  - ' .. name)
     end
-    print('\nDelete them? (y/N): ')
 
-    local confirm = vim.fn.input(''):lower()
-    if confirm == 'y' or confirm == 'yes' then
+    local choice = vim.fn.confirm('Delete ' .. #orphaned .. ' orphaned plugin(s)?', '&Yes\n&No', 2)
+    if choice == 1 then
       local deleted_count = 0
       for _, name in ipairs(orphaned) do
-        local success, err = pcall(vim.pack.del, {name})
+        local success, err = pcall(vim.pack.del, { name })
         if success then
           deleted_count = deleted_count + 1
           print('Deleted: ' .. name)
@@ -151,7 +165,7 @@ vim.api.nvim_create_user_command('PackDelete', function(opts)
 
   -- Delete specific plugin by name
   local plugin_name = opts.args
-  local success, err = pcall(vim.pack.del, {plugin_name})
+  local success, err = pcall(vim.pack.del, { plugin_name })
 
   if success then
     print('Deleted plugin: ' .. plugin_name)
@@ -178,5 +192,4 @@ lazy.setup_lazy_loading(plugins)
 
 return {
   plugins = plugins,
-  all_pack_specs = all_pack_specs,
 }

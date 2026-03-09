@@ -21,10 +21,6 @@ nnoremap('<Tab>', '<cmd>bnext<CR>', { desc = 'Next buffer' })
 nnoremap('<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
 nnoremap('<F5>', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle UndoTree' })
 nnoremap('<Leader>sr', '<cmd>vs<CR>', { desc = 'Split right' })
--- Window navigation
-for key in pairs({ h = true, l = true, j = true, k = true }) do
-  nnoremap('<Leader>w' .. key, '<cmd>wincmd ' .. key .. '<CR>', { desc = 'Window ' .. key })
-end
 nnoremap('<Leader>=', '<cmd>vertical resize +10<CR>', { desc = 'Resize wider' })
 nnoremap('<Leader>-', '<cmd>vertical resize -10<CR>', { desc = 'Resize thinner' })
 nnoremap('<Leader>rh', '<cmd>nohl<CR>', { desc = 'Remove highlight' })
@@ -39,7 +35,7 @@ local function smart_dd()
   end
 end
 nnoremap('dd', smart_dd, { expr = true, desc = 'Smart delete line' })
-nnoremap('<Leader>nf', '<cmd>enew<CR>', { desc = 'New file' })
+nnoremap('<Leader>fn', '<cmd>enew<CR>', { desc = 'New file' })
 nnoremap('<Leader>e', '<cmd>Fyler<CR>', { desc = 'File manager' })
 nnoremap('<Leader>ec', '<cmd>tabnew ~/.config/nvim/init.lua<CR>', { desc = 'Edit Config (init.lua)' })
 nnoremap('<Leader>cn', vim.lsp.buf.rename, { desc = 'Rename symbol' })
@@ -60,7 +56,6 @@ end, { desc = 'Format code' })
 nnoremap('<Leader>de', vim.diagnostic.open_float, { desc = 'Open diagnostics float' })
 nnoremap('<BS>', '<C-o>', { desc = 'Jump back' })
 nnoremap('K', vim.lsp.buf.hover, { desc = 'Hover info' })
-nnoremap('<Leader>gd', vim.lsp.buf.declaration, { desc = 'Go to declaration' })
 nnoremap('[d', function()
   vim.diagnostic.jump({ count = -1 })
 end, { desc = 'Previous diagnostic' })
@@ -113,11 +108,14 @@ vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)', { desc = 'Leap forward' }
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)', { desc = 'Leap from window' })
 
 -- Vim Test
-nnoremap('<Leader>t', ':TestNearest<CR>', { desc = 'Test nearest' })
+nnoremap('<Leader>tn', ':TestNearest<CR>', { desc = 'Test nearest' })
 nnoremap('<Leader>T', ':TestFile<CR>', { desc = 'Test file' })
 nnoremap('<Leader>a', ':TestSuite<CR>', { desc = 'Test suite' })
 nnoremap('<Leader>tl', ':TestLast<CR>', { desc = 'Test last' })
 nnoremap('<Leader>tv', ':TestVisit<CR>', { desc = 'Test visit' })
+
+-- Quit
+nnoremap('<Leader>qq', '<cmd>qa<CR>', { desc = 'Quit all' })
 
 -- Package management
 nnoremap('<Leader>pu', '<cmd>PackUpdate<CR>', { desc = 'Update plugins' })

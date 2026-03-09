@@ -2,38 +2,6 @@
 -- Updates are logged to: ~/.local/state/nvim/nvim-pack.log
 local M = {}
 
-local path_util = require('util.path')
-
----@class Plugin
----@field src string Plugin source URL
----@field name string Plugin name
----@field opt boolean Whether plugin is lazy-loaded
----@field trigger? string Trigger for lazy loading
----@field build? string Build command
-
--- Handle build commands for plugins that need them
----@param plugins_with_builds Plugin[]
-local function handle_builds(plugins_with_builds)
-  if #plugins_with_builds == 0 then
-    return
-  end
-
-  print('\n🔨 Building ' .. #plugins_with_builds .. ' updated plugins...')
-
-  for _, plugin in ipairs(plugins_with_builds) do
-    local plugin_path = path_util.get_plugin_path(plugin)
-    print('Building ' .. plugin.name .. '...')
-
-    local obj = vim.system({'sh', '-c', plugin.build}, {cwd = plugin_path}):wait()
-
-    if obj.code ~= 0 then
-      vim.notify('Build failed for ' .. plugin.name .. ':\n' .. (obj.stderr or obj.stdout or ''), vim.log.levels.ERROR)
-    else
-      print('Built ' .. plugin.name .. ' successfully')
-    end
-  end
-end
-
 -- Update plugins using native vim.pack API
 ---@param plugins Plugin[]
 ---@param opts? {force?: boolean}
@@ -51,26 +19,11 @@ function M.update_plugins(plugins, opts)
     return
   end
 
-  -- Ensure all plugins are registered with vim.pack before updating
-  local specs = {}
-  for _, plugin in ipairs(plugins) do
-    table.insert(specs, { src = plugin.src, name = plugin.name })
-  end
-  vim.pack.add(specs)
-
-  -- This provides:
-  --   - Built-in confirmation UI (unless force = true)
-  --   - Automatic changelog and revision tracking
-  --   - LSP support (gO, K, gra) in confirmation buffer
-  --   - Navigation with ]] and [[ between plugin sections
-  --   - Logging to "nvim-pack.log" in log stdpath
+  -- All plugins are already registered with vim.pack at startup.
+  -- Builds run automatically via the PackChanged autocommand.
   vim.pack.update(plugin_names, {
     force = opts.force or false,
   })
-
-  -- Note: Build commands need to be run manually after updates complete
-  -- vim.pack.update() is async, so builds would need to be in a callback
-  -- For now, users should run builds manually with :PackBuild if needed
 end
 
 -- PackUpdate command with optional bang for force update
@@ -85,13 +38,14 @@ function M.setup_command(plugins)
     desc = 'Update plugins (add ! to skip confirmation)',
   })
 
-  -- Optional: Command to rebuild plugins that have build commands
+  -- Command to rebuild plugins that have build commands
   vim.api.nvim_create_user_command('PackBuild', function()
+    local path_util = require('util.path')
     local plugins_with_builds = vim.tbl_filter(function(p)
       return p.build ~= nil
     end, plugins)
 
-    handle_builds(plugins_with_builds)
+    path_util.handle_builds(plugins_with_builds)
   end, {
     desc = 'Run build commands for plugins that need them',
   })

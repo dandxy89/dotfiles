@@ -93,32 +93,26 @@ end
 ---@param width number
 ---@return string
 function StatusLine.cache_key(win_id, buf_id, width)
-  local mode = vim.api.nvim_get_mode().mode
-
   local modified = vim.bo[buf_id].modified
   local readonly = vim.bo[buf_id].readonly
 
   local diag_count = vim.diagnostic.count(buf_id)
-  local diag_key = string.format('%d,%d,%d',
+  local diag_key = string.format(
+    '%d,%d,%d',
     diag_count[vim.diagnostic.severity.ERROR] or 0,
     diag_count[vim.diagnostic.severity.WARN] or 0,
     diag_count[vim.diagnostic.severity.HINT] or 0
   )
 
   local git_key = ''
-  local ok, signs = pcall(function() return vim.b[buf_id].gitsigns_status_dict end)
+  local ok, signs = pcall(function()
+    return vim.b[buf_id].gitsigns_status_dict
+  end)
   if ok and signs then
-    git_key = string.format('%s,%d,%d,%d',
-      signs.head or '',
-      signs.added or 0,
-      signs.changed or 0,
-      signs.removed or 0
-    )
+    git_key = string.format('%s,%d,%d,%d', signs.head or '', signs.added or 0, signs.changed or 0, signs.removed or 0)
   end
 
-  return string.format('%d:%d:%d:%s:%s:%s:%s:%s',
-    win_id, buf_id, width, mode, tostring(modified), tostring(readonly), diag_key, git_key
-  )
+  return string.format('%d:%d:%d:%s:%s:%s:%s', win_id, buf_id, width, tostring(modified), tostring(readonly), diag_key, git_key)
 end
 
 ---@return string
@@ -154,8 +148,12 @@ end
 ---@return StatusComponent[]
 function StatusLine.get_git_branch(buf_id)
   -- Safely access gitsigns buffer variable
-  local ok, signs = pcall(function() return vim.b[buf_id].gitsigns_status_dict end)
-  if not ok then signs = nil end
+  local ok, signs = pcall(function()
+    return vim.b[buf_id].gitsigns_status_dict
+  end)
+  if not ok then
+    signs = nil
+  end
 
   local text = signs and ('  ' .. (signs.head or '') .. ' ') or ''
   return { { text = text, group = 'StatusLineGitBranch' } }
@@ -165,7 +163,9 @@ end
 ---@return StatusComponent[]
 function StatusLine.get_git_diff(buf_id)
   -- Safely access gitsigns buffer variable
-  local ok, signs = pcall(function() return vim.b[buf_id].gitsigns_status_dict end)
+  local ok, signs = pcall(function()
+    return vim.b[buf_id].gitsigns_status_dict
+  end)
   if not ok or not signs then
     return {}
   end
@@ -406,20 +406,14 @@ function StatusLine.render_window(parent_win, buf_id)
 end
 
 function StatusLine.update()
-  -- Debounce updates to avoid excessive redraws
-  -- 20ms provides a good balance between responsiveness and performance
-  if StatusLine.state.update_timer then
-    if not StatusLine.state.update_timer:is_closing() then
-      StatusLine.state.update_timer:stop()
-      StatusLine.state.update_timer:close()
-    end
+  if not StatusLine.state.update_timer then
+    StatusLine.state.update_timer = vim.uv.new_timer()
   end
-
-  local timer = vim.uv.new_timer()
-  StatusLine.state.update_timer = timer
-  timer:start(20, 0, vim.schedule_wrap(function()
-      if not timer:is_closing() then timer:close() end
-      StatusLine.state.update_timer = nil
+  StatusLine.state.update_timer:stop()
+  StatusLine.state.update_timer:start(
+    20,
+    0,
+    vim.schedule_wrap(function()
       -- Evict arbitrary half of cache when it grows beyond 100 entries
       local cache_size = vim.tbl_count(StatusLine.state.cache)
       if cache_size > 100 then
@@ -445,7 +439,8 @@ function StatusLine.update()
           StatusLine.render_window(win, vim.api.nvim_win_get_buf(win))
         end
       end
-  end))
+    end)
+  )
 end
 
 -- Auto-scroll the window when cursor is at the last line and near the bottom
@@ -455,7 +450,9 @@ function StatusLine.autoscroll()
   local last_line = vim.api.nvim_buf_line_count(0)
 
   -- Early exit: only act when cursor is on the last line (avoids work 99% of the time)
-  if current_line ~= last_line then return end
+  if current_line ~= last_line then
+    return
+  end
 
   local win = vim.api.nvim_get_current_win()
   if vim.api.nvim_win_get_config(win).relative ~= '' then

@@ -1,13 +1,6 @@
 -- Lazy loading setup for plugins
 local M = {}
 
----@class Plugin
----@field src string Plugin source URL
----@field name string Plugin name
----@field opt boolean Whether plugin is lazy-loaded
----@field trigger? string Trigger for lazy loading
----@field build? string Build command
-
 ---@param plugins Plugin[]
 function M.setup_lazy_loading(plugins)
   local loaded_groups = {}
@@ -63,11 +56,9 @@ function M.setup_lazy_loading(plugins)
   vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile', 'BufWritePre' }, {
     once = true,
     callback = create_trigger_loader('file', function()
-      vim.defer_fn(function()
-        require('plugins.config.treesitter')
-        require('plugins.config.lsp')
-        require('plugins.config.gitsigns')
-      end, 10)
+      require('plugins.config.treesitter')
+      require('plugins.config.lsp')
+      require('plugins.config.gitsigns')
     end),
   })
 
@@ -104,39 +95,39 @@ function M.setup_lazy_loading(plugins)
 
   -- Register fzf keymaps that lazy-load on first use
   local fzf_keymaps = {
-    { '<Leader><space>', 'files' },
-    { '<Leader>/',       'live_grep' },
-    { '<Leader>,',       'buffers' },
-    { '<Leader>ff',      'files' },
-    { '<Leader>fg',      'git_files' },
-    { '<Leader>fb',      'buffers' },
-    { '<Leader>fr',      'oldfiles' },
-    { '<Leader>sf',      'resume' },
-    { '<Leader>ss',      'lsp_workspace_symbols' },
-    { '<Leader>sd',      'lsp_workspace_diagnostics' },
-    { '<Leader>gs',      'git_status' },
-    { '<Leader>gl',      'git_commits' },
-    { 'gd',              'lsp_definitions' },
-    { 'gD',              'lsp_declarations' },
-    { 'gr',              'lsp_references' },
-    { 'gI',              'lsp_implementations' },
-    { 'gy',              'lsp_typedefs' },
-    { '<Leader>ca',      'lsp_code_actions' },
-    { '<Leader>p',       'registers' },
-    { '<Leader>ch',      'changes' },
+    { '<Leader><space>', 'files', 'Find files' },
+    { '<Leader>/', 'live_grep', 'Live grep' },
+    { '<Leader>,', 'buffers', 'Buffers' },
+    { '<Leader>ff', 'files', 'Find files' },
+    { '<Leader>fg', 'git_files', 'Git files' },
+    { '<Leader>fb', 'buffers', 'Buffers' },
+    { '<Leader>fr', 'oldfiles', 'Recent files' },
+    { '<Leader>sf', 'resume', 'Resume search' },
+    { '<Leader>ss', 'lsp_workspace_symbols', 'Workspace symbols' },
+    { '<Leader>sd', 'lsp_workspace_diagnostics', 'Workspace diagnostics' },
+    { '<Leader>gs', 'git_status', 'Git status' },
+    { '<Leader>gl', 'git_commits', 'Git commits' },
+    { 'gd', 'lsp_definitions', 'Go to definition' },
+    { 'gD', 'lsp_declarations', 'Go to declaration' },
+    { 'gr', 'lsp_references', 'References' },
+    { 'gI', 'lsp_implementations', 'Implementations' },
+    { 'gy', 'lsp_typedefs', 'Type definitions' },
+    { '<Leader>ca', 'lsp_code_actions', 'Code actions' },
+    { '<Leader>p', 'registers', 'Registers' },
+    { '<Leader>ch', 'changes', 'Changes' },
   }
 
   for _, map in ipairs(fzf_keymaps) do
     vim.keymap.set('n', map[1], function()
       ensure_fzf()
       require('fzf-lua')[map[2]]()
-    end, { silent = true, noremap = true })
+    end, { silent = true, noremap = true, desc = map[3] })
   end
 
   vim.keymap.set('n', '<Leader>fc', function()
     ensure_fzf()
     require('fzf-lua').files({ cwd = vim.fn.stdpath('config') })
-  end, { silent = true, noremap = true })
+  end, { silent = true, noremap = true, desc = 'Find config files' })
 
   -- Fyler: lazy load on command
   create_lazy_command('Fyler', 'fyler.nvim', function()
@@ -144,11 +135,39 @@ function M.setup_lazy_loading(plugins)
     vim.cmd('Fyler')
   end)
 
+  -- Lazy loader for grug-far
+  local function load_grugfar()
+    if not loaded_groups['grug-far.nvim'] then
+      loaded_groups['grug-far.nvim'] = true
+      vim.cmd.packadd('grug-far.nvim')
+      require('plugins.config.grug-far')
+    end
+  end
+
   -- Command-based lazy loading
-  create_lazy_command('Spectre', 'nvim-spectre', function()
-    require('plugins.config.spectre')
-    require('spectre').open()
-  end)
+  vim.api.nvim_create_user_command('GrugFar', function()
+    load_grugfar()
+    require('grug-far').open()
+  end, {})
+
+  -- Eager keymaps
+  local keymap = require('util.keymap')
+  keymap.map('n', '<Leader>S', function()
+    load_grugfar()
+    require('grug-far').open()
+  end, 'GrugFar')
+  keymap.map('n', '<Leader>sw', function()
+    load_grugfar()
+    require('grug-far').open({ prefills = { search = vim.fn.expand('<cword>') } })
+  end, 'Search current word')
+  keymap.map('v', '<Leader>sw', function()
+    load_grugfar()
+    require('grug-far').with_visual_selection()
+  end, 'Search current selection')
+  keymap.map('n', '<Leader>sp', function()
+    load_grugfar()
+    require('grug-far').open({ prefills = { paths = vim.fn.expand('%') } })
+  end, 'Search on current file')
 
   create_lazy_command('CodeDiff', 'vscode-diff.nvim', function()
     require('vscode-diff').setup()
@@ -183,9 +202,24 @@ function M.setup_lazy_loading(plugins)
       vim.cmd.packadd('ferris.nvim')
       local keymap = require('util.keymap')
       keymap.set_batch('n', {
-        { '<Leader>ml', function() require('ferris.methods.view_memory_layout')() end },
-        { '<Leader>em', function() require('ferris.methods.expand_macro')() end },
-        { '<Leader>od', function() require('ferris.methods.open_documentation')() end },
+        {
+          '<Leader>ml',
+          function()
+            require('ferris.methods.view_memory_layout')()
+          end,
+        },
+        {
+          '<Leader>em',
+          function()
+            require('ferris.methods.expand_macro')()
+          end,
+        },
+        {
+          '<Leader>od',
+          function()
+            require('ferris.methods.open_documentation')()
+          end,
+        },
       })
     end,
   })

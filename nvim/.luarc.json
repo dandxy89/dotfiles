@@ -10,7 +10,7 @@
   "workspace.checkThirdParty": false,
   "workspace.library": [
     "$VIMRUNTIME",
-    "~/.local/share/nvim/lazy"
+    "~/.local/share/nvim/site/pack/core/opt"
   ],
   "diagnostics.disable": [
     "undefined-global"
