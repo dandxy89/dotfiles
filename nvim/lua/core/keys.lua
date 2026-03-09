@@ -40,6 +40,7 @@ local function smart_dd()
 end
 nnoremap('dd', smart_dd, { expr = true, desc = 'Smart delete line' })
 nnoremap('<Leader>nf', '<cmd>enew<CR>', { desc = 'New file' })
+nnoremap('<Leader>fn', '<cmd>enew<CR>', { desc = 'New file' })
 nnoremap('<Leader>e', '<cmd>Fyler<CR>', { desc = 'File manager' })
 nnoremap('<Leader>ec', '<cmd>tabnew ~/.config/nvim/init.lua<CR>', { desc = 'Edit Config (init.lua)' })
 nnoremap('<Leader>cn', vim.lsp.buf.rename, { desc = 'Rename symbol' })
@@ -118,6 +119,9 @@ nnoremap('<Leader>T', ':TestFile<CR>', { desc = 'Test file' })
 nnoremap('<Leader>a', ':TestSuite<CR>', { desc = 'Test suite' })
 nnoremap('<Leader>tl', ':TestLast<CR>', { desc = 'Test last' })
 nnoremap('<Leader>tv', ':TestVisit<CR>', { desc = 'Test visit' })
+
+-- Quit
+nnoremap('<Leader>qq', '<cmd>qa<CR>', { desc = 'Quit all' })
 
 -- Package management
 nnoremap('<Leader>pu', '<cmd>PackUpdate<CR>', { desc = 'Update plugins' })
