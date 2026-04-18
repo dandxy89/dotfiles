@@ -4,7 +4,7 @@ vim.keymap.set('', '<Space>', '<Nop>', { silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require('plugins.pack')
+require('pack').setup()
 
 -- Register tree-sitter-lp grammar (local dev) — must run before any .lp file triggers treesitter
 vim.filetype.add({ extension = { lp = 'lp' } })
@@ -17,3 +17,11 @@ end
 require('core.opts')
 require('core.autocmds')
 require('core.keys')
+
+-- Defer statusline until first buffer — requires colorscheme highlights to exist
+vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
+  once = true,
+  callback = function()
+    require('statusline')
+  end,
+})

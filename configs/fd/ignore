@@ -1,0 +1,28 @@
+# Global fd ignore file
+# Symlink: ln -s ~/Projects/dotfiles/configs/fd/ignore ~/.config/fd/ignore
+# fd reads this automatically in addition to .gitignore.
+
+.git/
+node_modules/
+target/
+.venv/
+venv/
+dist/
+build/
+.terraform/
+.terragrunt-cache/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.next/
+.nuxt/
+.cache/
+
+*.lock
+*.pyc
+*.pyo
+*.o
+*.so
+*.dylib
+*.class
