@@ -86,6 +86,21 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Auto-refresh codelens when LSP attaches
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = augroup('CodeLensRefresh'),
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.supports_method('textDocument/codeLens') then
+      vim.lsp.codelens.refresh()
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
+        buffer = args.buf,
+        callback = vim.lsp.codelens.refresh,
+      })
+    end
+  end,
+})
+
 -- LSP progress tracking
 local lsp_progress = require('util.lsp_progress')
 vim.api.nvim_create_autocmd('LspProgress', {

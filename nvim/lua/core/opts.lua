@@ -42,7 +42,7 @@ opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
 opt.clipboard = 'unnamedplus'
 opt.belloff, opt.history = 'all', 1000
 opt.spell, opt.spelllang = true, 'en_gb'
-opt.shortmess = 'filnxtToOFWIcC'
+opt.shortmess = 'filnxtToOFWcC'
 
 -- Folding (treesitter-based)
 opt.foldenable, opt.foldlevel, opt.foldcolumn = true, 99, '0'

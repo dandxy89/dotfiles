@@ -53,9 +53,11 @@ return {
       },
       lens = {
         enable = true,
-        methodReferences = true,
-        references = true,
-        implementations = false,
+        run = { enable = true },
+        debug = { enable = true },
+        methodReferences = { enable = true },
+        references = { enable = true },
+        implementations = { enable = false },
       },
       interpret = { tests = true },
       procMacro = {
