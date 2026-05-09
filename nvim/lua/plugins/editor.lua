@@ -6,7 +6,6 @@ return {
     name = 'leap.nvim',
     lazy = false,
   },
-
   {
     'lewis6991/gitsigns.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
@@ -38,13 +37,31 @@ return {
             { '<Leader>hR', gs.reset_buffer, { desc = 'Reset buffer' } },
             { '<Leader>hp', gs.preview_hunk, { desc = 'Preview hunk' } },
             { '<Leader>hd', gs.diffthis, { desc = 'Diff this' } },
-            { '<Leader>hD', function() gs.diffthis('~') end, { desc = 'Diff this ~' } },
+            {
+              '<Leader>hD',
+              function()
+                gs.diffthis('~')
+              end,
+              { desc = 'Diff this ~' },
+            },
             { '<Leader>td', gs.toggle_deleted, { desc = 'Toggle deleted' } },
           }, { buffer = bufnr })
 
           keymap.set_batch('v', {
-            { '<Leader>hs', function() gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, { desc = 'Stage hunk' } },
-            { '<Leader>hr', function() gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, { desc = 'Reset hunk' } },
+            {
+              '<Leader>hs',
+              function()
+                gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+              end,
+              { desc = 'Stage hunk' },
+            },
+            {
+              '<Leader>hr',
+              function()
+                gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+              end,
+              { desc = 'Reset hunk' },
+            },
           }, { buffer = bufnr })
 
           keymap.set_batch({ 'o', 'x' }, {
@@ -54,21 +71,47 @@ return {
       })
     end,
   },
-
   {
     'MagicDuck/grug-far.nvim',
     cmd = { 'GrugFar' },
     keys = {
-      { 'n', '<Leader>S', function() require('grug-far').open() end, { desc = 'GrugFar' } },
-      { 'n', '<Leader>sw', function() require('grug-far').open({ prefills = { search = vim.fn.expand('<cword>') } }) end, { desc = 'Search current word' } },
-      { 'v', '<Leader>sw', function() require('grug-far').with_visual_selection() end, { desc = 'Search current selection' } },
-      { 'n', '<Leader>sp', function() require('grug-far').open({ prefills = { paths = vim.fn.expand('%') } }) end, { desc = 'Search on current file' } },
+      {
+        'n',
+        '<Leader>S',
+        function()
+          require('grug-far').open()
+        end,
+        { desc = 'GrugFar' },
+      },
+      {
+        'n',
+        '<Leader>sw',
+        function()
+          require('grug-far').open({ prefills = { search = vim.fn.expand('<cword>') } })
+        end,
+        { desc = 'Search current word' },
+      },
+      {
+        'v',
+        '<Leader>sw',
+        function()
+          require('grug-far').with_visual_selection()
+        end,
+        { desc = 'Search current selection' },
+      },
+      {
+        'n',
+        '<Leader>sp',
+        function()
+          require('grug-far').open({ prefills = { paths = vim.fn.expand('%') } })
+        end,
+        { desc = 'Search on current file' },
+      },
     },
     config = function()
       require('grug-far').setup({})
     end,
   },
-
   {
     'A7Lavinraj/fyler.nvim',
     cmd = { 'Fyler' },
@@ -76,7 +119,6 @@ return {
       require('fyler').setup({})
     end,
   },
-
   {
     'christoomey/vim-tmux-navigator',
     keys = {
@@ -87,7 +129,6 @@ return {
       { 'n', '<C-\\>', '<cmd>TmuxNavigatePrevious<cr>', { silent = true, desc = 'Tmux previous' } },
     },
   },
-
   {
     'esmuellert/vscode-diff.nvim',
     cmd = { 'CodeDiff' },
@@ -96,6 +137,16 @@ return {
     },
     config = function()
       require('vscode-diff').setup()
+    end,
+  },
+  {
+    'rashedInt32/lazydiff.nvim',
+    cmd = { 'Lazydiff', 'LazydiffOff', 'LazydiffRefresh', 'LazydiffNext', 'LazydiffPrev', 'LazydiffFirst' },
+    keys = {
+      { 'n', '<Leader>hl', '<cmd>Lazydiff<cr>', { desc = 'Toggle lazydiff overlay' } },
+    },
+    config = function()
+      require('lazydiff').setup()
     end,
   },
 }

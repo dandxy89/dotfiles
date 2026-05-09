@@ -1,12 +1,19 @@
 return {
-  { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
 
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     lazy = false,
     dependencies = { 'nvim-treesitter-textobjects' },
     config = function()
-      require('nvim-treesitter.install').ensure_installed({
+      local ts = require('nvim-treesitter')
+      local installed = ts.get_installed and ts.get_installed('parsers') or {}
+      local have = {}
+      for _, p in ipairs(installed) do
+        have[p] = true
+      end
+      local wanted = {
         'bash',
         'lua',
         'rust',
@@ -21,7 +28,16 @@ return {
         'proto',
         'make',
         'dockerfile',
-      })
+      }
+      local missing = {}
+      for _, p in ipairs(wanted) do
+        if not have[p] then
+          table.insert(missing, p)
+        end
+      end
+      if #missing > 0 then
+        ts.install(missing)
+      end
 
       vim.api.nvim_create_autocmd('FileType', {
         group = vim.api.nvim_create_augroup('custom_treesitter_start', { clear = true }),
@@ -36,15 +52,12 @@ return {
         end,
       })
 
-      require('nvim-treesitter-textobjects').init()
-      require('nvim-treesitter').setup({
-        textobjects = {
-          select = { enable = true, lookahead = true, include_surrounding_whitespace = true },
-          move = { enable = true },
-        },
+      require('nvim-treesitter-textobjects').setup({
+        select = { lookahead = true, include_surrounding_whitespace = true },
+        move = { set_jumps = true },
       })
 
-      local ts_select = require('nvim-treesitter.textobjects.select')
+      local ts_select = require('nvim-treesitter-textobjects.select')
       local select_maps = {
         { 'aa', '@parameter.outer' },
         { 'ia', '@parameter.inner' },
@@ -64,15 +77,31 @@ return {
         end)
       end
 
-      local ts_move = require('nvim-treesitter.textobjects.move')
-      vim.keymap.set({ 'n', 'x', 'o' }, ']m', function() ts_move.goto_next_start('@function.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, ']]', function() ts_move.goto_next_start('@class.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, ']M', function() ts_move.goto_next_end('@function.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '][', function() ts_move.goto_next_end('@class.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[m', function() ts_move.goto_previous_start('@function.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[[', function() ts_move.goto_previous_start('@class.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[M', function() ts_move.goto_previous_end('@function.outer', 'textobjects') end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[]', function() ts_move.goto_previous_end('@class.outer', 'textobjects') end)
+      local ts_move = require('nvim-treesitter-textobjects.move')
+      vim.keymap.set({ 'n', 'x', 'o' }, ']m', function()
+        ts_move.goto_next_start('@function.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, ']]', function()
+        ts_move.goto_next_start('@class.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, ']M', function()
+        ts_move.goto_next_end('@function.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, '][', function()
+        ts_move.goto_next_end('@class.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, '[m', function()
+        ts_move.goto_previous_start('@function.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, '[[', function()
+        ts_move.goto_previous_start('@class.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, '[M', function()
+        ts_move.goto_previous_end('@function.outer', 'textobjects')
+      end)
+      vim.keymap.set({ 'n', 'x', 'o' }, '[]', function()
+        ts_move.goto_previous_end('@class.outer', 'textobjects')
+      end)
 
       local inc_sel_node = nil
       local function select_node(node)

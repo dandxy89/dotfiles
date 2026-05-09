@@ -2,10 +2,14 @@ return {
   {
     'saghen/blink.cmp',
     name = 'blink-cmp',
-    branch = 'v1',
+    branch = 'v2',
     event = { 'InsertEnter', 'CmdlineEnter' },
-    dependencies = { 'blink-ripgrep.nvim', 'blink-cmp-spell', 'blink-cmp-dat-word' },
-    build = 'cargo build --release',
+    dependencies = { 'blink-lib', 'blink-ripgrep.nvim', 'blink-cmp-spell', 'blink-cmp-dat-word' },
+    build = function()
+      vim.cmd.packadd('blink-lib')
+      vim.cmd.packadd('blink-cmp')
+      require('blink.cmp').build():wait(60000)
+    end,
     config = function()
       require('blink.cmp').setup({
         completion = {
@@ -27,12 +31,12 @@ return {
           },
           trigger = { show_on_insert_on_trigger_character = true },
         },
-        fuzzy = { implementation = 'rust' },
+        fuzzy = { implementation = 'prefer_rust_with_warning' },
         keymap = { preset = 'enter' },
         signature = { enabled = true, window = { border = 'rounded' } },
         cmdline = {
           enabled = true,
-          sources = { 'cmdline', 'path' },
+          sources = { default = { 'cmdline', 'path' } },
         },
         sources = {
           default = { 'lsp', 'path', 'snippets', 'buffer', 'ripgrep', 'spell', 'datword', 'omni' },
@@ -65,18 +69,27 @@ return {
   {
     'saghen/blink.pairs',
     name = 'blink-pairs',
-    branch = 'v1',
     event = { 'InsertEnter' },
     build = 'cargo build --release',
   },
 
+  { 'saghen/blink.lib', name = 'blink-lib' },
   { 'mikavilpas/blink-ripgrep.nvim' },
   { 'ribru17/blink-cmp-spell' },
 
   {
     'xieyonn/blink-cmp-dat-word',
-    build = 'curl -fsSL -o '
-      .. vim.fn.stdpath('data')
-      .. '/google-10000-english.txt https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
+    build = function()
+      local dest = vim.fn.stdpath('data') .. '/google-10000-english.txt'
+      vim
+        .system({
+          'curl',
+          '-fsSL',
+          '-o',
+          dest,
+          'https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
+        })
+        :wait()
+    end,
   },
 }

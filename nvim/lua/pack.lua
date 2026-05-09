@@ -37,10 +37,7 @@ local function run_build(spec)
     vim.system({ 'sh', '-c', spec.build }, { cwd = plugin_path(spec.name) }, function(obj)
       vim.schedule(function()
         if obj.code ~= 0 then
-          vim.notify(
-            'Build failed for ' .. spec.name .. ':\n' .. (obj.stderr or obj.stdout or ''),
-            vim.log.levels.ERROR
-          )
+          vim.notify('Build failed for ' .. spec.name .. ':\n' .. (obj.stderr or obj.stdout or ''), vim.log.levels.ERROR)
         else
           vim.notify('Built ' .. spec.name, vim.log.levels.INFO)
         end

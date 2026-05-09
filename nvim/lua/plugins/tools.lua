@@ -33,14 +33,18 @@ return {
         table.insert(keys, {
           'n',
           m[1],
-          function() require('fzf-lua')[action]() end,
+          function()
+            require('fzf-lua')[action]()
+          end,
           { silent = true, noremap = true, desc = m[3] },
         })
       end
       table.insert(keys, {
         'n',
         '<Leader>fc',
-        function() require('fzf-lua').files({ cwd = vim.fn.stdpath('config') }) end,
+        function()
+          require('fzf-lua').files({ cwd = vim.fn.stdpath('config') })
+        end,
         { silent = true, noremap = true, desc = 'Find config files' },
       })
       return keys
