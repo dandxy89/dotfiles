@@ -29,7 +29,8 @@ return {
           timeout = 1000,
           win = { backdrop = { transparent = false } },
         },
-        statuscolumn = { enabled = true },
+        -- statuscolumn intentionally disabled: core/opts.lua sets a minimal '%l%s'
+        statuscolumn = { enabled = false },
         words = { enabled = true },
       })
 

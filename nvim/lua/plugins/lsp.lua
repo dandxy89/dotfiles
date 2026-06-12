@@ -5,12 +5,8 @@ return {
     config = function()
       require('mason').setup({})
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      local ok, blink = pcall(require, 'blink.cmp')
-      if ok then
-        capabilities = blink.get_lsp_capabilities(capabilities)
-      end
-      vim.lsp.config('*', { capabilities = capabilities })
+      -- Completion capabilities are registered by blink.cmp's own plugin file
+      -- (vim.lsp.config('*')), which runs before servers attach since blink is eager
 
       local disabled = { ty = true }
       local server_names = {}

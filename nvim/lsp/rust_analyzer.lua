@@ -20,8 +20,8 @@ return {
       cargo_crate_dir .. '/Cargo.toml',
     }, { text = true }, function(output)
       if output.code == 0 and output.stdout then
-        local result = vim.json.decode(output.stdout)
-        on_dir(result.workspace_root and vim.fs.normalize(result.workspace_root) or cargo_crate_dir)
+        local ok, result = pcall(vim.json.decode, output.stdout)
+        on_dir(ok and result.workspace_root and vim.fs.normalize(result.workspace_root) or cargo_crate_dir)
       else
         on_dir(cargo_crate_dir)
       end

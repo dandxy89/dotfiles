@@ -23,7 +23,6 @@ opt.undofile, opt.undolevels = true, 10000
 opt.autoread, opt.autowrite = true, true
 
 -- Editing & Indentation
-opt.fileencoding = 'utf8'
 opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
 opt.smartindent = true
 opt.wrap = false
@@ -40,7 +39,6 @@ opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
 
 -- Misc
 opt.clipboard = 'unnamedplus'
-opt.belloff, opt.history = 'all', 1000
 opt.spell, opt.spelllang = true, 'en_gb'
 opt.shortmess = 'filnxtToOFWcC'
 
@@ -62,8 +60,7 @@ vim.filetype.add({
 vim.hl.priorities.semantic_tokens = 95
 
 -- Disable unused providers
-vim.g.loaded_python_provider = 0 -- Disable Python provider
+vim.g.loaded_python3_provider = 0 -- Disable Python provider
 vim.g.loaded_ruby_provider = 0 -- Disable Ruby
 vim.g.loaded_node_provider = 0 -- Disable Node
 vim.g.loaded_perl_provider = 0 -- Disable Perl
-vim.g.have_nerd_font = false

@@ -16,7 +16,6 @@ end
 return {
   cmd = { 'basedpyright-langserver', '--stdio' },
   filetypes = { 'python' },
-  single_file_support = true,
   root_markers = {
     'pyrightconfig.json',
     'pyproject.toml',

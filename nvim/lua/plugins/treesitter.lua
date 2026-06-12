@@ -78,30 +78,21 @@ return {
       end
 
       local ts_move = require('nvim-treesitter-textobjects.move')
-      vim.keymap.set({ 'n', 'x', 'o' }, ']m', function()
-        ts_move.goto_next_start('@function.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, ']]', function()
-        ts_move.goto_next_start('@class.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, ']M', function()
-        ts_move.goto_next_end('@function.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '][', function()
-        ts_move.goto_next_end('@class.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[m', function()
-        ts_move.goto_previous_start('@function.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[[', function()
-        ts_move.goto_previous_start('@class.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[M', function()
-        ts_move.goto_previous_end('@function.outer', 'textobjects')
-      end)
-      vim.keymap.set({ 'n', 'x', 'o' }, '[]', function()
-        ts_move.goto_previous_end('@class.outer', 'textobjects')
-      end)
+      local move_maps = {
+        { ']m', 'goto_next_start', '@function.outer' },
+        { ']]', 'goto_next_start', '@class.outer' },
+        { ']M', 'goto_next_end', '@function.outer' },
+        { '][', 'goto_next_end', '@class.outer' },
+        { '[m', 'goto_previous_start', '@function.outer' },
+        { '[[', 'goto_previous_start', '@class.outer' },
+        { '[M', 'goto_previous_end', '@function.outer' },
+        { '[]', 'goto_previous_end', '@class.outer' },
+      }
+      for _, map in ipairs(move_maps) do
+        vim.keymap.set({ 'n', 'x', 'o' }, map[1], function()
+          ts_move[map[2]](map[3], 'textobjects')
+        end)
+      end
 
       local inc_sel_node = nil
       local function select_node(node)

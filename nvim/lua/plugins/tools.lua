@@ -1,7 +1,4 @@
 return {
-  { 'nvim-lua/plenary.nvim' },
-  { 'MunifTanjim/nui.nvim' },
-
   {
     'ibhagwan/fzf-lua',
     keys = (function()

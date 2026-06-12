@@ -2,8 +2,9 @@ return {
   {
     'saghen/blink.cmp',
     name = 'blink-cmp',
-    branch = 'v2',
-    event = { 'InsertEnter', 'CmdlineEnter' },
+    -- Eager: blink's plugin file merges its capabilities into vim.lsp.config('*'),
+    -- which must happen before LSP servers attach at startup
+    lazy = false,
     dependencies = { 'blink-lib', 'blink-ripgrep.nvim', 'blink-cmp-spell', 'blink-cmp-dat-word' },
     build = function()
       vim.cmd.packadd('blink-lib')
@@ -71,6 +72,9 @@ return {
     name = 'blink-pairs',
     event = { 'InsertEnter' },
     build = 'cargo build --release',
+    config = function()
+      require('blink.pairs').setup({})
+    end,
   },
 
   { 'saghen/blink.lib', name = 'blink-lib' },

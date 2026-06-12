@@ -6,7 +6,8 @@ end
 
 -- Forces Neovim to detect file changes on disk immediately
 vim.api.nvim_create_user_command('Realtime', function()
-  vim.api.nvim_create_autocmd('CursorHold', { pattern = '*', command = 'checktime' })
+  -- augroup is cleared on re-creation, so repeat :Realtime calls don't stack autocmds
+  vim.api.nvim_create_autocmd('CursorHold', { group = augroup('realtime_checktime'), command = 'checktime' })
   vim.cmd('checktime')
 end, { desc = 'Enable realtime autoread (watch file changes)' })
 
@@ -86,20 +87,8 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- Auto-refresh codelens when LSP attaches
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = augroup('CodeLensRefresh'),
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client and client.supports_method('textDocument/codeLens') then
-      vim.lsp.codelens.refresh()
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave' }, {
-        buffer = args.buf,
-        callback = vim.lsp.codelens.refresh,
-      })
-    end
-  end,
-})
+-- Codelens: the enable() capability API tracks attach/detach and refreshes automatically
+vim.lsp.codelens.enable(true)
 
 -- LSP progress tracking
 local lsp_progress = require('util.lsp_progress')
