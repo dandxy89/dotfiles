@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Neovim setup and verification script
-# Usage: ./scripts/nvim-setup [--install | --verify | --help]
+# Usage: ./scripts/nvim-setup.sh [--install | --verify | --help]
 #
 # --install  : create symlink and install plugins/parsers (default on new machine)
 # --verify   : check symlink, parsers, LSP binaries, and open test files
@@ -8,7 +8,6 @@
 
 set -euo pipefail
 
-# ── Colours ──────────────────────────────────────────────────────────────────
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -26,11 +25,9 @@ FAILED=0
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NVIM_SRC="${DOTFILES_DIR}/nvim"
 NVIM_CFG="${HOME}/.config/nvim"
-# Resolve data dir from nvim itself (differs across OS and builds)
 NVIM_DATA="$(nvim --headless -c "lua io.write(vim.fn.stdpath('data'))" -c qa 2>/dev/null || true)"
 NVIM_PACK_DIR="${NVIM_DATA}/site/pack/core/opt"
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
 require_nvim() {
   if ! command -v nvim &>/dev/null; then
     fail "nvim not found on PATH — install Neovim 0.11+ first"
@@ -48,7 +45,6 @@ check_binary() {
     pass "${label}"
     return
   fi
-  # Also check Mason's bin directory (path differs per OS/build)
   local mason_bin="${NVIM_DATA}/mason/bin/${bin}"
   if [[ -x "${mason_bin}" ]]; then
     pass "${label} (via Mason)"
@@ -59,7 +55,6 @@ check_binary() {
 
 check_ts_parser() {
   local lang="$1"
-  # Ask nvim whether the parser can actually be loaded — handles all runtimepath layouts
   local result
   result=$(nvim --headless \
     -c "lua local ok = pcall(vim.treesitter.language.add, '${lang}'); io.write(ok and 'ok' or 'missing'); io.flush()" \
@@ -71,7 +66,6 @@ check_ts_parser() {
   fi
 }
 
-# ── Symlink ───────────────────────────────────────────────────────────────────
 setup_symlink() {
   header "1. Neovim config symlink"
 
@@ -101,28 +95,32 @@ setup_symlink() {
   pass "created symlink: ${NVIM_CFG} → ${NVIM_SRC}"
 }
 
-# ── Plugin install ─────────────────────────────────────────────────────────────
 install_plugins() {
   header "2. Plugin installation (vim.pack)"
-  info "running nvim headless — pack.lua will fetch any missing plugins …"
-  if nvim --headless -c "lua vim.defer_fn(function() vim.cmd('qa') end, 15000)" 2>&1 | grep -i 'error\|E[0-9]\{3\}' | head -5; then
-    warn "errors seen during startup (shown above)"
+  info "first pass — fetching plugins and running build steps …"
+
+  nvim --headless -c "lua vim.defer_fn(function() vim.cmd('qa') end, 30000)" >/dev/null 2>&1 || true
+
+  info "second pass — verifying a clean startup …"
+  local log
+  log=$(nvim --headless -c "qa" 2>&1 || true)
+  if echo "${log}" | grep -qiE 'E[0-9]{3}:|module .* not found|error'; then
+    warn "errors seen on second startup:"
+    echo "${log}" | grep -iE 'E[0-9]{3}:|not found|error' | head -10 | sed 's/^/     /'
   else
-    pass "plugins installed / up to date"
+    pass "plugins installed and startup is clean"
   fi
 }
 
 install_ts_parsers() {
   header "3. Treesitter parser installation"
-  info "installing python and rust parsers …"
-  # TSInstallSync is available when nvim-treesitter is loaded
+  info "installing python and rust parsers (synchronous) …"
   nvim --headless \
-    -c "TSInstallSync! python rust" \
+    -c "lua require('nvim-treesitter').install({ 'python', 'rust' }):wait(300000)" \
     -c "qa" 2>&1 | tail -5 || true
-  pass "TSInstallSync complete"
+  pass "python and rust parsers installed"
 }
 
-# ── Verification ───────────────────────────────────────────────────────────────
 verify_symlink() {
   header "1. Config symlink"
   if [[ -L "${NVIM_CFG}" && "$(readlink "${NVIM_CFG}")" == "${NVIM_SRC}" ]]; then
@@ -165,7 +163,7 @@ verify_lsp_binaries() {
   check_binary "vscode-json-language-server" "jsonls (JSON)"
   check_binary "harper-ls"              "harper_ls (prose grammar)"
   check_binary "docker-langserver"      "dockerls (Dockerfile)"
-  # rust-analyzer is invoked via rustup in lsp config, verify rustup + toolchain
+
   if command -v rustup &>/dev/null; then
     if rustup run stable rust-analyzer --version &>/dev/null 2>&1; then
       pass "rust-analyzer via rustup stable"
@@ -278,7 +276,6 @@ verify_mason_packages() {
   fi
 }
 
-# ── Entrypoint ─────────────────────────────────────────────────────────────────
 MODE="${1:-all}"
 
 case "${MODE}" in
@@ -329,7 +326,6 @@ case "${MODE}" in
     ;;
 esac
 
-# ── Summary ────────────────────────────────────────────────────────────────────
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
   echo -e "${GREEN}${BOLD}All checks passed.${NC}"

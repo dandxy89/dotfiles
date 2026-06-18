@@ -9,7 +9,10 @@ return {
     build = function()
       vim.cmd.packadd('blink-lib')
       vim.cmd.packadd('blink-cmp')
-      require('blink.cmp').build():wait(60000)
+      -- V2 build/download system: :pwait() matches :h blink-cmp-installation,
+      -- waits without a fixed timeout (cold cargo builds exceed 60s) and won't
+      -- throw out of the build callback if the native build fails.
+      require('blink.cmp').build():pwait()
     end,
     config = function()
       require('blink.cmp').setup({

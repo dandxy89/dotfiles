@@ -1,7 +1,7 @@
 {
   "plugins": {
     "blink-cmp": {
-      "rev": "f019dca368879756c6fe1d2640b4a67796e7f8a2",
+      "rev": "39682a9c737920578cf68887c21eaa4ce3845c67",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink-cmp-dat-word": {
@@ -13,15 +13,15 @@
       "src": "https://github.com/ribru17/blink-cmp-spell"
     },
     "blink-lib": {
-      "rev": "b127d48bf8e9ac9cf41f6e0fbead317503f76558",
+      "rev": "08ac9a9b873d3c7376e408a36c40c4131e2809ce",
       "src": "https://github.com/saghen/blink.lib"
     },
     "blink-pairs": {
-      "rev": "aad9046bc4670dc91301cd62a6948feb36c55f4a",
+      "rev": "667dc9dd5a3735883b0204212b9602c626ede3fe",
       "src": "https://github.com/saghen/blink.pairs"
     },
     "blink-ripgrep.nvim": {
-      "rev": "4491907dd46f6ae7a87ccc9f7a34b3d7c8616fc4",
+      "rev": "9d03bc7823f56638bd0dea40c3ed4e947e436c61",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "carvion.nvim": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/vxpm/ferris.nvim"
     },
     "fyler.nvim": {
-      "rev": "e87911e6c21d099225063f5aa672e00f6dbb5976",
+      "rev": "8364418d1495ce90823dca1db6ac7abba27a7972",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
@@ -65,7 +65,7 @@
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.icons": {
-      "rev": "284509648db084c5e40a31afa9abb9887c49e04a",
+      "rev": "ac38c983aed0a2bd32a65ca3e2348e12e58ca292",
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "nui.nvim": {
