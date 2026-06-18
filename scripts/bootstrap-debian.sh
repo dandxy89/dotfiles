@@ -224,7 +224,7 @@ build_nvim_from_source() {
 }
 
 install_tree_sitter() {
-  header "5. tree-sitter CLI"
+  header "6. tree-sitter CLI"
   local ts_arch tmp url
   case "${NVIM_ARCH}" in
     x86_64) ts_arch="x64" ;;
@@ -236,16 +236,48 @@ install_tree_sitter() {
   url="https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-${ts_arch}.gz"
   info "downloading ${url}"
   if ! curl -fL --retry 3 -o "${tmp}/tree-sitter.gz" "${url}"; then
-    fail "could not download tree-sitter CLI for ${NVIM_ARCH}"
+    warn "could not download prebuilt tree-sitter CLI for ${NVIM_ARCH}"
+    build_tree_sitter_from_cargo
     return
   fi
   gunzip -f "${tmp}/tree-sitter.gz"
   ${SUDO} install -m 0755 "${tmp}/tree-sitter" /usr/local/bin/tree-sitter
-  pass "tree-sitter installed: $(/usr/local/bin/tree-sitter --version 2>/dev/null || echo '?')"
+
+  # The prebuilt CLI is linked against a recent glibc; on older Debian/Ubuntu it
+  # won't run (e.g. "GLIBC_2.35 not found"). nvim-treesitter's main branch needs
+  # a working CLI to compile parsers, so fall back to a source build via cargo.
+  if /usr/local/bin/tree-sitter --version &>/dev/null; then
+    pass "tree-sitter installed: $(/usr/local/bin/tree-sitter --version 2>/dev/null || echo '?')"
+  else
+    warn "prebuilt tree-sitter will not run here (glibc too old):"
+    /usr/local/bin/tree-sitter --version 2>&1 | head -1 | sed 's/^/     /' || true
+    build_tree_sitter_from_cargo
+  fi
+}
+
+build_tree_sitter_from_cargo() {
+  info "falling back to building the tree-sitter CLI from source via cargo (several minutes) …"
+  # shellcheck disable=SC1090,SC1091
+  [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
+  export PATH="${HOME}/.cargo/bin:${PATH}"
+  if ! command -v cargo &>/dev/null; then
+    fail "cargo not available to build tree-sitter CLI (install_rust must run first)"
+    return
+  fi
+  if ! cargo install --quiet tree-sitter-cli; then
+    fail "cargo install tree-sitter-cli failed"
+    return
+  fi
+  ${SUDO} ln -sf "${HOME}/.cargo/bin/tree-sitter" /usr/local/bin/tree-sitter
+  if /usr/local/bin/tree-sitter --version &>/dev/null; then
+    pass "tree-sitter built from source: $(/usr/local/bin/tree-sitter --version 2>/dev/null || echo '?')"
+  else
+    fail "cargo build completed but tree-sitter still fails to run"
+  fi
 }
 
 install_lazygit() {
-  header "6. lazygit"
+  header "7. lazygit"
   # nvim's snacks.nvim integration shells out to the lazygit binary.
   local tmp ver url
   tmp="$(mktemp -d)"
@@ -271,7 +303,7 @@ install_lazygit() {
 }
 
 install_rust() {
-  header "7. Rust (rustup + rust-analyzer)"
+  header "5. Rust (rustup + rust-analyzer)"
   if command -v rustup &>/dev/null; then
     pass "rustup already present: $(rustup --version | head -1)"
   else
@@ -303,23 +335,40 @@ install_python_tools() {
 }
 
 ensure_path() {
-  header "9. PATH configuration"
+  header "9. Shell config (PATH + tmux + aliases)"
   local marker="# >>> dotfiles bootstrap >>>"
   local block
   block="${marker}
 export PATH=\"\$HOME/.local/bin:\$HOME/.cargo/bin:\$PATH\"
+# Curated portable aliases/functions (rust dev, fzf, nav). See dots/shell-common.sh.
+[ -f \"${DOTFILES_DIR}/dots/shell-common.sh\" ] && . \"${DOTFILES_DIR}/dots/shell-common.sh\"
 # <<< dotfiles bootstrap <<<"
 
   local rc
   for rc in "${HOME}/.bashrc" "${HOME}/.zshrc"; do
     if [[ -f "${rc}" ]] && grep -qF "${marker}" "${rc}"; then
-      pass "PATH block already present in $(basename "${rc}")"
+      pass "shell block already present in $(basename "${rc}")"
     else
       printf '\n%s\n' "${block}" >>"${rc}"
-      pass "added PATH block to $(basename "${rc}")"
+      pass "added shell block to $(basename "${rc}")"
     fi
   done
-  warn "open a new shell (or 'source ~/.zshrc') for PATH changes to take effect"
+
+  # tmux config — symlink to the repo so edits stay in sync.
+  local tmux_src="${DOTFILES_DIR}/dots/tmux.conf"
+  local tmux_dst="${HOME}/.tmux.conf"
+  if [[ ! -f "${tmux_src}" ]]; then
+    warn "tmux config not found at ${tmux_src} — skipping"
+  elif [[ -L "${tmux_dst}" && "$(readlink "${tmux_dst}")" == "${tmux_src}" ]]; then
+    pass "tmux config already linked: ${tmux_dst} → ${tmux_src}"
+  else
+    [[ -e "${tmux_dst}" && ! -L "${tmux_dst}" ]] &&
+      mv "${tmux_dst}" "${tmux_dst}.bak.$$" && warn "backed up existing ~/.tmux.conf"
+    ln -sf "${tmux_src}" "${tmux_dst}"
+    pass "linked tmux config: ${tmux_dst} → ${tmux_src}"
+  fi
+
+  warn "open a new shell (or 'source ~/.zshrc') for changes to take effect"
 }
 
 run_nvim_setup() {
@@ -408,9 +457,9 @@ resolve_repo
 install_apt_packages
 install_fzf
 install_nvim
+install_rust
 install_tree_sitter
 install_lazygit
-install_rust
 install_python_tools
 ensure_path
 
