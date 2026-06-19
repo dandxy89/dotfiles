@@ -2,6 +2,11 @@ return {
   {
     'saghen/blink.cmp',
     name = 'blink-cmp',
+    -- Pin to the latest 1.x release tag so blink downloads a prebuilt fuzzy
+    -- binary instead of compiling from source. Following `main` requires a
+    -- nightly Rust toolchain; the Debian box only has stable, so the build
+    -- silently failed and the Lua matcher emitted the prefer_rust warning.
+    version = vim.version.range('1'),
     -- Eager: blink's plugin file merges its capabilities into vim.lsp.config('*'),
     -- which must happen before LSP servers attach at startup
     lazy = false,
@@ -9,9 +14,9 @@ return {
     build = function()
       vim.cmd.packadd('blink-lib')
       vim.cmd.packadd('blink-cmp')
-      -- V2 build/download system: :pwait() matches :h blink-cmp-installation,
-      -- waits without a fixed timeout (cold cargo builds exceed 60s) and won't
-      -- throw out of the build callback if the native build fails.
+      -- On a release tag build() downloads the prebuilt fuzzy binary (no
+      -- toolchain needed); :pwait() matches :h blink-cmp-installation, waits
+      -- without a fixed timeout, and won't throw if the download/build fails.
       require('blink.cmp').build():pwait()
     end,
     config = function()
