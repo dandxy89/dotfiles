@@ -174,27 +174,19 @@ verify_lsp_binaries() {
   fi
 }
 
-verify_open_python_file() {
-  header "5. Python file — TS highlight + LSP attach"
+# Usage: verify_open_file <section> <lang> <ext> <attach-hint> <<<'snippet'
+verify_open_file() {
+  local section="$1" lang="$2" ext="$3" hint="$4"
+  header "${section}. ${lang^} file — TS highlight + LSP attach"
   local tmpfile
-  tmpfile=$(mktemp /tmp/nvim-verify-XXXXXX.py)
-  cat >"${tmpfile}" <<'PYEOF'
-def greet(name: str) -> str:
-    return f"Hello, {name}"
-
-class Greeter:
-    def __init__(self, prefix: str) -> None:
-        self.prefix = prefix
-
-    def greet(self, name: str) -> str:
-        return f"{self.prefix} {greet(name)}"
-PYEOF
+  tmpfile=$(mktemp "/tmp/nvim-verify-XXXXXX.${ext}")
+  cat >"${tmpfile}"
 
   local out
   out=$(nvim --headless \
     -c "edit ${tmpfile}" \
     -c "lua vim.defer_fn(function()
-          local ts_ok = pcall(vim.treesitter.get_parser, 0, 'python')
+          local ts_ok = pcall(vim.treesitter.get_parser, 0, '${lang}')
           local clients = vim.lsp.get_clients({ bufnr = 0 })
           local lsp_names = {}
           for _, c in ipairs(clients) do table.insert(lsp_names, c.name) end
@@ -205,24 +197,35 @@ PYEOF
   rm -f "${tmpfile}"
 
   if echo "${out}" | grep -q 'ts=true'; then
-    pass "treesitter parser active for Python"
+    pass "treesitter parser active for ${lang^}"
   else
-    warn "could not confirm treesitter for Python (LSP attach may need a project root)"
+    warn "could not confirm treesitter for ${lang^} (LSP attach may need a project root)"
   fi
   local lsp_info
   lsp_info=$(echo "${out}" | grep 'lsp=' | sed 's/.*lsp=//')
-  if [[ -n "${lsp_info}" && "${lsp_info}" != "" ]]; then
+  if [[ -n "${lsp_info}" ]]; then
     pass "LSP clients attached: ${lsp_info}"
   else
-    warn "no LSP clients attached to Python file (expected in a project directory)"
+    warn "no LSP clients attached to ${lang^} file (${hint})"
   fi
 }
 
+verify_open_python_file() {
+  verify_open_file 5 python py "expected in a project directory" <<'PYEOF'
+def greet(name: str) -> str:
+    return f"Hello, {name}"
+
+class Greeter:
+    def __init__(self, prefix: str) -> None:
+        self.prefix = prefix
+
+    def greet(self, name: str) -> str:
+        return f"{self.prefix} {greet(name)}"
+PYEOF
+}
+
 verify_open_rust_file() {
-  header "6. Rust file — TS highlight + LSP attach"
-  local tmpfile
-  tmpfile=$(mktemp /tmp/nvim-verify-XXXXXX.rs)
-  cat >"${tmpfile}" <<'RSEOF'
+  verify_open_file 6 rust rs "rust-analyzer needs a Cargo.toml workspace" <<'RSEOF'
 struct Point {
     x: f64,
     y: f64,
@@ -234,33 +237,6 @@ impl Point {
     }
 }
 RSEOF
-
-  local out
-  out=$(nvim --headless \
-    -c "edit ${tmpfile}" \
-    -c "lua vim.defer_fn(function()
-          local ts_ok = pcall(vim.treesitter.get_parser, 0, 'rust')
-          local clients = vim.lsp.get_clients({ bufnr = 0 })
-          local lsp_names = {}
-          for _, c in ipairs(clients) do table.insert(lsp_names, c.name) end
-          io.write('ts=' .. tostring(ts_ok) .. ' lsp=' .. table.concat(lsp_names, ',') .. '\n')
-          io.flush()
-          vim.cmd('qa!')
-        end, 3000)" 2>&1 || true)
-  rm -f "${tmpfile}"
-
-  if echo "${out}" | grep -q 'ts=true'; then
-    pass "treesitter parser active for Rust"
-  else
-    warn "could not confirm treesitter for Rust (LSP attach may need a project root)"
-  fi
-  local lsp_info
-  lsp_info=$(echo "${out}" | grep 'lsp=' | sed 's/.*lsp=//')
-  if [[ -n "${lsp_info}" && "${lsp_info}" != "" ]]; then
-    pass "LSP clients attached: ${lsp_info}"
-  else
-    warn "no LSP clients attached to Rust file (rust-analyzer needs a Cargo.toml workspace)"
-  fi
 }
 
 verify_mason_packages() {

@@ -316,13 +316,4 @@ function M.setup()
   })
 end
 
-function M.load(names)
-  for _, name in ipairs(names) do
-    local spec = specs[name]
-    if spec then
-      load_plugin(spec)
-    end
-  end
-end
-
 return M

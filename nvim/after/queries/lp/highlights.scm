@@ -1,1 +1,0 @@
-/Users/dan/Projects/tree-sitter-lp/queries/highlights.scm
