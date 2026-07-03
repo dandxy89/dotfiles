@@ -45,12 +45,7 @@ check_binary() {
     pass "${label}"
     return
   fi
-  local mason_bin="${NVIM_DATA}/mason/bin/${bin}"
-  if [[ -x "${mason_bin}" ]]; then
-    pass "${label} (via Mason)"
-    return
-  fi
-  fail "${label} not found — install with Mason (:MasonInstall ${bin}) or your package manager"
+  fail "${label} not found — install with your package manager"
 }
 
 check_ts_parser() {
@@ -239,19 +234,6 @@ impl Point {
 RSEOF
 }
 
-verify_mason_packages() {
-  header "7. Mason package directory"
-  local mason_dir="${NVIM_DATA}/mason"
-  if [[ -d "${mason_dir}/packages" ]]; then
-    local count pkg_list
-    count=$(find "${mason_dir}/packages" -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
-    pkg_list=$(find "${mason_dir}/packages" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; 2>/dev/null | sort | tr '\n' ' ')
-    pass "Mason packages directory exists (${count} installed): ${pkg_list}"
-  else
-    warn "Mason directory not found at ${mason_dir} — open nvim once to initialise"
-  fi
-}
-
 MODE="${1:-all}"
 
 case "${MODE}" in
@@ -279,7 +261,6 @@ case "${MODE}" in
     verify_lsp_binaries
     verify_open_python_file
     verify_open_rust_file
-    verify_mason_packages
     ;;
   all)
     echo -e "${BOLD}Neovim Setup + Verify${NC}"
@@ -293,7 +274,6 @@ case "${MODE}" in
     verify_lsp_binaries
     verify_open_python_file
     verify_open_rust_file
-    verify_mason_packages
     ;;
   *)
     echo "Unknown option: ${MODE}"

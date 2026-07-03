@@ -55,6 +55,8 @@ local function load_plugin(spec, defer)
     local dep_spec = specs[dep]
     if dep_spec then
       load_plugin(dep_spec, defer)
+    else
+      vim.notify(('pack.lua: %s depends on unknown plugin %q'):format(spec.name, dep), vim.log.levels.WARN)
     end
   end
   vim.cmd.packadd({ spec.name, bang = defer })
@@ -131,7 +133,8 @@ local function setup_lazy(spec, load_queue, event_queue)
         vim.keymap.set(k[1], k[2], k[3], k[4] or {})
       end
     end
-    return table.insert(load_queue, spec)
+    table.insert(load_queue, spec)
+    return
   end
 
   if spec.event then
@@ -187,6 +190,73 @@ local function setup_lazy(spec, load_queue, event_queue)
       })
     end
   end
+end
+
+---@param installed table<string, boolean> plugin names present on disk
+local function setup_commands(installed)
+  vim.api.nvim_create_user_command('PackUpdate', function(opts)
+    local names = {}
+    for name in pairs(specs) do
+      table.insert(names, name)
+    end
+    vim.pack.update(names, { force = opts.bang })
+  end, { bang = true, desc = 'Update all plugins (! skips confirm)' })
+
+  vim.api.nvim_create_user_command('PackBuild', function(opts)
+    if opts.args ~= '' then
+      local spec = specs[opts.args]
+      if spec and spec.build then
+        run_build(spec)
+      else
+        vim.notify('No build for plugin: ' .. opts.args, vim.log.levels.WARN)
+      end
+      return
+    end
+    for _, spec in pairs(specs) do
+      if spec.build then
+        run_build(spec)
+      end
+    end
+  end, {
+    nargs = '?',
+    desc = 'Run build for one plugin (by name) or all',
+    complete = function()
+      local names = {}
+      for name, spec in pairs(specs) do
+        if spec.build then
+          table.insert(names, name)
+        end
+      end
+      return names
+    end,
+  })
+
+  vim.api.nvim_create_user_command('PackClean', function(ev)
+    if ev.args ~= '' then
+      vim.pack.del({ ev.args }, { force = true })
+      return
+    end
+    local to_del = {}
+    for name in pairs(installed) do
+      if not specs[name] then
+        table.insert(to_del, name)
+      end
+    end
+    if #to_del == 0 then
+      print('No orphaned plugins.')
+      return
+    end
+    print('Orphaned: ' .. table.concat(to_del, ', '))
+    if vim.fn.confirm('Delete ' .. #to_del .. ' plugin(s)?', '&Yes\n&No', 2) == 1 then
+      vim.pack.del(to_del, { force = true })
+    end
+  end, {
+    nargs = '?',
+    desc = 'Delete orphaned plugins (no args) or specific plugin',
+    complete = function()
+      return vim.tbl_keys(installed)
+    end,
+  })
 end
 
 function M.setup()
@@ -251,69 +321,7 @@ function M.setup()
   end
   build_queue = nil
 
-  vim.api.nvim_create_user_command('PackUpdate', function(opts)
-    local names = {}
-    for name in pairs(specs) do
-      table.insert(names, name)
-    end
-    vim.pack.update(names, { force = opts.bang })
-  end, { bang = true, desc = 'Update all plugins (! skips confirm)' })
-
-  vim.api.nvim_create_user_command('PackBuild', function(opts)
-    if opts.args ~= '' then
-      local spec = specs[opts.args]
-      if spec and spec.build then
-        run_build(spec)
-      else
-        vim.notify('No build for plugin: ' .. opts.args, vim.log.levels.WARN)
-      end
-      return
-    end
-    for _, spec in pairs(specs) do
-      if spec.build then
-        run_build(spec)
-      end
-    end
-  end, {
-    nargs = '?',
-    desc = 'Run build for one plugin (by name) or all',
-    complete = function()
-      local names = {}
-      for name, spec in pairs(specs) do
-        if spec.build then
-          table.insert(names, name)
-        end
-      end
-      return names
-    end,
-  })
-
-  vim.api.nvim_create_user_command('PackClean', function(ev)
-    if ev.args ~= '' then
-      vim.pack.del({ ev.args }, { force = true })
-      return
-    end
-    local to_del = {}
-    for name in pairs(installed) do
-      if not specs[name] then
-        table.insert(to_del, name)
-      end
-    end
-    if #to_del == 0 then
-      print('No orphaned plugins.')
-      return
-    end
-    print('Orphaned: ' .. table.concat(to_del, ', '))
-    if vim.fn.confirm('Delete ' .. #to_del .. ' plugin(s)?', '&Yes\n&No', 2) == 1 then
-      vim.pack.del(to_del, { force = true })
-    end
-  end, {
-    nargs = '?',
-    desc = 'Delete orphaned plugins (no args) or specific plugin',
-    complete = function()
-      return vim.tbl_keys(installed)
-    end,
-  })
+  setup_commands(installed)
 end
 
 return M

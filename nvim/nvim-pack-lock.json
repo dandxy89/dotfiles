@@ -1,7 +1,7 @@
 {
   "plugins": {
     "blink-cmp": {
-      "rev": "39682a9c737920578cf68887c21eaa4ce3845c67",
+      "rev": "bda905a4bf1b3edfa708b0be193b8c63d8620c96",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink-cmp-dat-word": {
@@ -13,15 +13,15 @@
       "src": "https://github.com/ribru17/blink-cmp-spell"
     },
     "blink-lib": {
-      "rev": "08ac9a9b873d3c7376e408a36c40c4131e2809ce",
+      "rev": "5876dd95deeb70aadbe9f1c0b7117a135061cdac",
       "src": "https://github.com/saghen/blink.lib"
     },
     "blink-pairs": {
-      "rev": "667dc9dd5a3735883b0204212b9602c626ede3fe",
+      "rev": "d0f00431105f773ae50cdc0fa03208448f5f829e",
       "src": "https://github.com/saghen/blink.pairs"
     },
     "blink-ripgrep.nvim": {
-      "rev": "9d03bc7823f56638bd0dea40c3ed4e947e436c61",
+      "rev": "13023b933455725cc46cac2d80c988e50d15a1bf",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "carvion.nvim": {
@@ -37,19 +37,19 @@
       "src": "https://github.com/vxpm/ferris.nvim"
     },
     "fyler.nvim": {
-      "rev": "8364418d1495ce90823dca1db6ac7abba27a7972",
+      "rev": "3dd25cb6103f88ce5a4300a382c389eeae7a0fdb",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
-      "rev": "988416cc782dfe28bff3f0da9b8c943b236cd86a",
+      "rev": "b9919229c84bd64d8539367e67e32811cf39a836",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "25050e4ed39e628282831d4cbecb1850454ce915",
+      "rev": "2038c666bd9d8a0b7349a0b6ee00dc83104b9ecf",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "grug-far.nvim": {
-      "rev": "c995bbacf8229dc096ec1c3d60f8531059c86c1b",
+      "rev": "c69859c1d5427ab5fc7ed12380ab521b4e336691",
       "src": "https://github.com/MagicDuck/grug-far.nvim"
     },
     "lazydiff.nvim": {
@@ -65,7 +65,7 @@
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.icons": {
-      "rev": "ac38c983aed0a2bd32a65ca3e2348e12e58ca292",
+      "rev": "e56797f90192d81f1fda02e662fc3e8e3d775027",
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "nui.nvim": {
@@ -73,7 +73,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lsp-endhints": {
-      "rev": "a86e7ca7a92ef003008d7eb5d153c63bcc89f79c",
+      "rev": "cc11482c988ba0e394b3426ae13d0b97e81a508d",
       "src": "https://github.com/chrisgrieser/nvim-lsp-endhints"
     },
     "nvim-treesitter": {

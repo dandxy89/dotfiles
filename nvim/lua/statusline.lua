@@ -18,34 +18,18 @@ StatusLine.config = {
     buftypes = { ['nofile'] = true, ['nowrite'] = true, ['prompt'] = true, ['popup'] = true, ['terminal'] = true },
     filetypes = { ['fugitive'] = true, ['oil'] = true, ['snacks_dashboard'] = true },
   },
-  colors = (function()
-    local p = require('theme.colors').dark
-    return {
-      bg = p.bg_alt,
-      fg = p.fg,
-      yellow = p.yellow,
-      cyan = p.cyan,
-      darkblue = p.dark_blue,
-      green = p.green,
-      orange = p.orange,
-      violet = p.violet,
-      magenta = p.magenta,
-      blue = p.blue,
-      red = p.red,
-    }
-  end)(),
+  colors = require('theme.colors').dark,
   diff = {
     symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
   },
   lsp_errors = {
-    symbols = { info = ' ', warn = ' ', error = ' ' },
+    symbols = { hint = ' ', warn = ' ', error = ' ' },
   },
   border_style = { ' ', '─', '', '', '', '', '', '' },
 }
 
 StatusLine.state = {
   wins = {},
-  cache = {}, -- Cache for rendered content
   update_timer = nil, -- Debounce timer
 }
 
@@ -87,74 +71,41 @@ function StatusLine.is_ignored(buf_id)
   return false
 end
 
----Generate a cache key for a window/buffer combination
----@param win_id number
----@param buf_id number
----@param width number
----@return string
-function StatusLine.cache_key(win_id, buf_id, width)
-  local modified = vim.bo[buf_id].modified
-  local readonly = vim.bo[buf_id].readonly
-
-  local diag_count = vim.diagnostic.count(buf_id)
-  local diag_key = string.format(
-    '%d,%d,%d',
-    diag_count[vim.diagnostic.severity.ERROR] or 0,
-    diag_count[vim.diagnostic.severity.WARN] or 0,
-    diag_count[vim.diagnostic.severity.HINT] or 0
-  )
-
-  local git_key = ''
-  local ok, signs = pcall(function()
-    return vim.b[buf_id].gitsigns_status_dict
-  end)
-  if ok and signs then
-    git_key = string.format('%s,%d,%d,%d', signs.head or '', signs.added or 0, signs.changed or 0, signs.removed or 0)
-  end
-
-  return string.format('%d:%d:%d:%s:%s:%s:%s', win_id, buf_id, width, tostring(modified), tostring(readonly), diag_key, git_key)
-end
+-- Maps mode to a colour *name* (resolved at call time) so a colour refresh
+-- on ColorScheme is picked up without rebuilding this table.
+local mode_color_names = {
+  n = 'blue',
+  i = 'green',
+  v = 'red',
+  ['\22'] = 'red',
+  V = 'red',
+  c = 'magenta',
+  no = 'red',
+  s = 'orange',
+  S = 'orange',
+  ['\19'] = 'orange',
+  ic = 'yellow',
+  R = 'violet',
+  Rv = 'violet',
+  cv = 'red',
+  ce = 'red',
+  r = 'cyan',
+  rm = 'cyan',
+  ['r?'] = 'cyan',
+  ['!'] = 'red',
+  t = 'red',
+}
 
 ---@return string
 function StatusLine.get_mode_color()
-  local m = vim.fn.mode()
   local c = StatusLine.config.colors
-  local map = {
-    n = c.blue,
-    i = c.green,
-    v = c.red,
-    ['\22'] = c.red,
-    V = c.red,
-    c = c.magenta,
-    no = c.red,
-    s = c.orange,
-    S = c.orange,
-    ['\19'] = c.orange,
-    ic = c.yellow,
-    R = c.violet,
-    Rv = c.violet,
-    cv = c.red,
-    ce = c.red,
-    r = c.cyan,
-    rm = c.cyan,
-    ['r?'] = c.cyan,
-    ['!'] = c.red,
-    t = c.red,
-  }
-  return map[m] or c.blue
+  return c[mode_color_names[vim.fn.mode()]] or c.blue
 end
 
 ---@param buf_id number
 ---@return StatusComponent[]
 function StatusLine.get_git_branch(buf_id)
-  -- Safely access gitsigns buffer variable
-  local ok, signs = pcall(function()
-    return vim.b[buf_id].gitsigns_status_dict
-  end)
-  if not ok then
-    signs = nil
-  end
-
+  local signs = vim.b[buf_id].gitsigns_status_dict
   local text = signs and ('  ' .. (signs.head or '') .. ' ') or ''
   return { { text = text, group = 'StatusLineGitBranch' } }
 end
@@ -162,11 +113,8 @@ end
 ---@param buf_id number
 ---@return StatusComponent[]
 function StatusLine.get_git_diff(buf_id)
-  -- Safely access gitsigns buffer variable
-  local ok, signs = pcall(function()
-    return vim.b[buf_id].gitsigns_status_dict
-  end)
-  if not ok or not signs then
+  local signs = vim.b[buf_id].gitsigns_status_dict
+  if not signs then
     return {}
   end
 
@@ -199,7 +147,7 @@ function StatusLine.get_diagnostics(buf_id)
   local error_count = count[sev.ERROR] or 0
 
   if hint_count > 0 then
-    table.insert(parts, { text = sym.info .. hint_count .. ' ', group = 'StatusLineDiagInfo' })
+    table.insert(parts, { text = sym.hint .. hint_count .. ' ', group = 'StatusLineDiagInfo' })
   end
   if warn_count > 0 then
     table.insert(parts, { text = sym.warn .. warn_count .. ' ', group = 'StatusLineDiagWarn' })
@@ -249,18 +197,11 @@ function StatusLine.get_file_info(buf_id)
   }
 end
 
----@param win_id number
 ---@param buf_id number
 ---@param width number
 ---@return string content
 ---@return StatusHighlight[] highlights
-function StatusLine.generate_content(win_id, buf_id, width)
-  -- Check cache first
-  local key = StatusLine.cache_key(win_id, buf_id, width)
-  if StatusLine.state.cache[key] then
-    return StatusLine.state.cache[key].content, StatusLine.state.cache[key].highlights
-  end
-
+function StatusLine.generate_content(buf_id, width)
   local left_components = {}
   local right_components = {}
 
@@ -318,12 +259,6 @@ function StatusLine.generate_content(win_id, buf_id, width)
   full_text = full_text .. spacer_text -- Add spacer (no highlight)
   add_components(right_components)
 
-  -- Store in cache
-  StatusLine.state.cache[key] = {
-    content = full_text,
-    highlights = highlights,
-  }
-
   return full_text, highlights
 end
 
@@ -353,7 +288,7 @@ function StatusLine.render_window(parent_win, buf_id)
   -- This creates a visual distinction between active and inactive windows
   local row = is_active and height or (height - 1)
 
-  local content, highlights = StatusLine.generate_content(parent_win, buf_id, width)
+  local content, highlights = StatusLine.generate_content(buf_id, width)
 
   local status_win = StatusLine.state.wins[parent_win]
   local status_buf
@@ -387,22 +322,28 @@ function StatusLine.render_window(parent_win, buf_id)
     vim.hl.range(status_buf, ns_id, hl.group, { 0, hl.start }, { 0, hl.finish })
   end
 
-  local border_group = 'Comment'
-  if is_active then
-    local mode = vim.api.nvim_get_mode().mode
-    if mode == '\22' then
-      mode = 'VBlock'
-    end
-    if mode == '\19' then
-      mode = 'SBlock'
-    end
+  local border_group = StatusLine.render_window_border_group(is_active)
+  vim.api.nvim_set_option_value('winhighlight', 'Normal:Normal,FloatBorder:' .. border_group, { win = status_win })
+end
 
-    local hl_name = 'StatusBorderActive' .. mode
-    vim.api.nvim_set_hl(0, hl_name, { fg = StatusLine.get_mode_color() })
-    border_group = hl_name
+---@param is_active boolean
+---@return string highlight group for the statusline border
+function StatusLine.render_window_border_group(is_active)
+  if not is_active then
+    return 'Comment'
   end
 
-  vim.api.nvim_set_option_value('winhighlight', 'Normal:Normal,FloatBorder:' .. border_group, { win = status_win })
+  local mode = vim.api.nvim_get_mode().mode
+  if mode == '\22' then
+    mode = 'VBlock'
+  end
+  if mode == '\19' then
+    mode = 'SBlock'
+  end
+
+  local hl_name = 'StatusBorderActive' .. mode
+  vim.api.nvim_set_hl(0, hl_name, { fg = StatusLine.get_mode_color() })
+  return hl_name
 end
 
 function StatusLine.update()
@@ -414,15 +355,6 @@ function StatusLine.update()
     20,
     0,
     vim.schedule_wrap(function()
-      -- Evict arbitrary half of cache when it grows beyond 100 entries
-      local cache_size = vim.tbl_count(StatusLine.state.cache)
-      if cache_size > 100 then
-        local keys = vim.tbl_keys(StatusLine.state.cache)
-        for i = 1, math.floor(cache_size / 2) do
-          StatusLine.state.cache[keys[i]] = nil
-        end
-      end
-
       -- Clean up invalid windows
       for parent, status in pairs(StatusLine.state.wins) do
         if not vim.api.nvim_win_is_valid(parent) then
@@ -476,5 +408,15 @@ vim.api.nvim_create_autocmd(
 )
 
 vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, { group = grp, callback = StatusLine.autoscroll })
+
+-- Re-extract palette and rebuild highlights if the colorscheme changes at runtime
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = grp,
+  callback = function()
+    require('theme.colors').refresh()
+    StatusLine.setup_highlights()
+    StatusLine.update()
+  end,
+})
 
 return StatusLine

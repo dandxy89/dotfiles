@@ -93,7 +93,7 @@ return {
     'xieyonn/blink-cmp-dat-word',
     build = function()
       local dest = vim.fn.stdpath('data') .. '/google-10000-english.txt'
-      vim
+      local result = vim
         .system({
           'curl',
           '-fsSL',
@@ -102,6 +102,9 @@ return {
           'https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
         })
         :wait()
+      if result.code ~= 0 then
+        vim.notify('blink-cmp-dat-word: word list download failed:\n' .. (result.stderr or ''), vim.log.levels.ERROR)
+      end
     end,
   },
 }

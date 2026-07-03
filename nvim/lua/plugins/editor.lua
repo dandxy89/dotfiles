@@ -1,5 +1,3 @@
-local keymap = require('util.keymap')
-
 return {
   {
     'https://codeberg.org/andyg/leap.nvim.git',
@@ -14,6 +12,10 @@ return {
         on_attach = function(bufnr)
           local gs = require('gitsigns')
 
+          local function map(mode, lhs, rhs, desc)
+            vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, noremap = true, silent = true })
+          end
+
           local function nav_hunk(direction)
             return function()
               if vim.wo.diff then
@@ -24,49 +26,29 @@ return {
             end
           end
 
-          keymap.set_batch('n', {
-            { ']h', nav_hunk('next'), { desc = 'Next hunk' } },
-            { '[h', nav_hunk('prev'), { desc = 'Previous hunk' } },
-          }, { buffer = bufnr })
+          map('n', ']h', nav_hunk('next'), 'Next hunk')
+          map('n', '[h', nav_hunk('prev'), 'Previous hunk')
 
-          keymap.set_batch('n', {
-            { '<Leader>hs', gs.stage_hunk, { desc = 'Stage hunk' } },
-            { '<Leader>hr', gs.reset_hunk, { desc = 'Reset hunk' } },
-            { '<Leader>hS', gs.stage_buffer, { desc = 'Stage buffer' } },
-            { '<Leader>hu', gs.undo_stage_hunk, { desc = 'Undo stage hunk' } },
-            { '<Leader>hR', gs.reset_buffer, { desc = 'Reset buffer' } },
-            { '<Leader>hp', gs.preview_hunk, { desc = 'Preview hunk' } },
-            { '<Leader>hd', gs.diffthis, { desc = 'Diff this' } },
-            {
-              '<Leader>hD',
-              function()
-                gs.diffthis('~')
-              end,
-              { desc = 'Diff this ~' },
-            },
-            { '<Leader>td', gs.toggle_deleted, { desc = 'Toggle deleted' } },
-          }, { buffer = bufnr })
+          map('n', '<Leader>hs', gs.stage_hunk, 'Stage hunk')
+          map('n', '<Leader>hr', gs.reset_hunk, 'Reset hunk')
+          map('n', '<Leader>hS', gs.stage_buffer, 'Stage buffer')
+          map('n', '<Leader>hu', gs.undo_stage_hunk, 'Undo stage hunk')
+          map('n', '<Leader>hR', gs.reset_buffer, 'Reset buffer')
+          map('n', '<Leader>hp', gs.preview_hunk, 'Preview hunk')
+          map('n', '<Leader>hd', gs.diffthis, 'Diff this')
+          map('n', '<Leader>hD', function()
+            gs.diffthis('~')
+          end, 'Diff this ~')
+          map('n', '<Leader>td', gs.toggle_deleted, 'Toggle deleted')
 
-          keymap.set_batch('v', {
-            {
-              '<Leader>hs',
-              function()
-                gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-              end,
-              { desc = 'Stage hunk' },
-            },
-            {
-              '<Leader>hr',
-              function()
-                gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-              end,
-              { desc = 'Reset hunk' },
-            },
-          }, { buffer = bufnr })
+          map('v', '<Leader>hs', function()
+            gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+          end, 'Stage hunk')
+          map('v', '<Leader>hr', function()
+            gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+          end, 'Reset hunk')
 
-          keymap.set_batch({ 'o', 'x' }, {
-            { 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'Select hunk' } },
-          }, { buffer = bufnr })
+          map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'Select hunk')
         end,
       })
     end,

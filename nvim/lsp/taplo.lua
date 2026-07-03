@@ -1,5 +1,4 @@
 -- Install: cargo install taplo-cli --locked
--- Or via mason: :MasonInstall taplo
 return {
   cmd = { 'taplo', 'lsp', 'stdio' },
   filetypes = { 'toml' },

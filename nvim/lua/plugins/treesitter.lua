@@ -94,7 +94,9 @@ return {
         end)
       end
 
-      local inc_sel_node = nil
+      -- Track the buffer alongside the node so a stale node from another
+      -- buffer is never applied to the current one
+      local inc_sel_node, inc_sel_buf = nil, nil
       local function select_node(node)
         local sr, sc, er, ec = node:range()
         if ec == 0 then
@@ -112,11 +114,12 @@ return {
           return
         end
         inc_sel_node = node
+        inc_sel_buf = vim.api.nvim_get_current_buf()
         select_node(node)
       end, { desc = 'Init treesitter selection' })
 
       vim.keymap.set('x', '<C-space>', function()
-        if not inc_sel_node then
+        if not inc_sel_node or inc_sel_buf ~= vim.api.nvim_get_current_buf() then
           return
         end
         local parent = inc_sel_node:parent()
@@ -128,7 +131,7 @@ return {
       end, { desc = 'Expand treesitter selection' })
 
       vim.keymap.set('x', '<BS>', function()
-        if not inc_sel_node then
+        if not inc_sel_node or inc_sel_buf ~= vim.api.nvim_get_current_buf() then
           return
         end
         local child = inc_sel_node:named_child(0)

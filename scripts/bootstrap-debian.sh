@@ -19,8 +19,8 @@
 # Usage: ./scripts/bootstrap-debian.sh [--skip-config | --help]
 #
 #   --skip-config  install prerequisites only; do not run ./nvim-setup.sh
-#   (no args)      install prerequisites, then run ./nvim-setup.sh --install,
-#                  then verify the Python + Rust toolchain
+#   (no args)      install prerequisites, then run ./nvim-setup.sh
+#                  (install + verify), then check the installed binaries
 #
 # Safe to re-run: every step is idempotent.
 
@@ -372,7 +372,7 @@ export PATH=\"\$HOME/.local/bin:\$HOME/.cargo/bin:\$PATH\"
 }
 
 run_nvim_setup() {
-  header "10. Neovim config (symlink + plugins + parsers)"
+  header "10. Neovim config (symlink + plugins + parsers + verify)"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
   if [[ "${NVIM_OK}" -ne 1 ]]; then
     fail "skipping config — nvim is not runnable on this OS (see step 4)"
@@ -383,58 +383,25 @@ run_nvim_setup() {
     return
   fi
 
-  if "${DOTFILES_DIR}/scripts/nvim-setup.sh" --install; then
-    pass "nvim-setup.sh --install completed"
+  # nvim-setup.sh with no args runs install then verify (parsers, LSPs, test files)
+  if "${DOTFILES_DIR}/scripts/nvim-setup.sh"; then
+    pass "nvim-setup.sh completed"
   else
-    fail "nvim-setup.sh --install reported errors (shown above)"
+    fail "nvim-setup.sh reported errors (shown above)"
   fi
 }
 
-check_binary() {
-  local bin="$1" label="${2:-$1}"
-  if command -v "${bin}" &>/dev/null; then
-    pass "${label}: $(command -v "${bin}")"
-  else
-    fail "${label} not found on PATH"
-  fi
-}
-
-check_ts_parser() {
-  local lang="$1" result
-  result=$(nvim --headless \
-    -c "lua local ok = pcall(vim.treesitter.language.add, '${lang}'); io.write(ok and 'ok' or 'missing'); io.flush()" \
-    -c qa 2>/dev/null || true)
-  if [[ "${result}" == "ok" ]]; then
-    pass "treesitter parser: ${lang}"
-  else
-    fail "treesitter parser missing: ${lang}"
-  fi
-}
-
-verify_all() {
-  header "11. Verification (Python + Rust)"
+verify_tools() {
+  header "11. Installed binaries"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
-
-  check_binary nvim "nvim"
-  check_binary fzf "fzf"
-  check_binary tree-sitter "tree-sitter (CLI)"
-  check_binary lazygit "lazygit"
-  check_binary rg "ripgrep"
-  check_binary tmux "tmux"
-  check_binary bat "bat"
-  check_binary fd "fd"
-  check_binary cargo "cargo (Rust)"
-  check_binary rust-analyzer "rust-analyzer (Rust LSP)"
-  check_binary basedpyright-langserver "basedpyright (Python LSP)"
-  check_binary ruff "ruff (Python LSP/linter)"
-  check_binary uv "uv"
-
-  if command -v nvim &>/dev/null && /usr/local/bin/nvim --version &>/dev/null; then
-    check_ts_parser python
-    check_ts_parser rust
-  else
-    warn "skipping treesitter checks — nvim is not runnable"
-  fi
+  local bin
+  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv; do
+    if command -v "${bin}" &>/dev/null; then
+      pass "${bin}: $(command -v "${bin}")"
+    else
+      fail "${bin} not found on PATH"
+    fi
+  done
 }
 
 SKIP_CONFIG=0
@@ -465,7 +432,7 @@ ensure_path
 
 if [[ "${SKIP_CONFIG}" -eq 0 ]]; then
   run_nvim_setup
-  verify_all
+  verify_tools
 else
   info "--skip-config set: run '${DOTFILES_DIR}/scripts/nvim-setup.sh' yourself when ready"
 fi

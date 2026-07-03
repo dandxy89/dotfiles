@@ -58,7 +58,7 @@ function M.update(client_id, token, value)
   end, p)
 
   -- Notify with spinner
-  local ok, _ = pcall(vim.notify, table.concat(messages, '\n'), 'info', {
+  local ok, _ = pcall(vim.notify, table.concat(messages, '\n'), vim.log.levels.INFO, {
     id = 'lsp_progress',
     title = client.name,
     opts = function(notif)

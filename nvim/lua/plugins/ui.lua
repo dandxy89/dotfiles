@@ -1,5 +1,3 @@
-local keymap = require('util.keymap')
-
 return {
   {
     'echasnovski/mini.icons',
@@ -79,7 +77,7 @@ return {
         },
       }
       for _, map in ipairs(maps) do
-        keymap.map('n', map[1], map[2], map[3])
+        vim.keymap.set('n', map[1], map[2], { desc = map[3], noremap = true, silent = true })
       end
     end,
   },

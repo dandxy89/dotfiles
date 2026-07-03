@@ -43,20 +43,32 @@ local fallback = {
   dark_blue = '#264f78',
 }
 
+---@return ColorTable
+local function extract()
+  return {
+    bg = get_hl_color('Normal', 'bg') or fallback.bg,
+    bg_alt = get_hl_color('StatusLine', 'bg') or fallback.bg_alt,
+    fg = get_hl_color('Normal', 'fg') or fallback.fg,
+    red = get_hl_color('ErrorMsg', 'fg') or fallback.red,
+    green = get_hl_color('String', 'fg') or fallback.green,
+    yellow = get_hl_color('WarningMsg', 'fg') or fallback.yellow,
+    blue = get_hl_color('Function', 'fg') or fallback.blue,
+    magenta = get_hl_color('Statement', 'fg') or fallback.magenta,
+    cyan = get_hl_color('Special', 'fg') or fallback.cyan,
+    orange = get_hl_color('Number', 'fg') or fallback.orange,
+    violet = get_hl_color('Type', 'fg') or fallback.violet,
+    dark_blue = get_hl_color('CursorLine', 'bg') or fallback.dark_blue,
+  }
+end
+
 ---@type ColorTable
-M.dark = {
-  bg = get_hl_color('Normal', 'bg') or fallback.bg,
-  bg_alt = get_hl_color('StatusLine', 'bg') or fallback.bg_alt,
-  fg = get_hl_color('Normal', 'fg') or fallback.fg,
-  red = get_hl_color('ErrorMsg', 'fg') or fallback.red,
-  green = get_hl_color('String', 'fg') or fallback.green,
-  yellow = get_hl_color('WarningMsg', 'fg') or fallback.yellow,
-  blue = get_hl_color('Function', 'fg') or fallback.blue,
-  magenta = get_hl_color('Statement', 'fg') or fallback.magenta,
-  cyan = get_hl_color('Special', 'fg') or fallback.cyan,
-  orange = get_hl_color('Number', 'fg') or fallback.orange,
-  violet = get_hl_color('Type', 'fg') or fallback.violet,
-  dark_blue = get_hl_color('CursorLine', 'bg') or fallback.dark_blue,
-}
+M.dark = extract()
+
+-- Re-extract in place so consumers holding a reference to M.dark stay current
+function M.refresh()
+  for key, value in pairs(extract()) do
+    M.dark[key] = value
+  end
+end
 
 return M
