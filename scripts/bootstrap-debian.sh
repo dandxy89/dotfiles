@@ -7,7 +7,7 @@
 # What it installs:
 #   apt          build-essential git curl unzip tmux ripgrep bat fd-find
 #   fzf          latest prebuilt binary (apt's is too old for fzf-lua)
-#   nvim         latest stable prebuilt -> /opt/nvim (builds from source if glibc too old)
+#   nvim         nightly prebuilt -> /opt/nvim (builds master from source if glibc too old)
 #   tree-sitter  latest CLI binary -> /usr/local/bin (generates extra parsers)
 #   lazygit      latest binary -> /usr/local/bin (used by nvim's snacks.lazygit)
 #   rust         rustup + cargo + rust-analyzer component
@@ -16,9 +16,10 @@
 # Note: python & rust treesitter parsers compile via the C compiler (build-essential);
 # the tree-sitter CLI installed here covers parsers that need a generator (bash, markdown, …).
 #
-# Usage: ./scripts/bootstrap-debian.sh [--skip-config | --help]
+# Usage: ./scripts/bootstrap-debian.sh [--skip-config | --upgrade | --help]
 #
 #   --skip-config  install prerequisites only; do not run ./nvim-setup.sh
+#   --upgrade      re-fetch the nvim nightly and update plugins/parsers only
 #   (no args)      install prerequisites, then run ./nvim-setup.sh
 #                  (install + verify), then check the installed binaries
 #
@@ -158,18 +159,12 @@ install_nvim() {
   tmp="$(mktemp -d)"
   trap 'rm -rf "${tmp}"' RETURN
 
-  url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz"
+  url="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-${NVIM_ARCH}.tar.gz"
   info "downloading ${url}"
   if ! curl -fL --retry 3 -o "${tmp}/nvim.tar.gz" "${url}"; then
-    if [[ "${NVIM_ARCH}" == "x86_64" ]]; then
-      warn "new asset name failed, trying legacy nvim-linux64.tar.gz"
-      curl -fL --retry 3 -o "${tmp}/nvim.tar.gz" \
-        "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
-    else
-      warn "could not download a prebuilt Neovim for ${NVIM_ARCH}"
-      build_nvim_from_source
-      return
-    fi
+    warn "could not download the nightly build for ${NVIM_ARCH}"
+    build_nvim_from_source
+    return
   fi
 
   ${SUDO} rm -rf /opt/nvim
@@ -196,8 +191,8 @@ build_nvim_from_source() {
   fi
   local bld
   bld="$(mktemp -d)"
-  info "cloning neovim (stable branch, shallow) …"
-  if ! git clone --depth 1 --branch stable https://github.com/neovim/neovim "${bld}/neovim"; then
+  info "cloning neovim (master branch, shallow) …"
+  if ! git clone --depth 1 --branch master https://github.com/neovim/neovim "${bld}/neovim"; then
     fail "git clone of neovim failed"
     rm -rf "${bld}"
     return
@@ -407,10 +402,25 @@ verify_tools() {
 SKIP_CONFIG=0
 case "${1:-}" in
   --help | -h)
-    sed -n '2,23p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'
     exit 0
     ;;
   --skip-config) SKIP_CONFIG=1 ;;
+  --upgrade)
+    echo -e "${BOLD}Neovim Upgrade — nightly binary + plugins${NC}"
+    preflight
+    resolve_repo
+    install_nvim
+    "${DOTFILES_DIR}/scripts/nvim-setup.sh" --upgrade || FAILED=$((FAILED + 1))
+    echo ""
+    if [[ "${FAILED}" -eq 0 ]]; then
+      echo -e "${GREEN}${BOLD}Upgrade complete.${NC}"
+    else
+      echo -e "${RED}${BOLD}${FAILED} step(s) failed.${NC}"
+      exit 1
+    fi
+    exit 0
+    ;;
   "") ;;
   *)
     echo "Unknown option: $1 (try --help)" >&2

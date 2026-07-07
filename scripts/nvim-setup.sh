@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Neovim setup and verification script
-# Usage: ./scripts/nvim-setup.sh [--install | --verify | --help]
+# Usage: ./scripts/nvim-setup.sh [--install | --verify | --clean | --help]
 #
 # --install  : create symlink and install plugins/parsers (default on new machine)
 # --verify   : check symlink, parsers, LSP binaries, and open test files
+# --upgrade  : update plugins (:PackUpdate!) and treesitter parsers in place
+# --clean    : remove the config symlink and all plugin/parser state, so
+#              --install starts from scratch
 # (no args)  : run both install then verify
 
 set -euo pipefail
@@ -114,6 +117,54 @@ install_ts_parsers() {
     -c "lua require('nvim-treesitter').install({ 'python', 'rust' }):wait(300000)" \
     -c "qa" 2>&1 | tail -5 || true
   pass "python and rust parsers installed"
+}
+
+upgrade_plugins() {
+  header "Plugin upgrade (:PackUpdate!)"
+  nvim --headless -c "PackUpdate!" -c "qa" 2>&1 | tail -10 || true
+  pass "plugins updated"
+
+  header "Treesitter parser upgrade"
+  nvim --headless -c "lua require('nvim-treesitter').update():wait(600000)" -c "qa" 2>&1 | tail -5 || true
+  pass "parsers updated"
+}
+
+clean_nvim() {
+  header "Clean — remove config symlink and plugin/parser state"
+
+  # ponytail: XDG defaults as fallback, nvim may be missing or broken here
+  local dirs=(
+    "${NVIM_DATA:-${XDG_DATA_HOME:-${HOME}/.local/share}/nvim}"
+    "${XDG_STATE_HOME:-${HOME}/.local/state}/nvim"
+    "${XDG_CACHE_HOME:-${HOME}/.cache}/nvim"
+  )
+
+  echo "  Will remove:"
+  [[ -L "${NVIM_CFG}" ]] && echo "    ${NVIM_CFG} (symlink)"
+  for d in "${dirs[@]}"; do
+    [[ -d "${d}" ]] && echo "    ${d}"
+  done
+  read -rp "  Proceed? [y/N] " answer
+  if [[ "${answer,,}" != "y" ]]; then
+    warn "aborted — nothing removed"
+    return
+  fi
+
+  if [[ -L "${NVIM_CFG}" ]]; then
+    rm "${NVIM_CFG}"
+    pass "removed symlink ${NVIM_CFG}"
+  elif [[ -e "${NVIM_CFG}" ]]; then
+    warn "${NVIM_CFG} is not a symlink — left alone"
+  fi
+
+  for d in "${dirs[@]}"; do
+    if [[ -d "${d}" ]]; then
+      rm -rf "${d}"
+      pass "removed ${d}"
+    fi
+  done
+
+  info "run '${0} --install' to rebuild from scratch"
 }
 
 verify_symlink() {
@@ -238,10 +289,12 @@ MODE="${1:-all}"
 
 case "${MODE}" in
   --help | -h)
-    echo "Usage: $(basename "$0") [--install | --verify | --help]"
+    echo "Usage: $(basename "$0") [--install | --verify | --upgrade | --clean | --help]"
     echo ""
     echo "  --install   Create symlink and install plugins + TS parsers"
     echo "  --verify    Check symlink, parsers, LSP binaries, and open test files"
+    echo "  --upgrade   Update plugins and TS parsers in place"
+    echo "  --clean     Remove symlink and plugin/parser state (re-run --install after)"
     echo "  (no args)   Run install then verify"
     exit 0
     ;;
@@ -251,6 +304,16 @@ case "${MODE}" in
     setup_symlink
     install_plugins
     install_ts_parsers
+    ;;
+  --upgrade)
+    echo -e "${BOLD}Neovim Upgrade${NC}"
+    require_nvim
+    upgrade_plugins
+    verify_nvim_startup
+    ;;
+  --clean)
+    echo -e "${BOLD}Neovim Clean${NC}"
+    clean_nvim
     ;;
   --verify)
     echo -e "${BOLD}Neovim Verify${NC}"

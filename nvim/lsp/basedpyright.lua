@@ -31,9 +31,9 @@ return {
     if root then
       local venv_path = root .. '/.venv'
       if vim.fn.isdirectory(venv_path) == 1 then
-        config.settings = config.settings or {}
-        config.settings.python = config.settings.python or {}
-        config.settings.python.pythonPath = venv_path .. '/bin/python'
+        config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+          python = { pythonPath = venv_path .. '/bin/python' },
+        })
       end
     end
   end,

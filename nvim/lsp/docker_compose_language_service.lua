@@ -1,4 +1,5 @@
 -- Install: npm install -g @microsoft/compose-language-service
+---@type vim.lsp.Config
 return {
   cmd = { 'docker-compose-langserver', '--stdio' },
   filetypes = { 'yaml.docker-compose' },

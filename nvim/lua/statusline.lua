@@ -10,65 +10,46 @@
 vim.opt.statusline = ' '
 local ns_id = vim.api.nvim_create_namespace('StatusLineNS')
 
-local StatusLine = {}
+-- Live reference: require('theme.colors').refresh() mutates this table in place,
+-- so the ColorScheme autocmd below picks up new colours without re-requiring.
+local colors = require('theme.colors').dark
+local ignored_names = { ['No Name'] = true }
+local ignored_buftypes = { ['nofile'] = true, ['nowrite'] = true, ['prompt'] = true, ['popup'] = true, ['terminal'] = true }
+local diff_symbols = { added = ' ', modified = '󰝤 ', removed = ' ' }
+local diag_symbols = { hint = ' ', warn = ' ', error = ' ' }
+local border_style = { ' ', '─', '', '', '', '', '', '' }
 
-StatusLine.config = {
-  ignored = {
-    names = { ['[LSP Eldoc]'] = true, ['NvimTree_1'] = true, ['No Name'] = true },
-    buftypes = { ['nofile'] = true, ['nowrite'] = true, ['prompt'] = true, ['popup'] = true, ['terminal'] = true },
-    filetypes = { ['fugitive'] = true, ['oil'] = true, ['snacks_dashboard'] = true },
-  },
-  colors = require('theme.colors').dark,
-  diff = {
-    symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
-  },
-  lsp_errors = {
-    symbols = { hint = ' ', warn = ' ', error = ' ' },
-  },
-  border_style = { ' ', '─', '', '', '', '', '', '' },
-}
+local StatusLine = {}
 
 StatusLine.state = {
   wins = {},
-  update_timer = nil, -- Debounce timer
+  update_timer = nil, ---@type uv.uv_timer_t? Debounce timer
 }
 
 function StatusLine.setup_highlights()
   vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'None', fg = 'None' })
   vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'None', fg = 'None' })
 
-  vim.api.nvim_set_hl(0, 'StatusLineFilename', { fg = StatusLine.config.colors.fg, bg = 'None', bold = true })
-  vim.api.nvim_set_hl(0, 'StatusLineFilenameEdited', { fg = StatusLine.config.colors.yellow, bg = 'None', bold = true })
-  vim.api.nvim_set_hl(0, 'StatusLineFilenameRO', { fg = StatusLine.config.colors.red, bg = 'None', bold = true })
+  vim.api.nvim_set_hl(0, 'StatusLineFilename', { fg = colors.fg, bg = 'None', bold = true })
+  vim.api.nvim_set_hl(0, 'StatusLineFilenameEdited', { fg = colors.yellow, bg = 'None', bold = true })
+  vim.api.nvim_set_hl(0, 'StatusLineFilenameRO', { fg = colors.red, bg = 'None', bold = true })
 
-  vim.api.nvim_set_hl(0, 'StatusLineGitBranch', { fg = StatusLine.config.colors.violet, bg = 'None', bold = true })
+  vim.api.nvim_set_hl(0, 'StatusLineGitBranch', { fg = colors.violet, bg = 'None', bold = true })
 
-  vim.api.nvim_set_hl(0, 'StatusLineDiffAdd', { fg = StatusLine.config.colors.green, bg = 'None' })
-  vim.api.nvim_set_hl(0, 'StatusLineDiffChange', { fg = StatusLine.config.colors.orange, bg = 'None' })
-  vim.api.nvim_set_hl(0, 'StatusLineDiffDelete', { fg = StatusLine.config.colors.red, bg = 'None' })
+  vim.api.nvim_set_hl(0, 'StatusLineDiffAdd', { fg = colors.green, bg = 'None' })
+  vim.api.nvim_set_hl(0, 'StatusLineDiffChange', { fg = colors.orange, bg = 'None' })
+  vim.api.nvim_set_hl(0, 'StatusLineDiffDelete', { fg = colors.red, bg = 'None' })
 
-  vim.api.nvim_set_hl(0, 'StatusLineDiagError', { fg = StatusLine.config.colors.red, bg = 'None' })
-  vim.api.nvim_set_hl(0, 'StatusLineDiagWarn', { fg = StatusLine.config.colors.yellow, bg = 'None' })
-  vim.api.nvim_set_hl(0, 'StatusLineDiagInfo', { fg = StatusLine.config.colors.cyan, bg = 'None' })
+  vim.api.nvim_set_hl(0, 'StatusLineDiagError', { fg = colors.red, bg = 'None' })
+  vim.api.nvim_set_hl(0, 'StatusLineDiagWarn', { fg = colors.yellow, bg = 'None' })
+  vim.api.nvim_set_hl(0, 'StatusLineDiagInfo', { fg = colors.cyan, bg = 'None' })
 end
 
 ---@param buf_id number
 ---@return boolean
 function StatusLine.is_ignored(buf_id)
   local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf_id), ':t')
-  local buftype = vim.bo[buf_id].buftype
-  local filetype = vim.bo[buf_id].filetype
-
-  if StatusLine.config.ignored.names[name] then
-    return true
-  end
-  if StatusLine.config.ignored.buftypes[buftype] then
-    return true
-  end
-  if StatusLine.config.ignored.filetypes[filetype] then
-    return true
-  end
-  return false
+  return ignored_names[name] or ignored_buftypes[vim.bo[buf_id].buftype] or false
 end
 
 -- Maps mode to a colour *name* (resolved at call time) so a colour refresh
@@ -98,16 +79,15 @@ local mode_color_names = {
 
 ---@return string
 function StatusLine.get_mode_color()
-  local c = StatusLine.config.colors
-  return c[mode_color_names[vim.fn.mode()]] or c.blue
+  return colors[mode_color_names[vim.fn.mode()]] or colors.blue
 end
 
 ---@param buf_id number
----@return StatusComponent[]
+---@return StatusComponent
 function StatusLine.get_git_branch(buf_id)
   local signs = vim.b[buf_id].gitsigns_status_dict
   local text = signs and ('  ' .. (signs.head or '') .. ' ') or ''
-  return { { text = text, group = 'StatusLineGitBranch' } }
+  return { text = text, group = 'StatusLineGitBranch' }
 end
 
 ---@param buf_id number
@@ -118,17 +98,16 @@ function StatusLine.get_git_diff(buf_id)
     return {}
   end
 
-  local config = StatusLine.config.diff
   local parts = { { text = ' ', group = 'None' } }
 
   if (signs.added or 0) > 0 then
-    table.insert(parts, { text = config.symbols.added .. signs.added .. ' ', group = 'StatusLineDiffAdd' })
+    table.insert(parts, { text = diff_symbols.added .. signs.added .. ' ', group = 'StatusLineDiffAdd' })
   end
   if (signs.changed or 0) > 0 then
-    table.insert(parts, { text = config.symbols.modified .. signs.changed .. ' ', group = 'StatusLineDiffChange' })
+    table.insert(parts, { text = diff_symbols.modified .. signs.changed .. ' ', group = 'StatusLineDiffChange' })
   end
   if (signs.removed or 0) > 0 then
-    table.insert(parts, { text = config.symbols.removed .. signs.removed .. ' ', group = 'StatusLineDiffDelete' })
+    table.insert(parts, { text = diff_symbols.removed .. signs.removed .. ' ', group = 'StatusLineDiffDelete' })
   end
 
   return parts
@@ -139,7 +118,6 @@ end
 function StatusLine.get_diagnostics(buf_id)
   local count = vim.diagnostic.count(buf_id)
   local parts = { { text = ' ', group = 'None' } }
-  local sym = StatusLine.config.lsp_errors.symbols
   local sev = vim.diagnostic.severity
 
   local hint_count = count[sev.HINT] or 0
@@ -147,13 +125,13 @@ function StatusLine.get_diagnostics(buf_id)
   local error_count = count[sev.ERROR] or 0
 
   if hint_count > 0 then
-    table.insert(parts, { text = sym.hint .. hint_count .. ' ', group = 'StatusLineDiagInfo' })
+    table.insert(parts, { text = diag_symbols.hint .. hint_count .. ' ', group = 'StatusLineDiagInfo' })
   end
   if warn_count > 0 then
-    table.insert(parts, { text = sym.warn .. warn_count .. ' ', group = 'StatusLineDiagWarn' })
+    table.insert(parts, { text = diag_symbols.warn .. warn_count .. ' ', group = 'StatusLineDiagWarn' })
   end
   if error_count > 0 then
-    table.insert(parts, { text = sym.error .. error_count .. ' ', group = 'StatusLineDiagError' })
+    table.insert(parts, { text = diag_symbols.error .. error_count .. ' ', group = 'StatusLineDiagError' })
   end
 
   return parts
@@ -202,29 +180,14 @@ end
 ---@return string content
 ---@return StatusHighlight[] highlights
 function StatusLine.generate_content(buf_id, width)
-  local left_components = {}
-  local right_components = {}
-
   -- A. Build Left Side
   local file = StatusLine.get_file_info(buf_id)
-  table.insert(left_components, file.icon)
-  table.insert(left_components, file.name)
-
-  local diffs = StatusLine.get_git_diff(buf_id)
-  for _, d in ipairs(diffs) do
-    table.insert(left_components, d)
-  end
+  local left_components = { file.icon, file.name }
+  vim.list_extend(left_components, StatusLine.get_git_diff(buf_id))
 
   -- B. Build Right Side
-  local diags = StatusLine.get_diagnostics(buf_id)
-  for _, d in ipairs(diags) do
-    table.insert(right_components, d)
-  end
-
-  local branch = StatusLine.get_git_branch(buf_id)
-  for _, b in ipairs(branch) do
-    table.insert(right_components, b)
-  end
+  local right_components = StatusLine.get_diagnostics(buf_id)
+  table.insert(right_components, StatusLine.get_git_branch(buf_id))
 
   -- C. Calculate Spacer
   local left_len = 0
@@ -300,7 +263,7 @@ function StatusLine.render_window(parent_win, buf_id)
     height = 1,
     row = row,
     col = 0,
-    border = StatusLine.config.border_style,
+    border = border_style,
     style = 'minimal',
     focusable = false,
     zindex = 10, -- Low zindex to stay behind most floating windows (default is 50)
@@ -340,6 +303,8 @@ function StatusLine.render_window_border_group(is_active)
   if mode == '\19' then
     mode = 'SBlock'
   end
+  -- Highlight group names allow only word chars, and modes like 'r?' / '!' don't
+  mode = mode:gsub('%W', '')
 
   local hl_name = 'StatusBorderActive' .. mode
   vim.api.nvim_set_hl(0, hl_name, { fg = StatusLine.get_mode_color() })

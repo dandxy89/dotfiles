@@ -2,15 +2,15 @@ return {
   {
     'saghen/blink.cmp',
     name = 'blink-cmp',
-    -- Pin to the latest 1.x release tag so blink downloads a prebuilt fuzzy
-    -- binary instead of compiling from source. Following `main` requires a
-    -- nightly Rust toolchain; the Debian box only has stable, so the build
-    -- silently failed and the Lua matcher emitted the prefer_rust warning.
-    version = vim.version.range('1'),
+    -- v2 (UPGRADE.md): requires Neovim 0.12+ and blink.lib; build():pwait()
+    -- fetches the fuzzy binary via blink.lib, so no Rust toolchain is needed.
+    -- v2 is untagged and lives on main; pin vim.version.range('2')
+    -- once v2.0.0 is released.
+    version = 'main',
     -- Eager: blink's plugin file merges its capabilities into vim.lsp.config('*'),
     -- which must happen before LSP servers attach at startup
     lazy = false,
-    dependencies = { 'blink-lib', 'blink-ripgrep.nvim', 'blink-cmp-spell', 'blink-cmp-dat-word' },
+    dependencies = { 'blink-lib', 'blink-ripgrep.nvim', 'blink-cmp-spell' },
     build = function()
       vim.cmd.packadd('blink-lib')
       vim.cmd.packadd('blink-cmp')
@@ -48,7 +48,7 @@ return {
           sources = { default = { 'cmdline', 'path' } },
         },
         sources = {
-          default = { 'lsp', 'path', 'snippets', 'buffer', 'ripgrep', 'spell', 'datword', 'omni' },
+          default = { 'lsp', 'path', 'snippets', 'buffer', 'ripgrep', 'spell' },
           providers = {
             ripgrep = {
               module = 'blink-ripgrep',
@@ -61,14 +61,6 @@ return {
               min_keyword_length = 0,
             },
             spell = { name = 'Spell', module = 'blink-cmp-spell' },
-            omni = { name = 'Omni', module = 'blink.cmp.sources.complete_func' },
-            datword = {
-              name = 'Word',
-              module = 'blink-cmp-dat-word',
-              opts = {
-                paths = { vim.fn.stdpath('data') .. '/google-10000-english.txt' },
-              },
-            },
           },
         },
       })
@@ -79,7 +71,13 @@ return {
     'saghen/blink.pairs',
     name = 'blink-pairs',
     event = { 'InsertEnter' },
-    build = 'cargo build --release',
+    dependencies = { 'blink-lib' },
+    -- v0.6+: native library fetched via blink.lib, no cargo needed
+    build = function()
+      vim.cmd.packadd('blink-lib')
+      vim.cmd.packadd('blink-pairs')
+      require('blink.pairs').build():pwait(60000)
+    end,
     config = function()
       require('blink.pairs').setup({})
     end,
@@ -88,23 +86,4 @@ return {
   { 'saghen/blink.lib', name = 'blink-lib' },
   { 'mikavilpas/blink-ripgrep.nvim' },
   { 'ribru17/blink-cmp-spell' },
-
-  {
-    'xieyonn/blink-cmp-dat-word',
-    build = function()
-      local dest = vim.fn.stdpath('data') .. '/google-10000-english.txt'
-      local result = vim
-        .system({
-          'curl',
-          '-fsSL',
-          '-o',
-          dest,
-          'https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
-        })
-        :wait()
-      if result.code ~= 0 then
-        vim.notify('blink-cmp-dat-word: word list download failed:\n' .. (result.stderr or ''), vim.log.levels.ERROR)
-      end
-    end,
-  },
 }

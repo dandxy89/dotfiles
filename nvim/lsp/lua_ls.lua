@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
   cmd = { 'lua-language-server' },
   filetypes = { 'lua' },
@@ -21,7 +22,7 @@ return {
       },
       diagnostics = {
         enable = true,
-        globals = { 'require', 'vim', 'use', 'love' },
+        globals = { 'vim' },
       },
       workspace = {
         library = { vim.env.VIMRUNTIME },

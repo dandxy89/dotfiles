@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
   cmd = {
     'sh',
@@ -34,7 +35,7 @@ return {
   end,
   settings = {
     ['rust-analyzer'] = {
-      cargo = { features = 'all', buildScripts = { enable = true } },
+      cargo = { buildScripts = { enable = true } },
       diagnostics = { enable = true },
       inlayHints = {
         enable = true,

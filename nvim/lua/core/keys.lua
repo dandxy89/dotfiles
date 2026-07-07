@@ -1,16 +1,9 @@
 local keymap = require('util.keymap')
 
--- Quality of Life stuff --
-local multiremap = keymap.bind({ 'n', 's', 'v' }, { nowait = true })
-multiremap('<Leader>yy', '"+y', { desc = 'Yank to clipboard' })
-multiremap('<Leader>yY', '"+yy', { desc = 'Yank line to clipboard' })
-multiremap('<Leader>yp', '"+p', { desc = 'Paste from clipboard' })
-multiremap('<Leader>yd', '"+d', { desc = 'Delete to clipboard' })
-
 -- NORMAL MODE
 local nnoremap = keymap.bind('n', { nowait = true })
 nnoremap('<Leader>w', function()
-  local ok, err = pcall(vim.cmd, 'write')
+  local ok, err = pcall(vim.cmd.write)
   if ok then
     vim.notify('File saved')
   else
@@ -42,12 +35,12 @@ nnoremap('<Leader>cl', vim.lsp.codelens.run, { desc = 'Run codelens' })
 nnoremap('<Leader>cL', function()
   vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled())
 end, { desc = 'Toggle codelens' })
-nnoremap('<C-Z>', '<cmd>undo<CR>', { desc = 'Undo' })
-nnoremap('<C-Y>', '<cmd>redo<CR>', { desc = 'Redo' })
 nnoremap('<Leader>fl', function()
   if vim.bo.filetype == 'json' or vim.bo.filetype == 'jsonc' then
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    local ok = pcall(vim.cmd, '%!jq .')
+    local ok = pcall(function()
+      vim.cmd('%!jq .')
+    end)
     if not ok then
       vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
       vim.notify('jq formatting failed', vim.log.levels.ERROR)

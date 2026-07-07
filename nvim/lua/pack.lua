@@ -1,22 +1,26 @@
 -- Declarative plugin manager wrapping vim.pack, adapted from kite12580/pack.lua
 -- Plugin specs live in lua/plugins/*.lua, each returning { {spec}, {spec}, … }
---
--- Spec fields:
---   [1]          string  source (GitHub "org/repo" or full URL)           required
---   name         string  plugin name (inferred from src if omitted)
---   version      string  passthrough to vim.pack.add
---   branch       string  passthrough to vim.pack.add
---   lazy         boolean default true; false means load at startup
---   dependencies string[] plugin names; each dep must have its own spec
---   event        string[] autocmd events ("InsertEnter" or "FileType rust")
---   cmd          string[] user commands that trigger loading
---   keys         table[] { mode, lhs, rhs?, opts? } — stub keymaps
---   build        fn|str  runs after install/update; string is shell command
---   init         fn      called before any plugin is loaded
---   config       fn      called after this plugin is loaded
 
-local M, specs, loaded = {}, {}, {}
+---@class PackSpec
+---@field [1] string source (GitHub "org/repo" or full URL)
+---@field name? string plugin name (inferred from src if omitted)
+---@field version? string passthrough to vim.pack.add
+---@field branch? string passthrough to vim.pack.add
+---@field lazy? boolean default true; false means load at startup
+---@field dependencies? string[] plugin names; each dep must have its own spec
+---@field event? string[] autocmd events ("InsertEnter" or "FileType rust")
+---@field cmd? string[] user commands that trigger loading
+---@field keys? table[] { mode, lhs, rhs?, opts? } — stub keymaps
+---@field build? fun()|string runs after install/update; string is shell command
+---@field init? fun() called before any plugin is loaded
+---@field config? fun() called after this plugin is loaded
 
+local M = {}
+local specs = {} ---@type table<string, PackSpec>
+local loaded = {} ---@type table<string, boolean>
+
+---@param spec PackSpec
+---@return vim.pack.Spec
 local function to_pack_spec(spec)
   local src = spec[1]
   if not src:match('^https?://') then
@@ -25,16 +29,20 @@ local function to_pack_spec(spec)
   return { src = src, name = spec.name, version = spec.version, branch = spec.branch }
 end
 
+---@param name string
+---@return string
 local function plugin_path(name)
   return vim.fn.stdpath('data') .. '/site/pack/core/opt/' .. name
 end
 
+---@param spec PackSpec
 local function run_build(spec)
-  if type(spec.build) == 'function' then
-    spec.build()
-  elseif type(spec.build) == 'string' then
+  local build = spec.build
+  if type(build) == 'function' then
+    build()
+  elseif type(build) == 'string' then
     vim.notify('Building ' .. spec.name .. '...', vim.log.levels.INFO)
-    vim.system({ 'sh', '-c', spec.build }, { cwd = plugin_path(spec.name) }, function(obj)
+    vim.system({ 'sh', '-c', build }, { cwd = plugin_path(spec.name) }, function(obj)
       vim.schedule(function()
         if obj.code ~= 0 then
           vim.notify('Build failed for ' .. spec.name .. ':\n' .. (obj.stderr or obj.stdout or ''), vim.log.levels.ERROR)
@@ -46,6 +54,8 @@ local function run_build(spec)
   end
 end
 
+---@param spec PackSpec
+---@param defer? boolean packadd with bang (defer sourcing until startup completes)
 local function load_plugin(spec, defer)
   if loaded[spec.name] then
     return
@@ -65,6 +75,7 @@ local function load_plugin(spec, defer)
   end
 end
 
+---@param queue table<string, PackSpec[]> event name (or "Event pattern") -> specs to load
 local function stub_events(queue)
   -- Build the chain of events to replay after loading plugins.
   -- FileType triggers BufReadPost -> BufReadPre so late-loaded plugins see the full chain.
@@ -126,6 +137,9 @@ local function stub_events(queue)
   end
 end
 
+---@param spec PackSpec
+---@param load_queue PackSpec[] specs to load eagerly at startup
+---@param event_queue table<string, PackSpec[]> event name -> specs to load on that event
 local function setup_lazy(spec, load_queue, event_queue)
   if spec.lazy == false then
     if spec.keys then
