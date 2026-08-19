@@ -53,7 +53,11 @@ vim.opt.diffopt:append('algorithm:histogram')
 
 -- Filetype associations
 vim.filetype.add({
-  pattern = { ['gitconf.*'] = 'gitconfig' },
+  pattern = {
+    ['gitconf.*'] = 'gitconfig',
+    -- Nvim has no built-in detection for this; the compose LSP keys off it
+    ['.*[cC]ompose%.ya?ml'] = 'yaml.docker-compose',
+  },
 })
 
 -- Prevent LSP from overwriting treesitter colour settings

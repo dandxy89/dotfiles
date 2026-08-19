@@ -4,8 +4,7 @@
 ---@class PackSpec
 ---@field [1] string source (GitHub "org/repo" or full URL)
 ---@field name? string plugin name (inferred from src if omitted)
----@field version? string passthrough to vim.pack.add
----@field branch? string passthrough to vim.pack.add
+---@field version? string|vim.VersionRange passthrough to vim.pack.add
 ---@field lazy? boolean default true; false means load at startup
 ---@field dependencies? string[] plugin names; each dep must have its own spec
 ---@field event? string[] autocmd events ("InsertEnter" or "FileType rust")
@@ -26,7 +25,7 @@ local function to_pack_spec(spec)
   if not src:match('^https?://') then
     src = 'https://github.com/' .. src
   end
-  return { src = src, name = spec.name, version = spec.version, branch = spec.branch }
+  return { src = src, name = spec.name, version = spec.version }
 end
 
 ---@param name string
@@ -206,16 +205,7 @@ local function setup_lazy(spec, load_queue, event_queue)
   end
 end
 
----@param installed table<string, boolean> plugin names present on disk
-local function setup_commands(installed)
-  vim.api.nvim_create_user_command('PackUpdate', function(opts)
-    local names = {}
-    for name in pairs(specs) do
-      table.insert(names, name)
-    end
-    vim.pack.update(names, { force = opts.bang })
-  end, { bang = true, desc = 'Update all plugins (! skips confirm)' })
-
+local function setup_commands()
   vim.api.nvim_create_user_command('PackBuild', function(opts)
     if opts.args ~= '' then
       local spec = specs[opts.args]
@@ -244,46 +234,11 @@ local function setup_commands(installed)
       return names
     end,
   })
-
-  vim.api.nvim_create_user_command('PackClean', function(ev)
-    if ev.args ~= '' then
-      vim.pack.del({ ev.args }, { force = true })
-      return
-    end
-    local to_del = {}
-    for name in pairs(installed) do
-      if not specs[name] then
-        table.insert(to_del, name)
-      end
-    end
-    if #to_del == 0 then
-      print('No orphaned plugins.')
-      return
-    end
-    print('Orphaned: ' .. table.concat(to_del, ', '))
-    if vim.fn.confirm('Delete ' .. #to_del .. ' plugin(s)?', '&Yes\n&No', 2) == 1 then
-      vim.pack.del(to_del, { force = true })
-    end
-  end, {
-    nargs = '?',
-    desc = 'Delete orphaned plugins (no args) or specific plugin',
-    complete = function()
-      return vim.tbl_keys(installed)
-    end,
-  })
 end
 
 function M.setup()
-  local installed, to_install = {}, {}
+  local pack_specs = {}
   local event_queue, load_queue, build_queue = {}, {}, {}
-
-  local opt_dir = vim.fn.stdpath('data') .. '/site/pack/core/opt/'
-  local ok, iter = pcall(vim.fs.dir, opt_dir)
-  if ok then
-    for name in iter do
-      installed[name] = true
-    end
-  end
 
   local plugins_dir = vim.fn.stdpath('config') .. '/lua/plugins'
   for name, kind in vim.fs.dir(plugins_dir) do
@@ -292,9 +247,7 @@ function M.setup()
       for _, spec in ipairs(mod) do
         spec.name = spec.name or spec[1]:match('[^/]+$'):gsub('%.git$', '')
         specs[spec.name] = spec
-        if not installed[spec.name] then
-          table.insert(to_install, to_pack_spec(spec))
-        end
+        table.insert(pack_specs, to_pack_spec(spec))
         setup_lazy(spec, load_queue, event_queue)
         if spec.init then
           spec.init()
@@ -323,9 +276,9 @@ function M.setup()
     end,
   })
 
-  if #to_install > 0 then
-    vim.pack.add(to_install, { load = false, confirm = false })
-  end
+  -- Register every spec so vim.pack owns install, `version` pinning, the
+  -- lockfile and `:packdel ++all`. The no-op `load` leaves loading to us.
+  vim.pack.add(pack_specs, { load = function() end, confirm = false })
 
   for _, spec in ipairs(build_queue) do
     run_build(spec)
@@ -335,7 +288,7 @@ function M.setup()
   end
   build_queue = nil
 
-  setup_commands(installed)
+  setup_commands()
 end
 
 return M

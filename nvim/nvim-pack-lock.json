@@ -2,11 +2,8 @@
   "plugins": {
     "blink-cmp": {
       "rev": "e116ff9c5c1c2ed6bcdb2e0a6e547099876a8116",
-      "src": "https://github.com/saghen/blink.cmp"
-    },
-    "blink-cmp-dat-word": {
-      "rev": "0c58fe92bd94710c52a5cb3a89c63a47bc851733",
-      "src": "https://github.com/xieyonn/blink-cmp-dat-word"
+      "src": "https://github.com/saghen/blink.cmp",
+      "version": "'main'"
     },
     "blink-cmp-spell": {
       "rev": "2bd0e0d5e7735c047e72b6918a0458f3e8fadaba",
@@ -21,7 +18,7 @@
       "src": "https://github.com/saghen/blink.pairs"
     },
     "blink-ripgrep.nvim": {
-      "rev": "634bde7f4918659768ea35158c8e48b5ea7381c3",
+      "rev": "e5cf9ad40434d357c0164d1959ffb6bde7a5721e",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "carvion.nvim": {
@@ -37,7 +34,7 @@
       "src": "https://github.com/vxpm/ferris.nvim"
     },
     "fyler.nvim": {
-      "rev": "377540cefb9d8162e92487507708c07da65cf5f6",
+      "rev": "81066aa5d1fabdd6c71f57f1af57f2a1a6f91166",
       "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
@@ -60,17 +57,9 @@
       "rev": "e51ba2a70169bb6fd58342312ccde591242ac739",
       "src": "https://codeberg.org/andyg/leap.nvim.git"
     },
-    "mason.nvim": {
-      "rev": "2a6940af80375532e5e9e7c1f2fc6319a1b7a69d",
-      "src": "https://github.com/williamboman/mason.nvim"
-    },
     "mini.icons": {
       "rev": "98faae31e9be1cc054ae63485e58ceb185efcad0",
       "src": "https://github.com/echasnovski/mini.icons"
-    },
-    "nui.nvim": {
-      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
-      "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lsp-endhints": {
       "rev": "3224a1c1b2fe1b067049764a154d4d727425fa6d",
@@ -78,15 +67,13 @@
     },
     "nvim-treesitter": {
       "rev": "074aa4422bf029908338e855d0c0f71470a971bb",
-      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter",
+      "version": "'main'"
     },
     "nvim-treesitter-textobjects": {
       "rev": "898ee307df58f854d11cd7edd06472574d48014e",
-      "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
-    },
-    "plenary.nvim": {
-      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
-      "src": "https://github.com/nvim-lua/plenary.nvim"
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
+      "version": "'main'"
     },
     "snacks.nvim": {
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",

@@ -1,9 +1,9 @@
 return {
-  { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
+  { 'nvim-treesitter/nvim-treesitter-textobjects', version = 'main' },
 
   {
     'nvim-treesitter/nvim-treesitter',
-    branch = 'main',
+    version = 'main',
     lazy = false,
     dependencies = { 'nvim-treesitter-textobjects' },
     config = function()
