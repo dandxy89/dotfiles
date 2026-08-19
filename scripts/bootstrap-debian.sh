@@ -11,7 +11,11 @@
 #   tree-sitter  latest CLI binary -> /usr/local/bin (generates extra parsers)
 #   lazygit      latest binary -> /usr/local/bin (used by nvim's snacks.lazygit)
 #   rust         rustup + cargo + rust-analyzer component
-#   python       uv, then `uv tool install` basedpyright + ruff
+#   python       uv, then `uv tool install` basedpyright + ruff + ty
+#   lsp          the remaining servers configured in nvim/lsp/:
+#                  npm    bashls, dockerls, compose, jsonls, yamlls, buf
+#                  cargo  taplo-cli (--features lsp), harper-ls  [slow, compiles]
+#                  github lua-language-server, marksman
 #
 # Note: python & rust treesitter parsers compile via the C compiler (build-essential);
 # the tree-sitter CLI installed here covers parsers that need a generator (bash, markdown, …).
@@ -329,8 +333,92 @@ install_python_tools() {
   pass "basedpyright + ruff installed via uv"
 }
 
+install_language_servers() {
+  header "9. Language servers"
+  export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
+
+  # Node-based servers. A user-owned npm prefix keeps this out of sudo's way.
+  if ! command -v npm &>/dev/null; then
+    info "installing nodejs + npm (five language servers ship only on npm)"
+    DEBIAN_FRONTEND=noninteractive ${SUDO} apt-get install -y -qq nodejs npm
+  fi
+  if command -v npm &>/dev/null; then
+    npm config set prefix "${HOME}/.local" >/dev/null
+    info "npm -g: bash/docker/compose/json/yaml language servers + buf"
+    if npm install -g --silent \
+      bash-language-server \
+      dockerfile-language-server-nodejs \
+      @microsoft/compose-language-service \
+      vscode-langservers-extracted \
+      yaml-language-server \
+      @bufbuild/buf; then
+      pass "npm language servers installed"
+    else
+      fail "npm language server install failed"
+    fi
+  else
+    fail "npm unavailable — bashls, dockerls, compose, jsonls, yamlls and buf_ls will not work"
+  fi
+
+  # taplo needs the non-default `lsp` feature or it builds without a server.
+  info "cargo install: taplo-cli (lsp) + harper-ls — this compiles, allow a few minutes"
+  cargo install --quiet --locked --features lsp taplo-cli || fail "cargo install taplo-cli failed"
+  cargo install --quiet --locked harper-ls || fail "cargo install harper-ls failed"
+
+  info "uv tool install ty"
+  uv tool install --quiet ty || fail "uv tool install ty failed"
+
+  install_lua_ls
+  install_marksman
+}
+
+# Released as a tree (bin/ + meta/), not a bare binary, so it lands in /opt.
+install_lua_ls() {
+  local ver tmp arch
+  case "${NVIM_ARCH}" in
+    x86_64) arch="x64" ;;
+    arm64) arch="arm64" ;;
+  esac
+  ver="$(curl -fsSL https://api.github.com/repos/LuaLS/lua-language-server/releases/latest |
+    grep -Po '"tag_name":\s*"\K[^"]*' || true)"
+  if [[ -z "${ver}" ]]; then
+    fail "could not resolve lua-language-server version (GitHub API rate limit?)"
+    return
+  fi
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "${tmp}"' RETURN
+  if ! curl -fL --retry 3 -o "${tmp}/luals.tar.gz" \
+    "https://github.com/LuaLS/lua-language-server/releases/download/${ver}/lua-language-server-${ver}-linux-${arch}.tar.gz"; then
+    fail "could not download lua-language-server ${ver}"
+    return
+  fi
+  ${SUDO} rm -rf /opt/lua-language-server
+  ${SUDO} mkdir -p /opt/lua-language-server
+  ${SUDO} tar -xzf "${tmp}/luals.tar.gz" -C /opt/lua-language-server
+  ${SUDO} ln -sf /opt/lua-language-server/bin/lua-language-server /usr/local/bin/lua-language-server
+  pass "lua-language-server ${ver} installed"
+}
+
+install_marksman() {
+  local asset
+  case "${NVIM_ARCH}" in
+    x86_64) asset="marksman-linux-x64" ;;
+    arm64) asset="marksman-linux-arm64" ;;
+  esac
+  local tmp
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "${tmp}"' RETURN
+  if ! curl -fL --retry 3 -o "${tmp}/marksman" \
+    "https://github.com/artempyanykh/marksman/releases/latest/download/${asset}"; then
+    fail "could not download marksman"
+    return
+  fi
+  ${SUDO} install -m 0755 "${tmp}/marksman" /usr/local/bin/marksman
+  pass "marksman installed: $(marksman --version 2>/dev/null || echo '?')"
+}
+
 ensure_path() {
-  header "9. Shell config (PATH + tmux + aliases)"
+  header "10. Shell config (PATH + tmux + fd + aliases)"
   local marker="# >>> dotfiles bootstrap >>>"
   local block
   block="${marker}
@@ -363,11 +451,18 @@ export PATH=\"\$HOME/.local/bin:\$HOME/.cargo/bin:\$PATH\"
     pass "linked tmux config: ${tmux_dst} → ${tmux_src}"
   fi
 
+  # fd honours ~/.config/fd/ignore globally; fzf-lua's file picker relies on it.
+  if [[ -f "${DOTFILES_DIR}/configs/fd/ignore" ]]; then
+    mkdir -p "${HOME}/.config/fd"
+    ln -sf "${DOTFILES_DIR}/configs/fd/ignore" "${HOME}/.config/fd/ignore"
+    pass "linked fd ignore file"
+  fi
+
   warn "open a new shell (or 'source ~/.zshrc') for changes to take effect"
 }
 
 run_nvim_setup() {
-  header "10. Neovim config (symlink + plugins + parsers + verify)"
+  header "11. Neovim config (symlink + plugins + parsers + verify)"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
   if [[ "${NVIM_OK}" -ne 1 ]]; then
     fail "skipping config — nvim is not runnable on this OS (see step 4)"
@@ -387,10 +482,10 @@ run_nvim_setup() {
 }
 
 verify_tools() {
-  header "11. Installed binaries"
+  header "12. Installed binaries"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
   local bin
-  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv; do
+  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv npm; do
     if command -v "${bin}" &>/dev/null; then
       pass "${bin}: $(command -v "${bin}")"
     else
@@ -402,7 +497,7 @@ verify_tools() {
 SKIP_CONFIG=0
 case "${1:-}" in
   --help | -h)
-    sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'
     exit 0
     ;;
   --skip-config) SKIP_CONFIG=1 ;;
@@ -438,6 +533,7 @@ install_rust
 install_tree_sitter
 install_lazygit
 install_python_tools
+install_language_servers
 ensure_path
 
 if [[ "${SKIP_CONFIG}" -eq 0 ]]; then

@@ -1,13 +1,5 @@
 return {
   {
-    'echasnovski/mini.icons',
-    lazy = false,
-    config = function()
-      require('mini.icons').setup()
-    end,
-  },
-
-  {
     'zitrocode/carvion.nvim',
     lazy = false,
     config = function()

@@ -53,88 +53,10 @@ return {
     end,
   },
   {
-    'MagicDuck/grug-far.nvim',
-    cmd = { 'GrugFar' },
-    keys = {
-      {
-        'n',
-        '<Leader>S',
-        function()
-          require('grug-far').open()
-        end,
-        { desc = 'GrugFar' },
-      },
-      {
-        'n',
-        '<Leader>sw',
-        function()
-          require('grug-far').open({ prefills = { search = vim.fn.expand('<cword>') } })
-        end,
-        { desc = 'Search current word' },
-      },
-      {
-        'v',
-        '<Leader>sw',
-        function()
-          require('grug-far').with_visual_selection()
-        end,
-        { desc = 'Search current selection' },
-      },
-      {
-        'n',
-        '<Leader>sp',
-        function()
-          require('grug-far').open({ prefills = { paths = vim.fn.expand('%') } })
-        end,
-        { desc = 'Search on current file' },
-      },
-    },
-    config = function()
-      require('grug-far').setup({})
-    end,
-  },
-  {
     'A7Lavinraj/fyler.nvim',
     cmd = { 'Fyler' },
     config = function()
       require('fyler').setup({})
-    end,
-  },
-  {
-    'christoomey/vim-tmux-navigator',
-    keys = {
-      { 'n', '<C-h>', '<cmd>TmuxNavigateLeft<cr>', { silent = true, desc = 'Tmux left' } },
-      { 'n', '<C-j>', '<cmd>TmuxNavigateDown<cr>', { silent = true, desc = 'Tmux down' } },
-      { 'n', '<C-k>', '<cmd>TmuxNavigateUp<cr>', { silent = true, desc = 'Tmux up' } },
-      { 'n', '<C-l>', '<cmd>TmuxNavigateRight<cr>', { silent = true, desc = 'Tmux right' } },
-      { 'n', '<C-\\>', '<cmd>TmuxNavigatePrevious<cr>', { silent = true, desc = 'Tmux previous' } },
-    },
-  },
-  {
-    'esmuellert/vscode-diff.nvim',
-    cmd = { 'CodeDiff' },
-    keys = {
-      { 'n', 'cd', '<cmd>CodeDiff<cr>', { desc = 'VSCode diff' } },
-    },
-    config = function()
-      require('vscode-diff').setup()
-    end,
-  },
-  {
-    'rashedInt32/lazydiff.nvim',
-    cmd = { 'Lazydiff', 'LazydiffOff', 'LazydiffRefresh', 'LazydiffNext', 'LazydiffPrev', 'LazydiffFirst' },
-    keys = {
-      { 'n', '<Leader>hl', '<cmd>Lazydiff<cr>', { desc = 'Toggle lazydiff overlay' } },
-    },
-    config = function()
-      require('lazydiff').setup()
-    end,
-  },
-  {
-    'chrisgrieser/nvim-lsp-endhints',
-    event = { 'LspAttach' },
-    config = function()
-      require('lsp-endhints').setup({})
     end,
   },
 }

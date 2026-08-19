@@ -137,6 +137,33 @@ function StatusLine.get_diagnostics(buf_id)
   return parts
 end
 
+-- ponytail: extension -> nerd font glyph, add entries as needed (was mini.icons)
+local FILE_ICONS = {
+  default = '',
+  lua = '',
+  rs = '',
+  py = '',
+  ts = '',
+  tsx = '',
+  js = '',
+  jsx = '',
+  json = '',
+  toml = '',
+  yaml = '',
+  yml = '',
+  md = '',
+  sh = '',
+  bash = '',
+  zsh = '',
+  go = '',
+  proto = '',
+  sql = '',
+  html = '',
+  css = '',
+  vim = '',
+  Dockerfile = '',
+}
+
 ---@param buf_id number
 ---@return {icon: StatusComponent, name: StatusComponent}
 function StatusLine.get_file_info(buf_id)
@@ -148,17 +175,7 @@ function StatusLine.get_file_info(buf_id)
     filename = '[No Name]'
   end
 
-  -- Safely get file icon with fallback
-  local icon_symbol, icon_hl_group = '', 'Normal'
-  local ok, mini_icons = pcall(require, 'mini.icons')
-  if ok then
-    local icon_ok, symbol, hl_group = pcall(mini_icons.get, 'file', tail)
-    if icon_ok then
-      icon_symbol, icon_hl_group = symbol, hl_group
-    end
-  end
-
-  local icon = { text = ' ' .. icon_symbol .. ' ', group = icon_hl_group }
+  local icon = { text = ' ' .. (FILE_ICONS[tail:match('[^.]+$')] or FILE_ICONS.default) .. ' ', group = 'Normal' }
   local name = { text = ' ' .. filename .. ' ', group = 'StatusLineFilename' }
 
   if vim.bo[buf_id].modified then

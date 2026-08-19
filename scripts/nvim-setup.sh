@@ -4,7 +4,7 @@
 #
 # --install  : create symlink and install plugins/parsers (default on new machine)
 # --verify   : check symlink, parsers, LSP binaries, and open test files
-# --upgrade  : update plugins (:PackUpdate!) and treesitter parsers in place
+# --upgrade  : update plugins (vim.pack.update) and treesitter parsers in place
 # --clean    : remove the config symlink and all plugin/parser state, so
 #              --install starts from scratch
 # (no args)  : run both install then verify
@@ -29,7 +29,6 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NVIM_SRC="${DOTFILES_DIR}/nvim"
 NVIM_CFG="${HOME}/.config/nvim"
 NVIM_DATA="$(nvim --headless -c "lua io.write(vim.fn.stdpath('data'))" -c qa 2>/dev/null || true)"
-NVIM_PACK_DIR="${NVIM_DATA}/site/pack/core/opt"
 
 require_nvim() {
   if ! command -v nvim &>/dev/null; then
@@ -80,7 +79,7 @@ setup_symlink() {
   elif [[ -e "${NVIM_CFG}" ]]; then
     warn "${NVIM_CFG} exists but is not a symlink"
     read -rp "  Backup and replace? [y/N] " answer
-    if [[ "${answer,,}" == "y" ]]; then
+    if [[ "${answer}" =~ ^[Yy]$ ]]; then
       mv "${NVIM_CFG}" "${NVIM_CFG}.bak.$(date +%Y%m%d_%H%M%S)"
       warn "backed up to ${NVIM_CFG}.bak.*"
     else
@@ -96,37 +95,53 @@ setup_symlink() {
 install_plugins() {
   header "2. Plugin installation (vim.pack)"
   info "first pass — fetching plugins and running build steps …"
+  # vim.pack.add() installs synchronously, so a plain startup is enough; the
+  # blink build steps block on :pwait() before the editor exits.
+  nvim --headless -c "qa" >/dev/null 2>&1 || true
 
-  nvim --headless -c "lua vim.defer_fn(function() vim.cmd('qa') end, 30000)" >/dev/null 2>&1 || true
-
-  info "second pass — verifying a clean startup …"
-  local log
-  log=$(nvim --headless -c "qa" 2>&1 || true)
-  if echo "${log}" | grep -qiE 'E[0-9]{3}:|module .* not found|error'; then
-    warn "errors seen on second startup:"
-    echo "${log}" | grep -iE 'E[0-9]{3}:|not found|error' | head -10 | sed 's/^/     /'
+  info "second pass — confirming every spec is on disk …"
+  local missing
+  missing=$(nvim --headless -c "lua
+      local gone = {}
+      for _, p in ipairs(vim.pack.get()) do
+        if not vim.uv.fs_stat(p.path) then gone[#gone + 1] = p.spec.name end
+      end
+      io.write(table.concat(gone, ' '))
+      io.flush()" -c "qa" 2>/dev/null || true)
+  if [[ -n "${missing}" ]]; then
+    fail "plugins failed to install: ${missing}"
   else
-    pass "plugins installed and startup is clean"
+    pass "all plugins installed"
   fi
 }
 
 install_ts_parsers() {
   header "3. Treesitter parser installation"
-  info "installing python and rust parsers (synchronous) …"
-  nvim --headless \
-    -c "lua require('nvim-treesitter').install({ 'python', 'rust' }):wait(300000)" \
-    -c "qa" 2>&1 | tail -5 || true
-  pass "python and rust parsers installed"
+  info "installing every parser in vim.g.treesitter_parsers (synchronous) …"
+  if nvim --headless \
+    -c "lua require('nvim-treesitter').install(vim.g.treesitter_parsers):wait(600000)" \
+    -c "qa" 2>&1 | tail -5; then
+    pass "parsers installed"
+  else
+    fail "parser installation failed (needs a C compiler and the tree-sitter CLI)"
+  fi
 }
 
 upgrade_plugins() {
-  header "Plugin upgrade (:PackUpdate!)"
-  nvim --headless -c "PackUpdate!" -c "qa" 2>&1 | tail -10 || true
-  pass "plugins updated"
+  header "Plugin upgrade"
+  # force = true skips the confirmation buffer, which nothing can answer headless
+  if nvim --headless -c "lua vim.pack.update(nil, { force = true })" -c "qa" 2>&1 | tail -10; then
+    pass "plugins updated"
+  else
+    fail "plugin update failed"
+  fi
 
   header "Treesitter parser upgrade"
-  nvim --headless -c "lua require('nvim-treesitter').update():wait(600000)" -c "qa" 2>&1 | tail -5 || true
-  pass "parsers updated"
+  if nvim --headless -c "lua require('nvim-treesitter').update():wait(600000)" -c "qa" 2>&1 | tail -5; then
+    pass "parsers updated"
+  else
+    fail "parser update failed"
+  fi
 }
 
 clean_nvim() {
@@ -145,7 +160,7 @@ clean_nvim() {
     [[ -d "${d}" ]] && echo "    ${d}"
   done
   read -rp "  Proceed? [y/N] " answer
-  if [[ "${answer,,}" != "y" ]]; then
+  if [[ ! "${answer}" =~ ^[Yy]$ ]]; then
     warn "aborted — nothing removed"
     return
   fi
@@ -196,8 +211,17 @@ verify_ts_parsers() {
   check_ts_parser bash
 }
 
+verify_util_test() {
+  header "4. util.test nearest-test detection"
+  if nvim -l "${NVIM_SRC}/tests/test_nearest.lua" >/dev/null 2>&1; then
+    pass "treesitter nearest-test lookup works (rust + python)"
+  else
+    fail "tests/test_nearest.lua failed — <Leader>tn will not find the test name"
+  fi
+}
+
 verify_lsp_binaries() {
-  header "4. LSP server binaries"
+  header "5. LSP server binaries"
   check_binary "basedpyright-langserver" "basedpyright (Python)"
   check_binary "ruff"                    "ruff (Python linter/LSP)"
   check_binary "rust-analyzer"           "rust-analyzer (Rust)"
@@ -209,6 +233,9 @@ verify_lsp_binaries() {
   check_binary "vscode-json-language-server" "jsonls (JSON)"
   check_binary "harper-ls"              "harper_ls (prose grammar)"
   check_binary "docker-langserver"      "dockerls (Dockerfile)"
+  check_binary "docker-compose-langserver" "docker_compose_language_service (Compose)"
+  check_binary "buf"                     "buf_ls (Protobuf)"
+  check_binary "ty"                      "ty (Python type checker)"
 
   if command -v rustup &>/dev/null; then
     if rustup run stable rust-analyzer --version &>/dev/null 2>&1; then
@@ -223,7 +250,7 @@ verify_lsp_binaries() {
 # Usage: verify_open_file <section> <lang> <ext> <attach-hint> <<<'snippet'
 verify_open_file() {
   local section="$1" lang="$2" ext="$3" hint="$4"
-  header "${section}. ${lang^} file — TS highlight + LSP attach"
+  header "${section}. ${lang} file — TS highlight + LSP attach"
   local tmpfile
   tmpfile=$(mktemp "/tmp/nvim-verify-XXXXXX.${ext}")
   cat >"${tmpfile}"
@@ -243,21 +270,21 @@ verify_open_file() {
   rm -f "${tmpfile}"
 
   if echo "${out}" | grep -q 'ts=true'; then
-    pass "treesitter parser active for ${lang^}"
+    pass "treesitter parser active for ${lang}"
   else
-    warn "could not confirm treesitter for ${lang^} (LSP attach may need a project root)"
+    warn "could not confirm treesitter for ${lang} (LSP attach may need a project root)"
   fi
   local lsp_info
   lsp_info=$(echo "${out}" | grep 'lsp=' | sed 's/.*lsp=//')
   if [[ -n "${lsp_info}" ]]; then
     pass "LSP clients attached: ${lsp_info}"
   else
-    warn "no LSP clients attached to ${lang^} file (${hint})"
+    warn "no LSP clients attached to ${lang} file (${hint})"
   fi
 }
 
 verify_open_python_file() {
-  verify_open_file 5 python py "expected in a project directory" <<'PYEOF'
+  verify_open_file 6 python py "expected in a project directory" <<'PYEOF'
 def greet(name: str) -> str:
     return f"Hello, {name}"
 
@@ -271,7 +298,7 @@ PYEOF
 }
 
 verify_open_rust_file() {
-  verify_open_file 6 rust rs "rust-analyzer needs a Cargo.toml workspace" <<'RSEOF'
+  verify_open_file 7 rust rs "rust-analyzer needs a Cargo.toml workspace" <<'RSEOF'
 struct Point {
     x: f64,
     y: f64,
@@ -321,6 +348,7 @@ case "${MODE}" in
     verify_symlink
     verify_nvim_startup
     verify_ts_parsers
+    verify_util_test
     verify_lsp_binaries
     verify_open_python_file
     verify_open_rust_file
@@ -334,6 +362,7 @@ case "${MODE}" in
     verify_symlink
     verify_nvim_startup
     verify_ts_parsers
+    verify_util_test
     verify_lsp_binaries
     verify_open_python_file
     verify_open_rust_file

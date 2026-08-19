@@ -10,7 +10,7 @@ return {
     -- Eager: blink's plugin file merges its capabilities into vim.lsp.config('*'),
     -- which must happen before LSP servers attach at startup
     lazy = false,
-    dependencies = { 'blink-lib', 'blink-ripgrep.nvim', 'blink-cmp-spell' },
+    dependencies = { 'blink-lib', 'blink-ripgrep.nvim' },
     build = function()
       vim.cmd.packadd('blink-lib')
       vim.cmd.packadd('blink-cmp')
@@ -48,7 +48,7 @@ return {
           sources = { default = { 'cmdline', 'path' } },
         },
         sources = {
-          default = { 'lsp', 'path', 'snippets', 'buffer', 'ripgrep', 'spell' },
+          default = { 'lsp', 'path', 'snippets', 'buffer', 'ripgrep' },
           providers = {
             ripgrep = {
               module = 'blink-ripgrep',
@@ -60,30 +60,12 @@ return {
               module = 'blink.cmp.sources.lsp',
               min_keyword_length = 0,
             },
-            spell = { name = 'Spell', module = 'blink-cmp-spell' },
           },
         },
       })
     end,
   },
 
-  {
-    'saghen/blink.pairs',
-    name = 'blink-pairs',
-    event = { 'InsertEnter' },
-    dependencies = { 'blink-lib' },
-    -- v0.6+: native library fetched via blink.lib, no cargo needed
-    build = function()
-      vim.cmd.packadd('blink-lib')
-      vim.cmd.packadd('blink-pairs')
-      require('blink.pairs').build():pwait(60000)
-    end,
-    config = function()
-      require('blink.pairs').setup({})
-    end,
-  },
-
   { 'saghen/blink.lib', name = 'blink-lib' },
   { 'mikavilpas/blink-ripgrep.nvim' },
-  { 'ribru17/blink-cmp-spell' },
 }

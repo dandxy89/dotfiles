@@ -66,7 +66,6 @@ vim.api.nvim_create_autocmd('FileType', {
   group = augroup('CloseWithEscGrp'),
   pattern = {
     'PlenaryTestPopup',
-    'grug-far',
     'help',
     'lspinfo',
     'notify',

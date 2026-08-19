@@ -54,7 +54,18 @@ nnoremap('<BS>', '<C-o>', { desc = 'Jump back' })
 nnoremap(']q', '<cmd>cnext<CR>', { desc = 'Quickfix next' })
 nnoremap('[q', '<cmd>cprevious<CR>', { desc = 'Quickfix previous' })
 
--- Buffer management (C-h/j/k/l handled by tmux navigator in pack.lua)
+-- Window navigation that falls through to tmux at the edges
+for key, pane in pairs({ h = 'L', j = 'D', k = 'U', l = 'R' }) do
+  nnoremap('<C-' .. key .. '>', function()
+    local from = vim.api.nvim_get_current_win()
+    vim.cmd.wincmd(key)
+    if from == vim.api.nvim_get_current_win() and vim.env.TMUX then
+      vim.system({ 'tmux', 'select-pane', '-' .. pane })
+    end
+  end, { silent = true, desc = 'Window/tmux ' .. pane })
+end
+
+-- Buffer management
 nnoremap('<Leader>bd', function()
   require('snacks').bufdelete()
 end, { desc = 'Delete buffer' })
@@ -96,12 +107,20 @@ tnoremap('<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)', { desc = 'Leap forward' })
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)', { desc = 'Leap from window' })
 
--- Vim Test
-nnoremap('<Leader>tn', ':TestNearest<CR>', { desc = 'Test nearest' })
-nnoremap('<Leader>T', ':TestFile<CR>', { desc = 'Test file' })
-nnoremap('<Leader>a', ':TestSuite<CR>', { desc = 'Test suite' })
-nnoremap('<Leader>tl', ':TestLast<CR>', { desc = 'Test last' })
-nnoremap('<Leader>tv', ':TestVisit<CR>', { desc = 'Test visit' })
+-- Tests (lua/util/test.lua)
+local test = require('util.test')
+nnoremap('<Leader>tn', function()
+  test.run('nearest')
+end, { desc = 'Test nearest' })
+nnoremap('<Leader>T', function()
+  test.run('file')
+end, { desc = 'Test file' })
+nnoremap('<Leader>a', function()
+  test.run('suite')
+end, { desc = 'Test suite' })
+nnoremap('<Leader>tl', function()
+  test.run('last')
+end, { desc = 'Test last' })
 
 -- Quit
 nnoremap('<Leader>qq', '<cmd>qa<CR>', { desc = 'Quit all' })

@@ -13,7 +13,8 @@ return {
       for _, p in ipairs(installed) do
         have[p] = true
       end
-      local wanted = {
+      -- Exposed so scripts/nvim-setup.sh can install the same set synchronously
+      vim.g.treesitter_parsers = {
         'bash',
         'lua',
         'rust',
@@ -30,7 +31,7 @@ return {
         'dockerfile',
       }
       local missing = {}
-      for _, p in ipairs(wanted) do
+      for _, p in ipairs(vim.g.treesitter_parsers) do
         if not have[p] then
           table.insert(missing, p)
         end

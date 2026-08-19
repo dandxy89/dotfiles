@@ -25,3 +25,11 @@ vim.diagnostic.config({
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },
 })
+
+-- Inlay hints (replaces nvim-lsp-endhints; servers are configured in lsp/*.lua)
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('custom_inlay_hints', { clear = true }),
+  callback = function(ev)
+    vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+  end,
+})
