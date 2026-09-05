@@ -40,6 +40,15 @@ return {
           'Terminal',
         },
         {
+          '<Leader>k',
+          function()
+            require('snacks').terminal.toggle('kiro-cli chat --v3', {
+              win = { position = 'right', width = 0.4 },
+            })
+          end,
+          'Kiro CLI',
+        },
+        {
           '<Leader>gB',
           function()
             require('snacks').gitbrowse()
