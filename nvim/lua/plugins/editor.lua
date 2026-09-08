@@ -53,13 +53,6 @@ return {
     end,
   },
   {
-    'A7Lavinraj/fyler.nvim',
-    cmd = { 'Fyler' },
-    config = function()
-      require('fyler').setup({})
-    end,
-  },
-  {
     'abecodes/tabout.nvim',
     -- Eager so its global <Tab>/<S-Tab> maps exist before blink applies its
     -- buffer-local ones on InsertEnter; blink's fallback then reaches tabout.

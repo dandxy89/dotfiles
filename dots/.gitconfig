@@ -6,7 +6,6 @@
     defaultBranch = main
 [core]
 	autocrlf = input
-	excludesfile = /Users/enzymex/.gitignore
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -64,8 +63,6 @@
 	user = dandxy89
 [rerere]
 	enabled = true
-[init]
-	defaultBranch = main
 [push]
 	autoSetupRemote = true
 [branch]
@@ -73,8 +70,6 @@
 	autosetuprebase = always
 [pull]
     rebase = true
-[rerere]
-    enabled = true
 
 [gpg]
 	program = /opt/homebrew/bin/gpg

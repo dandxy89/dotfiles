@@ -1,16 +1,16 @@
 {
   "plugins": {
     "blink-cmp": {
-      "rev": "8e5e03f1ef7991d74950c245910e6118f6d95e3b",
+      "rev": "f72465357ede7f8d899f34816d49408813c374c6",
       "src": "https://github.com/saghen/blink.cmp",
       "version": "'main'"
     },
     "blink-lib": {
-      "rev": "f55df8a6e0a7acccf45ef0ffbb4ce46110fcf7d0",
+      "rev": "fd9a48ebbe6ec30d5dfcc5b42c243941ccdca1aa",
       "src": "https://github.com/saghen/blink.lib"
     },
     "blink-ripgrep.nvim": {
-      "rev": "39fdb36779704227f66995caa2868302cbbf9097",
+      "rev": "bc6e9d6d079d6c82c96ae0052443448f005e00ad",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "carvion.nvim": {
@@ -20,10 +20,6 @@
     "crates.nvim": {
       "rev": "b8281be336498035f9288d6542b2881a7140a9ec",
       "src": "https://github.com/Saecki/crates.nvim"
-    },
-    "fyler.nvim": {
-      "rev": "81066aa5d1fabdd6c71f57f1af57f2a1a6f91166",
-      "src": "https://github.com/A7Lavinraj/fyler.nvim"
     },
     "fzf-lua": {
       "rev": "05e44d38de0a79c11fba5f7bf8138791b1dbdd1e",
@@ -38,7 +34,7 @@
       "src": "https://codeberg.org/andyg/leap.nvim.git"
     },
     "nvim-treesitter": {
-      "rev": "41416e81a6c7f4af4984395bfe0cd8d174e70976",
+      "rev": "5cb0114e6242625db56dd6440e945ed1ece10bc7",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },

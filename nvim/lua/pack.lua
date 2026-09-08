@@ -8,10 +8,8 @@
 ---@field lazy? boolean default true; false means load at startup
 ---@field dependencies? string[] plugin names; each dep must have its own spec
 ---@field event? string[] autocmd events ("InsertEnter" or "FileType rust")
----@field cmd? string[] user commands that trigger loading
 ---@field keys? table[] { mode, lhs, rhs?, opts? } — stub keymaps
 ---@field build? fun()|string runs after install/update; string is shell command
----@field init? fun() called before any plugin is loaded
 ---@field config? fun() called after this plugin is loaded
 
 local M = {}
@@ -90,7 +88,7 @@ local function stub_events(queue)
           end
         end
       end
-      table.insert(chain, 1, { event = event, buffer = buf, exclude = groups, data = data })
+      table.insert(chain, 1, { event = event, buf = buf, exclude = groups, data = data })
       data = nil
       event = triggers[event]
     end
@@ -111,7 +109,7 @@ local function stub_events(queue)
         for _, opts in ipairs(chain) do
           if next(opts.exclude) == nil then
             vim.api.nvim_exec_autocmds(opts.event, {
-              buffer = opts.buffer,
+              buf = opts.buf,
               modeline = false,
               data = opts.data,
             })
@@ -122,7 +120,7 @@ local function stub_events(queue)
               if autocmd.group and not done[id] and not opts.exclude[autocmd.group_name] then
                 done[id] = true
                 vim.api.nvim_exec_autocmds(opts.event, {
-                  buffer = opts.buffer,
+                  buf = opts.buf,
                   group = autocmd.group_name,
                   modeline = false,
                   data = opts.data,
@@ -173,36 +171,8 @@ local function setup_lazy(spec, load_queue, event_queue)
     end
   end
 
-  if spec.cmd then
-    for _, cmd in ipairs(spec.cmd) do
-      vim.api.nvim_create_user_command(cmd, function(ev)
-        for _, c in ipairs(spec.cmd) do
-          pcall(vim.api.nvim_del_user_command, c)
-        end
-        load_plugin(spec)
-        local command = { cmd = cmd, bang = ev.bang, mods = ev.smods, args = ev.fargs }
-        if ev.range == 1 then
-          command.range = { ev.line1 }
-        elseif ev.range == 2 then
-          command.range = { ev.line1, ev.line2 }
-        elseif ev.count >= 0 then
-          command.count = ev.count
-        end
-        vim.cmd(command)
-      end, {
-        bang = true,
-        nargs = '*',
-        range = true,
-        complete = function(_, line)
-          for _, c in ipairs(spec.cmd) do
-            pcall(vim.api.nvim_del_user_command, c)
-          end
-          load_plugin(spec)
-          return vim.fn.getcompletion(line, 'cmdline')
-        end,
-      })
-    end
-  end
+  -- ponytail: no cmd-triggered lazy loading; add a `cmd` branch here if a spec
+  -- ever needs it (the PackSpec class omits `cmd`, so lua_ls flags the attempt).
 end
 
 local function setup_commands()
@@ -249,9 +219,6 @@ function M.setup()
         specs[spec.name] = spec
         table.insert(pack_specs, to_pack_spec(spec))
         setup_lazy(spec, load_queue, event_queue)
-        if spec.init then
-          spec.init()
-        end
       end
     end
   end

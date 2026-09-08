@@ -28,7 +28,7 @@ local function smart_dd()
 end
 nnoremap('dd', smart_dd, { expr = true, desc = 'Smart delete line' })
 nnoremap('<Leader>fn', '<cmd>enew<CR>', { desc = 'New file' })
-nnoremap('<Leader>e', '<cmd>Fyler<CR>', { desc = 'File manager' })
+nnoremap('<Leader>e', '<cmd>edit .<CR>', { desc = 'Browse cwd (native dir)' })
 nnoremap('<Leader>ec', '<cmd>tabnew ~/.config/nvim/init.lua<CR>', { desc = 'Edit Config (init.lua)' })
 nnoremap('<Leader>cn', vim.lsp.buf.rename, { desc = 'Rename symbol' })
 nnoremap('<Leader>cl', vim.lsp.codelens.run, { desc = 'Run codelens' })

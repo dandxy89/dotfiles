@@ -45,10 +45,10 @@ vim.api.nvim_create_autocmd('BufRead', {
 })
 
 -- Highlight yanked text
-vim.api.nvim_create_autocmd('TextYankPost', {
+vim.api.nvim_create_autocmd({ 'TextYankPost', 'TextPutPost' }, {
   group = augroup('highlight_yank'),
   pattern = '*',
-  desc = 'highlight selection on yank',
+  desc = 'highlight selection on yank/put',
   callback = function()
     vim.hl.hl_op({ timeout = 200 })
   end,
