@@ -4,13 +4,6 @@ local function augroup(name)
   return vim.api.nvim_create_augroup('custom_' .. name, { clear = true })
 end
 
--- Forces Neovim to detect file changes on disk immediately
-vim.api.nvim_create_user_command('Realtime', function()
-  -- augroup is cleared on re-creation, so repeat :Realtime calls don't stack autocmds
-  vim.api.nvim_create_autocmd('CursorHold', { group = augroup('realtime_checktime'), command = 'checktime' })
-  vim.cmd('checktime')
-end, { desc = 'Enable realtime autoread (watch file changes)' })
-
 -- Format files on save (sync to ensure format completes before write)
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = { '*.rs', '*.py', '*.toml' },
