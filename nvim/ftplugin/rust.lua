@@ -1,5 +1,5 @@
--- rust-analyzer extras (replaces ferris.nvim)
-
+---@param lines string[]
+---@param ft? string
 local function scratch(lines, ft)
   vim.cmd('botright new')
   local buf = vim.api.nvim_get_current_buf()
@@ -10,6 +10,7 @@ end
 
 ---@param method string
 ---@param handler fun(result: any)
+---@return fun()
 local function request(method, handler)
   return function()
     local client = vim.lsp.get_clients({ bufnr = 0, name = 'rust_analyzer' })[1]
@@ -28,6 +29,9 @@ local function request(method, handler)
   end
 end
 
+---@param lhs string
+---@param rhs fun()
+---@param desc string
 local function map(lhs, rhs, desc)
   vim.keymap.set('n', lhs, rhs, { buffer = 0, desc = desc })
 end
@@ -48,7 +52,6 @@ map(
   'Open documentation'
 )
 
--- Nodes arrive as a flat array with parent_idx back-references; indent by depth.
 map(
   '<Leader>ml',
   request('rust-analyzer/viewRecursiveMemoryLayout', function(result)

@@ -26,7 +26,6 @@ return {
     '.git',
   },
   before_init = function(_, config)
-    -- Auto-detect .venv in the project root, fallback to global
     local root = config.root_dir
     if root then
       local venv_path = root .. '/.venv'
@@ -37,10 +36,7 @@ return {
       end
     end
   end,
-  on_attach = function(client, bufnr)
-    -- Disable hover in favour of ruff
-    client.server_capabilities.hoverProvider = false
-
+  on_attach = function(_, bufnr)
     vim.api.nvim_buf_create_user_command(bufnr, 'LspPyrightSetPythonPath', set_python_path, {
       desc = 'Reconfigure basedpyright with the provided python path',
       nargs = 1,

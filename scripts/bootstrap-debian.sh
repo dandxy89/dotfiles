@@ -9,7 +9,7 @@
 #   fzf          latest prebuilt binary (apt's is too old for fzf-lua)
 #   nvim         nightly prebuilt -> /opt/nvim (builds master from source if glibc too old)
 #   tree-sitter  latest CLI binary -> /usr/local/bin (generates extra parsers)
-#   lazygit      latest binary -> /usr/local/bin (used by nvim's snacks.lazygit)
+#   lazygit      latest binary -> /usr/local/bin (used by nvim's <Leader>lg terminal)
 #   rust         rustup + cargo + rust-analyzer component
 #   python       uv, then `uv tool install` basedpyright + ruff + ty
 #   lsp          the remaining servers configured in nvim/lsp/:
@@ -277,7 +277,7 @@ build_tree_sitter_from_cargo() {
 
 install_lazygit() {
   header "7. lazygit"
-  # nvim's snacks.nvim integration shells out to the lazygit binary.
+  # nvim's <Leader>lg opens lazygit in a terminal tab.
   local tmp ver url
   tmp="$(mktemp -d)"
   trap 'rm -rf "${tmp}"' RETURN

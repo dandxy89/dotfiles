@@ -1,13 +1,12 @@
--- Test runner (replaces vim-test + vimux)
--- ponytail: rust + python only; add a table entry for another language.
 local M = {}
+M.last = nil ---@type string?
 
+---@type table<string, table<'suite'|'file'|'nearest', string>>
 local runners = {
   rust = { suite = 'cargo test', file = 'cargo test', nearest = 'cargo test %s' },
   python = { suite = 'pytest', file = 'pytest %f', nearest = 'pytest %f -k %s' },
 }
 
---- Name of the function the cursor sits in, via treesitter.
 ---@return string?
 function M.nearest_name()
   local node = vim.treesitter.get_node()
@@ -22,8 +21,9 @@ function M.nearest_name()
   end
 end
 
-local win
+local win ---@type integer?
 
+---@param cmd string
 local function run(cmd)
   M.last = cmd
   if win and vim.api.nvim_win_is_valid(win) then

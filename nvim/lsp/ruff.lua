@@ -9,4 +9,7 @@ return {
       format = { enable = true },
     },
   },
+  on_attach = function(client)
+    client.server_capabilities.hoverProvider = false
+  end,
 }

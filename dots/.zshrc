@@ -38,6 +38,7 @@ export LANG=en_GB.UTF-8
 export UPDATE_ZSH_DAYS=1
 
 export XDG_DATA_HOME="$HOME/Library/Application Support"
+export UV_TOOL_BIN_DIR="$HOME/.local/bin"
 
 export EDITOR="nvim"
 export VISUAL="$EDITOR"

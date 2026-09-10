@@ -1,6 +1,6 @@
--- Checks util.test.nearest_name. Run: nvim -l tests/test_nearest.lua
 local test = require('util.test')
 
+---@type { ft: string, lines: string[], line: integer, want: string? }[]
 local cases = {
   { ft = 'rust', lines = { 'fn helper() {}', 'fn my_test() {', '    let x = 1;', '}' }, line = 3, want = 'my_test' },
   {

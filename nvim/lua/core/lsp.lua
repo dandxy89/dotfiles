@@ -1,7 +1,4 @@
--- Enable every server with a config file in lsp/.
--- Completion capabilities are registered by blink.cmp's own plugin file
--- (vim.lsp.config('*')), which runs before servers attach since blink is eager.
-local server_names = {}
+local server_names = {} ---@type string[]
 for file in vim.fs.dir(vim.fn.stdpath('config') .. '/lsp') do
   local name = file:match('(.+)%.lua$')
   if name then
@@ -11,7 +8,7 @@ end
 vim.lsp.enable(server_names)
 
 local signs = { ERROR = '', WARN = '', HINT = '', INFO = '' }
-local numhl, text = {}, {}
+local numhl, text = {}, {} ---@type table<vim.diagnostic.Severity, string>, table<vim.diagnostic.Severity, string>
 for name, icon in pairs(signs) do
   local severity = vim.diagnostic.severity[name]
   numhl[severity] = 'DiagnosticSign' .. name:sub(1, 1):upper() .. name:sub(2):lower()
@@ -26,6 +23,5 @@ vim.diagnostic.config({
   float = { border = 'rounded', source = 'if_many' },
 })
 
--- Inlay hints (servers are configured in lsp/*.lua). Like codelens, the
--- capability API tracks attach/detach itself, so no LspAttach autocmd.
 vim.lsp.inlay_hint.enable(true)
+vim.lsp.codelens.enable(true)

@@ -10,6 +10,7 @@
   "workspace.checkThirdParty": false,
   "workspace.library": [
     "$VIMRUNTIME",
-    "~/.local/share/nvim/site/pack/core/opt"
+    "~/.local/share/nvim/site/pack/core/opt",
+    "~/Library/Application Support/nvim/site/pack/core/opt"
   ]
 }

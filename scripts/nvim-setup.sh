@@ -95,8 +95,7 @@ setup_symlink() {
 install_plugins() {
   header "2. Plugin installation (vim.pack)"
   info "first pass — fetching plugins and running build steps …"
-  # vim.pack.add() installs synchronously, so a plain startup is enough; the
-  # blink build steps block on :pwait() before the editor exits.
+  # vim.pack.add() installs synchronously, so a plain startup is enough.
   nvim --headless -c "qa" >/dev/null 2>&1 || true
 
   info "second pass — confirming every spec is on disk …"
@@ -147,7 +146,6 @@ upgrade_plugins() {
 clean_nvim() {
   header "Clean — remove config symlink and plugin/parser state"
 
-  # ponytail: XDG defaults as fallback, nvim may be missing or broken here
   local dirs=(
     "${NVIM_DATA:-${XDG_DATA_HOME:-${HOME}/.local/share}/nvim}"
     "${XDG_STATE_HOME:-${HOME}/.local/state}/nvim"

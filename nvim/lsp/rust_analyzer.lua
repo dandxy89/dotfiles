@@ -6,9 +6,12 @@ return {
     'if rust-analyzer --version >/dev/null 2>&1; then exec rust-analyzer "$@"; ' .. 'else exec rustup run nightly rust-analyzer "$@"; fi',
     'rust-analyzer',
   },
-  filetypes = { 'rust' },
+  filetypes = { 'rust', 'toml' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
+    if vim.bo[bufnr].filetype == 'toml' and vim.fs.basename(fname) ~= 'Cargo.toml' then
+      return
+    end
     local cargo_crate_dir = vim.fs.root(fname, { 'Cargo.toml' })
 
     if cargo_crate_dir == nil then

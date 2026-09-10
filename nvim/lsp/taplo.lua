@@ -1,4 +1,3 @@
--- Install: cargo install taplo-cli --locked
 ---@type vim.lsp.Config
 return {
   cmd = { 'taplo', 'lsp', 'stdio' },

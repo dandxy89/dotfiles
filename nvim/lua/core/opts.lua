@@ -1,70 +1,66 @@
 local opt = vim.opt
 
--- UI & Display
 opt.guifont = 'JetBrains Mono'
 opt.number, opt.relativenumber, opt.cursorline = true, true, true
-opt.ruler, opt.laststatus, opt.cmdheight = false, 0, 1
+opt.ruler, opt.laststatus, opt.cmdheight = false, 2, 1
 opt.signcolumn, opt.numberwidth, opt.statuscolumn = 'yes:1', 3, '%l%s'
 opt.pumheight, opt.winborder = 25, 'rounded'
 opt.background = 'dark'
 opt.smoothscroll, opt.title = true, true
 opt.guicursor = {
-  'n-v:block', -- Normal/Visual: Block
-  'i-c-ci-ve:ver25', -- Insert/Command: Vertical bar
-  'r-cr:hor20', -- Replace: Horizontal underline
-  'o:hor50', -- Operator-pending: Horizontal underline
-  'i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor', -- Blink settings for Insert
-  'sm:block-blinkwait175-blinkoff150-blinkon175', -- Showmatch: Fast blink
+  'n-v:block',
+  'i-c-ci-ve:ver25',
+  'r-cr:hor20',
+  'o:hor50',
+  'i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor',
+  'sm:block-blinkwait175-blinkoff150-blinkon175',
 }
 
--- Files & Backup
 opt.backup, opt.writebackup, opt.swapfile = false, false, false
 opt.undofile, opt.undolevels = true, 10000
 opt.autoread, opt.autowrite = true, true
 
--- Editing & Indentation
 opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
 opt.smartindent = true
 opt.wrap = false
 
--- Search
 opt.ignorecase, opt.smartcase = true, true
 
--- Splits & Windows
 opt.splitright, opt.splitbelow = true, true
 opt.scrolloff = 10
 
--- Timing
 opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
 
--- Misc
 opt.clipboard = 'unnamedplus'
-opt.spell, opt.spelllang = true, 'en_gb'
+opt.spelllang = 'en_gb'
+vim.api.nvim_create_autocmd('UIEnter', {
+  once = true,
+  callback = function()
+    vim.defer_fn(function()
+      vim.o.spell = true
+    end, 50)
+  end,
+})
 opt.shortmess = 'filnxtToOFWcC'
 
--- Folding (treesitter-based)
 opt.foldenable, opt.foldlevel, opt.foldcolumn = true, 99, '0'
 opt.foldmethod, opt.foldexpr, opt.foldtext = 'expr', 'v:lua.vim.treesitter.foldexpr()', ''
 opt.fillchars:append({ fold = ' ' })
 
--- Use histogram algorithm for diffing, generates more readable diffs in
--- situations where two lines are swapped
-vim.opt.diffopt:append('algorithm:histogram')
+opt.diffopt:append('algorithm:histogram')
 
--- Filetype associations
 vim.filetype.add({
+  filename = { ['.env'] = 'dosini' },
   pattern = {
+    ['%.env%..*'] = 'dosini',
     ['gitconf.*'] = 'gitconfig',
-    -- Nvim has no built-in detection for this; the compose LSP keys off it
     ['.*[cC]ompose%.ya?ml'] = 'yaml.docker-compose',
   },
 })
 
--- Prevent LSP from overwriting treesitter colour settings
 vim.hl.priorities.semantic_tokens = 95
 
--- Disable unused providers
-vim.g.loaded_python3_provider = 0 -- Disable Python provider
-vim.g.loaded_ruby_provider = 0 -- Disable Ruby
-vim.g.loaded_node_provider = 0 -- Disable Node
-vim.g.loaded_perl_provider = 0 -- Disable Perl
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
