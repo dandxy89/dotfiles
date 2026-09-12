@@ -79,6 +79,29 @@ map('n', '<Leader>gf', function()
   term.toggle('lazygit -f ' .. vim.fn.shellescape(vim.fn.expand('%')), 'tab')
 end, { desc = 'Git log file' })
 
+-- :LpDiff            -> explore current file
+-- :LpDiff other.lp   -> diff current file against other.lp
+-- :LpDiff a.lp b.lp  -> diff a.lp against b.lp
+vim.api.nvim_create_user_command('LpDiff', function(o)
+  local files = o.fargs
+  if #files < 2 then
+    local cur = vim.fn.expand('%:p')
+    if cur == '' then
+      return vim.notify('LpDiff: no file in current buffer', vim.log.levels.ERROR)
+    end
+    table.insert(files, 1, cur)
+  end
+  term.toggle('lp_diff ' .. table.concat(vim.tbl_map(vim.fn.shellescape, files), ' '), 'tab')
+end, { nargs = '*', complete = 'file', desc = 'lp_diff [FILE2] | FILE1 FILE2' })
+map('n', '<Leader>me', vim.cmd.LpDiff, { desc = 'LP explore current file' })
+map('n', '<Leader>md', function()
+  vim.ui.input({ prompt = 'lp_diff against (blank = explore): ', completion = 'file' }, function(f)
+    if f then
+      vim.cmd.LpDiff({ args = f ~= '' and { f } or {} })
+    end
+  end)
+end, { desc = 'LP diff/explore' })
+
 map('v', 'K', "<cmd>m '>-2<CR>gv=gv", { desc = 'Move line up' })
 map('v', 'J', "<cmd>m '>+1<CR>gv=gv", { desc = 'Move line down' })
 map('n', '<M-k>', ':m .-2<CR>==', { desc = 'Move line up' })
