@@ -1,13 +1,13 @@
-vim.opt_local.errorformat = '%f:%l:%c: %m,%-G%.%#'
-
----@param tool 'ruff'|'ty'
+---@param compiler 'ruff'|'ty'|'pytest'
 ---@return fun()
-local function check(tool)
+local function make(compiler)
   return function()
-    vim.opt_local.makeprg = 'uv run ' .. tool .. ' check --output-format concise .'
-    vim.cmd('silent make! | copen')
+    vim.cmd.compiler(compiler)
+    vim.bo.makeprg = 'uv run ' .. vim.bo.makeprg
+    vim.cmd('silent make! | cwindow')
   end
 end
 
-vim.keymap.set('n', '<Leader>mr', check('ruff'), { buffer = 0, desc = 'Ruff check project' })
-vim.keymap.set('n', '<Leader>mt', check('ty'), { buffer = 0, desc = 'Ty check project' })
+vim.keymap.set('n', '<Leader>mr', make('ruff'), { buffer = 0, desc = 'Ruff check project' })
+vim.keymap.set('n', '<Leader>mt', make('ty'), { buffer = 0, desc = 'Ty check project' })
+vim.keymap.set('n', '<Leader>mp', make('pytest'), { buffer = 0, desc = 'Pytest to quickfix' })

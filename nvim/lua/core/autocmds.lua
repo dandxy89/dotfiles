@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   callback = function(ev)
     if not vim.g.disable_autoformat then
       if vim.bo[ev.buf].filetype == 'python' then
-        ruff_action(ev.buf, 'source.fixAll')
+        -- ponytail: no fixAll on save, it deletes half-written imports; use <Leader>ca
         ruff_action(ev.buf, 'source.organizeImports')
       end
       vim.lsp.buf.format({

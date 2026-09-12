@@ -1,17 +1,3 @@
-local function set_python_path(command)
-  local path = command.args
-  local clients = vim.lsp.get_clients({
-    bufnr = vim.api.nvim_get_current_buf(),
-    name = 'basedpyright',
-  })
-  for _, client in ipairs(clients) do
-    client.settings = vim.tbl_deep_extend('force', client.settings or {}, {
-      python = { pythonPath = path },
-    })
-    client:notify('workspace/didChangeConfiguration', { settings = nil })
-  end
-end
-
 ---@type vim.lsp.Config
 return {
   cmd = { 'basedpyright-langserver', '--stdio' },
@@ -26,22 +12,12 @@ return {
     '.git',
   },
   before_init = function(_, config)
-    local root = config.root_dir
-    if root then
-      local venv_path = root .. '/.venv'
-      if vim.fn.isdirectory(venv_path) == 1 then
-        config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
-          python = { pythonPath = venv_path .. '/bin/python' },
-        })
-      end
+    local res = vim.system({ 'uv', 'python', 'find' }, { cwd = config.root_dir }):wait()
+    if res.code == 0 then
+      config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+        python = { pythonPath = vim.trim(res.stdout) },
+      })
     end
-  end,
-  on_attach = function(_, bufnr)
-    vim.api.nvim_buf_create_user_command(bufnr, 'LspPyrightSetPythonPath', set_python_path, {
-      desc = 'Reconfigure basedpyright with the provided python path',
-      nargs = 1,
-      complete = 'file',
-    })
   end,
   settings = {
     basedpyright = {
@@ -50,7 +26,8 @@ return {
         autoImportCompletions = true,
         useLibraryCodeForTypes = true,
         diagnosticMode = 'openFilesOnly',
-        typeCheckingMode = 'all',
+        -- ponytail: ty owns type diagnostics; basedpyright is hover/completion/rename/inlay only
+        typeCheckingMode = 'off',
         inlayHints = {
           variableTypes = true,
           callArgumentNames = true,

@@ -1,6 +1,6 @@
 local test = require('util.test')
 
----@type { ft: string, lines: string[], line: integer, want: string? }[]
+---@type { ft: string, lines: string[], line: integer, col?: integer, want: string? }[]
 local cases = {
   { ft = 'rust', lines = { 'fn helper() {}', 'fn my_test() {', '    let x = 1;', '}' }, line = 3, want = 'my_test' },
   {
@@ -10,6 +10,13 @@ local cases = {
     want = 'test_thing',
   },
   { ft = 'rust', lines = { 'struct S;' }, line = 1, want = nil },
+  {
+    ft = 'python',
+    lines = { 'class TestModel:', '    def test_fit(self):', '        pass' },
+    line = 3,
+    want = 'TestModel::test_fit',
+  },
+  { ft = 'rust', lines = { 'mod tests {', '    fn it_works() {}', '}' }, line = 2, col = 8, want = 'tests::it_works' },
 }
 
 for _, case in ipairs(cases) do
@@ -19,7 +26,7 @@ for _, case in ipairs(cases) do
   vim.api.nvim_set_current_buf(buf)
   vim.treesitter.start(buf)
   vim.treesitter.get_parser(buf):parse()
-  vim.api.nvim_win_set_cursor(0, { case.line, 0 })
+  vim.api.nvim_win_set_cursor(0, { case.line, case.col or 0 })
   local got = test.nearest_name()
   assert(got == case.want, ('%s: expected %s, got %s'):format(case.ft, tostring(case.want), tostring(got)))
 end

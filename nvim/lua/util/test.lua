@@ -4,21 +4,25 @@ M.last = nil ---@type string?
 ---@type table<string, table<'suite'|'file'|'nearest', string>>
 local runners = {
   rust = { suite = 'cargo test', file = 'cargo test', nearest = 'cargo test %s' },
-  python = { suite = 'pytest', file = 'pytest %f', nearest = 'pytest %f -k %s' },
+  python = { suite = 'uv run pytest', file = 'uv run pytest %f', nearest = 'uv run pytest %f::%s' },
 }
 
+---Node id of the enclosing test: `Class::method` (python) or `mod::name` (rust).
 ---@return string?
 function M.nearest_name()
+  local parts = {} ---@type string[]
   local node = vim.treesitter.get_node()
   while node do
-    if node:type():match('function') then
+    local t = node:type()
+    if t:match('function') or t == 'class_definition' or t == 'mod_item' then
       local name = node:field('name')[1]
       if name then
-        return vim.treesitter.get_node_text(name, 0)
+        table.insert(parts, 1, vim.treesitter.get_node_text(name, 0))
       end
     end
     node = node:parent()
   end
+  return #parts > 0 and table.concat(parts, '::') or nil
 end
 
 local win ---@type integer?

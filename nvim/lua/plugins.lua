@@ -242,7 +242,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
   end),
 })
 
-local fd_opts = '--color=never --type f --hidden --follow --strip-cwd-prefix --no-ignore-vcs'
+local fd_opts = '--color=never --type f --hidden --follow --strip-cwd-prefix'
 local load_fzf = lazy('fzf-lua', function()
   local fzf_lua, actions = require('fzf-lua'), require('fzf-lua.actions')
   fzf_lua.setup({
@@ -275,7 +275,7 @@ local load_fzf = lazy('fzf-lua', function()
       ['--tiebreak'] = 'end',
     },
     files = {
-      fd_opts = fd_opts .. ' --exclude .git --exclude target --exclude .venv --exclude node_modules --exclude dist --exclude .terraform',
+      fd_opts = fd_opts .. ' --exclude .git',
       sort_lastused = true,
       fzf_opts = { ['--tiebreak'] = 'end' },
       actions = { ['ctrl-q'] = actions.file_edit_or_qf },
@@ -290,10 +290,8 @@ local load_fzf = lazy('fzf-lua', function()
     grep = {
       rg_opts = table.concat({
         '--color=never --column --line-number --no-heading --smart-case',
-        '--max-columns=4096 --hidden --trim --no-ignore-vcs',
-        "--glob '!.git/*' --glob '!node_modules/*' --glob '!target/*'",
-        "--glob '!.venv/*' --glob '!dist/*' --glob '!.terraform/*'",
-        "--glob '!*.lock'",
+        '--max-columns=4096 --hidden --trim',
+        "--glob '!.git/*' --glob '!*.lock'",
         '-e',
       }, ' '),
       actions = {
@@ -358,7 +356,7 @@ for _, m in ipairs({
   { '<Leader>p', 'registers', 'Registers' },
   { '<Leader>ch', 'changes', 'Changes' },
   { '<Leader>fc', 'files', 'Find config files', { cwd = vim.fn.stdpath('config') } },
-  { '<Leader>fa', 'files', 'Find files (incl. target, .venv)', { fd_opts = fd_opts } },
+  { '<Leader>fa', 'files', 'Find files (incl. gitignored)', { fd_opts = fd_opts .. ' --no-ignore-vcs' } },
 }) do
   vim.keymap.set('n', m[1], fzf(m[2], m[4]), { silent = true, desc = m[3] })
 end
