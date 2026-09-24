@@ -5,14 +5,13 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 vim.filetype.add({ extension = { lp = 'lp', mps = 'mps' } })
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'lp',
-  once = true,
+-- Vendored grammar (synced via `make nvim-sync` in tree-sitter-lp); queries live in queries/lp
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'TSUpdate',
   callback = function()
-    local parser = vim.fn.expand('~/Projects/tree-sitter-lp/parser.so')
-    if vim.uv.fs_stat(parser) then
-      vim.treesitter.language.add('lp', { path = parser })
-    end
+    require('nvim-treesitter.parsers').lp = {
+      install_info = { path = vim.fn.stdpath('config') .. '/tree-sitter-lp' },
+    }
   end,
 })
 

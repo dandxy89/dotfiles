@@ -3,89 +3,72 @@
 
 (subject_to_keyword) @keyword.conditional
 
-(bounds_keyword) @keyword.type
+[
+  (bounds_keyword)
+  (generals_keyword)
+  (integers_keyword)
+  (binaries_keyword)
+  (semi_continuous_keyword)
+  (sos_keyword)
+  (lazy_constraints_keyword)
+  (user_cuts_keyword)
+  (general_constraints_keyword)
+] @keyword.type
 
-(generals_keyword) @keyword.type
-
-(integers_keyword) @keyword.type
-
-(binaries_keyword) @keyword.type
-
-(semi_continuous_keyword) @keyword.type
-
-(sos_keyword) @keyword.type
+(multi_objectives_keyword) @keyword.modifier
 
 (end_marker) @keyword.return
 
 (free_keyword) @keyword.modifier
 
-; SOS type
 (sos_type) @type
 
-; Operators
+; Operators and punctuation
 (comparison_operator) @operator
 
-(linear_expression
-  [
-    "+"
-    "-"
-  ] @operator)
+[
+  "="
+  "->"
+  "+"
+  "-"
+  "/"
+  "^"
+  "*"
+] @operator
 
-; Signed numeric values in constraints/bounds
-(constraint
-  [
-    "+"
-    "-"
-  ] @operator)
+[
+  "["
+  "]"
+  "("
+  ")"
+] @punctuation.bracket
 
-(bound_declaration
-  [
-    "+"
-    "-"
-  ] @operator)
+[
+  ":"
+  "::"
+  ","
+] @punctuation.delimiter
 
-(sos_entry
-  [
-    "+"
-    "-"
-  ] @operator)
-
-; Numbers
+; Literals
 (number) @number
 
-; Infinity
 (infinity) @constant.builtin
 
-; Labels / names
-(objective_name) @label
+; Names (objective/constraint/SOS names are aliased, so bare identifiers are variables)
+[
+  (objective_name)
+  (constraint_name)
+  (sos_name)
+] @label
 
-(constraint_name) @label
+(attribute_name) @property
 
-(sos_name) @label
+(function_name) @function.builtin
 
-; Variables
-(term
-  (identifier) @variable)
-
-(bound_declaration
-  (identifier) @variable)
-
-(generals_section
-  (identifier) @variable)
-
-(integers_section
-  (identifier) @variable)
-
-(binaries_section
-  (identifier) @variable)
-
-(semi_continuous_section
-  (identifier) @variable)
-
-(sos_entry
-  (identifier) @variable)
+(identifier) @variable
 
 ; Comments
-(line_comment) @comment
-
-(block_comment) @comment
+[
+  (line_comment)
+  (block_comment)
+] @comment

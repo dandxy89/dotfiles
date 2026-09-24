@@ -1,16 +1,17 @@
 ; Fold section bodies
-(objectives_section) @fold
+[
+  (objectives_section)
+  (constraints_section)
+  (bounds_section)
+  (generals_section)
+  (integers_section)
+  (binaries_section)
+  (semi_continuous_section)
+  (sos_section)
+] @fold
 
-(constraints_section) @fold
+(lazy_constraints_section) @fold
 
-(bounds_section) @fold
+(user_cuts_section) @fold
 
-(generals_section) @fold
-
-(integers_section) @fold
-
-(binaries_section) @fold
-
-(semi_continuous_section) @fold
-
-(sos_section) @fold
+(general_constraints_section) @fold

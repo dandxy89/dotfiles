@@ -18,5 +18,14 @@
 (term
   (identifier) @local.reference)
 
+(quadratic_term
+  (identifier) @local.reference)
+
+(indicator
+  (identifier) @local.reference)
+
+(general_constraint
+  (identifier) @local.reference)
+
 ; Scopes
 (source_file) @local.scope
