@@ -27,7 +27,7 @@ local function ruff_action(bufnr, kind)
 end
 
 vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = { '*.rs', '*.py', '*.toml' },
+  pattern = { '*.rs', '*.py', '*.toml', '*.lp' },
   group = augroup('FormatOnSave'),
   callback = function(ev)
     if not vim.g.disable_autoformat then

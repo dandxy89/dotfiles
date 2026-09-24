@@ -27,5 +27,8 @@
 (general_constraint
   (identifier) @local.reference)
 
+(sos_entry
+  (identifier) @local.reference)
+
 ; Scopes
 (source_file) @local.scope

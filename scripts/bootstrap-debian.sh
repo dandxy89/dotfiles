@@ -361,9 +361,11 @@ install_language_servers() {
   fi
 
   # taplo needs the non-default `lsp` feature or it builds without a server.
-  info "cargo install: taplo-cli (lsp) + harper-ls — this compiles, allow a few minutes"
+  info "cargo install: taplo-cli (lsp) + harper-ls + lp-lsp + lp_diff — this compiles, allow a few minutes"
   cargo install --quiet --locked --features lsp taplo-cli || fail "cargo install taplo-cli failed"
   cargo install --quiet --locked harper-ls || fail "cargo install harper-ls failed"
+  cargo install --quiet --locked --git https://github.com/dandxy89/lp_parser_rs lp-lsp lp_parser_tui \
+    || fail "cargo install lp-lsp + lp_diff failed"
 
   info "uv tool install ty"
   uv tool install --quiet ty || fail "uv tool install ty failed"

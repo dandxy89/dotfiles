@@ -8,10 +8,7 @@
   (binaries_section)
   (semi_continuous_section)
   (sos_section)
+  (lazy_constraints_section)
+  (user_cuts_section)
+  (general_constraints_section)
 ] @fold
-
-(lazy_constraints_section) @fold
-
-(user_cuts_section) @fold
-
-(general_constraints_section) @fold

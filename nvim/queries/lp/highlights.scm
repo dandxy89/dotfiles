@@ -15,11 +15,12 @@
   (general_constraints_keyword)
 ] @keyword.type
 
-(multi_objectives_keyword) @keyword.modifier
+[
+  (multi_objectives_keyword)
+  (free_keyword)
+] @keyword.modifier
 
 (end_marker) @keyword.return
-
-(free_keyword) @keyword.modifier
 
 (sos_type) @type
 

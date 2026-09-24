@@ -102,63 +102,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PATTERN",
-        "value": "general[ \\t]+constraints?|general[ \\t]+constrs?|gen[ \\t]+cons|genconstrs?",
-        "flags": "i"
-      }
-    },
-    "bounds_keyword": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "bounds?",
-        "flags": "i"
-      }
-    },
-    "generals_keyword": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "generals?|gen",
-        "flags": "i"
-      }
-    },
-    "integers_keyword": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "integers?",
-        "flags": "i"
-      }
-    },
-    "binaries_keyword": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "binar(y|ies)|bin",
-        "flags": "i"
-      }
-    },
-    "semi_continuous_keyword": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "semi-continuous|semis?",
-        "flags": "i"
-      }
-    },
-    "sos_keyword": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "sos",
-        "flags": "i"
-      }
-    },
-    "end_marker": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "end",
+        "value": "general[ \\t]+constraints?|general[ \\t]+constrs?|gen[ \\t]+cons",
         "flags": "i"
       }
     },
@@ -203,24 +147,8 @@
     "line_comment": {
       "type": "TOKEN",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "\\\\[^\\n*][^\\n]*"
-          },
-          {
-            "type": "STRING",
-            "value": "\\"
-          }
-        ]
-      }
-    },
-    "block_comment": {
-      "type": "TOKEN",
-      "content": {
         "type": "PATTERN",
-        "value": "\\\\\\*([^*]|\\*+[^*\\\\])*\\*+\\\\"
+        "value": "\\\\([^\\n*][^\\n]*)?"
       }
     },
     "comparison_operator": {
@@ -419,54 +347,59 @@
           "value": "["
         },
         {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "+"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "+"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "-"
+                    }
+                  ]
                 },
                 {
-                  "type": "STRING",
-                  "value": "-"
+                  "type": "BLANK"
                 }
               ]
             },
             {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "SYMBOL",
-          "name": "quadratic_term"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "CHOICE",
+              "type": "SYMBOL",
+              "name": "quadratic_term"
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
                 "members": [
                   {
-                    "type": "STRING",
-                    "value": "+"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "+"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "-"
+                      }
+                    ]
                   },
                   {
-                    "type": "STRING",
-                    "value": "-"
+                    "type": "SYMBOL",
+                    "name": "quadratic_term"
                   }
                 ]
-              },
-              {
-                "type": "SYMBOL",
-                "name": "quadratic_term"
               }
-            ]
-          }
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -876,8 +809,22 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "general_constraints_keyword"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "general_constraints_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_genconstrs_keyword"
+              },
+              "named": true,
+              "value": "general_constraints_keyword"
+            }
+          ]
         },
         {
           "type": "REPEAT",
@@ -1016,8 +963,26 @@
               "name": "identifier"
             },
             {
-              "type": "SYMBOL",
-              "name": "free_keyword"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "free_keyword"
+                },
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "comparison_operator"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "_numeric_value"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -1037,46 +1002,25 @@
               "name": "identifier"
             },
             {
-              "type": "SYMBOL",
-              "name": "comparison_operator"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "_numeric_value"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identifier"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "comparison_operator"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "_numeric_value"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_numeric_value"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "comparison_operator"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "identifier"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "comparison_operator"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "_numeric_value"
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           ]
         }
@@ -1257,7 +1201,44 @@
     ]
   ],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "bounds_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "generals_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "integers_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "binaries_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "semi_continuous_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "sos_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "end_marker"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_genconstrs_keyword"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "block_comment"
+    }
+  ],
   "inline": [],
   "supertypes": [],
   "reserved": {}
