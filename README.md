@@ -1,8 +1,22 @@
-# Collection of Useful Workspace files
+# Dotfiles
 
-...and Neovim config mainly
+Neovim config (0.12+, `vim.pack`), shell, tmux and git config.
 
-## Interesting
+## Install
+
+```sh
+./scripts/nvim-setup.sh          # symlink nvim/, install plugins + parsers, verify
+./scripts/bootstrap-debian.sh    # Debian/Ubuntu: tools, shell-common.sh, tmux, fd ignore
+make check                       # luacheck + lua-language-server + tests
+```
+
+- `dots/.zshrc` (macOS, oh-my-zsh), `dots/shell-common.sh` (portable), `dots/tmux.conf`, `dots/.gitconfig` are not auto-linked on macOS: symlink them to `~`.
+- `dots/.gitconfig` sets no credential helper. Set `user.email` locally (e.g. `git config --global user.email`); commit signing is off.
+- The `lp` tree-sitter grammar installs from `dandxy89/treesitter-lp`; bump `revision` in `nvim/init.lua`, then `:TSUpdate lp`.
+
+## Links
+
+### Interesting
 
 - [Dan luu blog](https://danluu.com/)
 - [DoA](https://xlinux.nist.gov/dads/)

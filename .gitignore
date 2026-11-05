@@ -1,24 +1,22 @@
-/target
-.aws-sam/
-.venv/
-.vscode/
-.metals/
-/development*
+# OS
+.DS_Store
+Desktop.ini
+Thumbs.db
+.Spotlight-V100
+.Trashes
 
-*.log
-*.csv
-*.DS_Store
-
-*/.pytest_cache
-.pytest_cache
+# Editors
 .idea/
-lib/
-.xml
-dotfiles/spell
-dotfiles/pack/
-nvim/spell/**
-nvim2/nvim/spell/en.utf-8.add
-nvim2/nvim/spell/en.utf-8.add.spl
+.vscode/
 
+# Python / Rust
+*.pyc
+.venv/
+.pytest_cache/
+/target
+
+# Secrets
 .env
-nvim/tree-sitter-lp/parser.so
+
+# Logs
+*.log

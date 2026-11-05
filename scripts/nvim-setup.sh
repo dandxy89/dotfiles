@@ -112,6 +112,13 @@ install_plugins() {
   else
     pass "all plugins installed"
   fi
+
+  info "aligning plugins to nvim-pack-lock.json …"
+  if nvim --headless -c "lua vim.pack.update(nil, { target = 'lockfile', force = true })" -c "qa" 2>&1 | tail -5; then
+    pass "plugins match lockfile"
+  else
+    fail "lockfile sync failed"
+  fi
 }
 
 install_ts_parsers() {

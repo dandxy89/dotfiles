@@ -49,11 +49,12 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = augroup('StripWhitespace'),
   callback = function()
-    if not vim.bo.modifiable then
+    -- diffs need their trailing context whitespace
+    if not vim.bo.modifiable or vim.bo.filetype == 'diff' then
       return
     end
     local pos = vim.api.nvim_win_get_cursor(0)
-    vim.cmd([[ %s/\s\+$//e ]])
+    vim.cmd([[ keeppatterns %s/\s\+$//e ]])
     pcall(vim.api.nvim_win_set_cursor, 0, pos)
   end,
 })
@@ -72,7 +73,7 @@ vim.api.nvim_create_autocmd('BufReadPre', {
   group = augroup('BigFile'),
   callback = function(ev)
     if vim.fn.getfsize(ev.match) > 1024 * 1024 then
-      vim.b[ev.buf].bigfile = true
+      vim.b[ev.buf].bigfile = true -- core.lsp detaches servers from these buffers
       vim.bo[ev.buf].undolevels = -1
       vim.opt_local.foldmethod = 'manual'
     end

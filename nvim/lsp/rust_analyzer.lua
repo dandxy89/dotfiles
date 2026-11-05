@@ -36,43 +36,16 @@ return {
       end
     end)
   end,
+  -- Only non-default values; see rust-analyzer.github.io/book/configuration.html
   settings = {
     ['rust-analyzer'] = {
-      cargo = { buildScripts = { enable = true } },
-      diagnostics = { enable = true },
-      inlayHints = {
-        enable = true,
-        bindingModeHints = { enable = false },
-        chainingHints = { enable = true },
-        closingBraceHints = { enable = true, minLines = 25 },
-        closureReturnTypeHints = { enable = 'never' },
-        lifetimeElisionHints = {
-          enable = 'never',
-          useParameterNames = false,
-        },
-        maxLength = 25,
-        parameterHints = { enable = true },
-        reborrowHints = { enable = 'never' },
-        renderColons = true,
-        typeHints = {
-          enable = true,
-          hideClosureInitialization = false,
-          hideNamedConstructor = false,
-        },
-      },
       lens = {
-        enable = true,
-        run = { enable = true },
-        debug = { enable = true },
         methodReferences = { enable = true },
         references = { enable = true },
         implementations = { enable = false },
       },
       interpret = { tests = true },
-      procMacro = {
-        enable = true,
-        ignored = { leptos_macro = { 'component', 'server' } },
-      },
+      procMacro = { ignored = { leptos_macro = { 'component', 'server' } } },
     },
   },
 }

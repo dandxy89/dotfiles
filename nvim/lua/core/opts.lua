@@ -1,6 +1,5 @@
 local opt = vim.opt
 
-opt.guifont = 'JetBrains Mono'
 opt.number, opt.relativenumber, opt.cursorline = true, true, true
 opt.ruler, opt.laststatus, opt.cmdheight = false, 2, 1
 opt.signcolumn, opt.numberwidth, opt.statuscolumn = 'yes:1', 3, '%l%s'
@@ -21,7 +20,6 @@ opt.undofile, opt.undolevels = true, 10000
 opt.autoread, opt.autowrite = true, true
 
 opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
-opt.smartindent = true
 opt.wrap = false
 
 opt.ignorecase, opt.smartcase = true, true
@@ -33,14 +31,7 @@ opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
 
 opt.clipboard = 'unnamedplus'
 opt.spelllang = 'en_gb'
-vim.api.nvim_create_autocmd('UIEnter', {
-  once = true,
-  callback = function()
-    vim.defer_fn(function()
-      vim.o.spell = true
-    end, 50)
-  end,
-})
+-- spell is enabled per filetype in ftplugin/{markdown,text,gitcommit}.lua; Harper covers code comments
 opt.shortmess = 'filnxtToOFWcC'
 
 opt.foldenable, opt.foldlevel, opt.foldcolumn = true, 99, '0'

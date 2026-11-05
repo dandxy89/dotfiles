@@ -19,7 +19,6 @@ vim.api.nvim_create_autocmd('PackChanged', {
 })
 
 vim.pack.add({
-  gh('zitrocode/carvion.nvim'),
   { src = gh('saghen/blink.cmp'), name = 'blink-cmp', version = vim.version.range('*') },
   { src = gh('saghen/blink.lib'), name = 'blink-lib' },
   gh('mikavilpas/blink-ripgrep.nvim'),
@@ -91,6 +90,7 @@ vim.g.treesitter_parsers = {
   'proto',
   'make',
   'dockerfile',
+  'lp',
 }
 
 vim.api.nvim_create_autocmd('FileType', {
@@ -342,21 +342,11 @@ for _, m in ipairs({
   { '<Leader><space>', 'files', 'Find files' },
   { '<Leader>/', 'live_grep', 'Live grep' },
   { '<Leader>,', 'buffers', 'Buffers' },
-  { '<Leader>ff', 'files', 'Find files' },
   { '<Leader>fg', 'git_files', 'Git files' },
-  { '<Leader>fb', 'buffers', 'Buffers' },
   { '<Leader>fr', 'oldfiles', 'Recent files' },
   { '<Leader>sf', 'resume', 'Resume search' },
-  { '<Leader>ss', 'lsp_workspace_symbols', 'Workspace symbols' },
-  { '<Leader>sd', 'lsp_workspace_diagnostics', 'Workspace diagnostics' },
   { '<Leader>gs', 'git_status', 'Git status' },
   { '<Leader>gl', 'git_commits', 'Git commits' },
-  { 'gd', 'lsp_definitions', 'Go to definition' },
-  { 'gD', 'lsp_declarations', 'Go to declaration' },
-  { 'gr', 'lsp_references', 'References' },
-  { 'gI', 'lsp_implementations', 'Implementations' },
-  { 'gy', 'lsp_typedefs', 'Type definitions' },
-  { '<Leader>ca', 'lsp_code_actions', 'Code actions' },
   { '<Leader>p', 'registers', 'Registers' },
   { '<Leader>ch', 'changes', 'Changes' },
   { '<Leader>fc', 'files', 'Find config files', { cwd = vim.fn.stdpath('config') } },
@@ -367,3 +357,23 @@ end
 
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)', { desc = 'Leap forward' })
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)', { desc = 'Leap from window' })
+
+-- LSP pickers are buffer-local so native gd/gr keep working where no server attached
+local lsp_pickers = {
+  { '<Leader>ss', 'lsp_workspace_symbols', 'Workspace symbols' },
+  { '<Leader>sd', 'lsp_workspace_diagnostics', 'Workspace diagnostics' },
+  { 'gd', 'lsp_definitions', 'Go to definition' },
+  { 'gD', 'lsp_declarations', 'Go to declaration' },
+  { 'gr', 'lsp_references', 'References' },
+  { 'gI', 'lsp_implementations', 'Implementations' },
+  { 'gy', 'lsp_typedefs', 'Type definitions' },
+  { '<Leader>ca', 'lsp_code_actions', 'Code actions' },
+}
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('custom_lsp_pickers', { clear = true }),
+  callback = function(ev)
+    for _, m in ipairs(lsp_pickers) do
+      vim.keymap.set('n', m[1], fzf(m[2]), { buffer = ev.buf, silent = true, desc = m[3] })
+    end
+  end,
+})

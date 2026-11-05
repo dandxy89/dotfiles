@@ -1,7 +1,5 @@
 [user]
-	email = Dan@gmail.com
 	name = Dan Dixey
-	signingkey = XYZ
 [init]
     defaultBranch = main
 [core]
@@ -11,8 +9,6 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[ui "color"]
-	ui = always
 [color]
 	status = auto
 	diff = auto
@@ -20,11 +16,8 @@
 	interactive = auto
 	grep = auto
 	ui = auto
-[credential]
-	helper = store
 [alias]
 	c = commit
-    cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 -r git branch -d"
 	s = status
 	lg = log --oneline
 	last = log -1 HEAD
@@ -52,7 +45,8 @@
 	# Delete local branches that are now merged
 	delete-merged-branches = "!f() { git checkout --quiet main && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
 [diff]
-  	tool = nvimdiff
+	algorithm = histogram
+	tool = nvimdiff
 [difftool "nvimdiff"]
 	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
 	path =
@@ -63,15 +57,15 @@
 	user = dandxy89
 [rerere]
 	enabled = true
+	autoUpdate = true
 [push]
 	autoSetupRemote = true
-[branch]
-    # set up 'git pull' to rebase instead of merge
-	autosetuprebase = always
 [pull]
     rebase = true
-
-[gpg]
-	program = /opt/homebrew/bin/gpg
-[commit]
-	gpgsign = true
+[fetch]
+	prune = true
+[rebase]
+	autoStash = true
+	autoSquash = true
+[merge]
+	conflictstyle = zdiff3

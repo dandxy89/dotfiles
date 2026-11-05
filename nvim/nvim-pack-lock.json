@@ -13,10 +13,6 @@
       "rev": "47c9795bf1be9f4b6466d19a2bf0dca42bd65bf7",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
-    "carvion.nvim": {
-      "rev": "bf099b9f8a826ea614100cc1e637c6e49e1c1a7d",
-      "src": "https://github.com/zitrocode/carvion.nvim"
-    },
     "fzf-lua": {
       "rev": "11357ee24a9f092b1db503237eb57e2a11e48434",
       "src": "https://github.com/ibhagwan/fzf-lua"

@@ -2,10 +2,27 @@ local server_names = {} ---@type string[]
 for file in vim.fs.dir(vim.fn.stdpath('config') .. '/lsp') do
   local name = file:match('(.+)%.lua$')
   if name then
-    table.insert(server_names, name)
+    -- skip servers that are not installed instead of erroring on every matching buffer
+    local cmd = (vim.lsp.config[name] or {}).cmd
+    if type(cmd) ~= 'table' or vim.fn.executable(cmd[1]) == 1 then
+      table.insert(server_names, name)
+    end
   end
 end
 vim.lsp.enable(server_names)
+
+-- Big files: no language server, no inlay hints
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('custom_lsp_bigfile', { clear = true }),
+  callback = function(ev)
+    if vim.b[ev.buf].bigfile then
+      vim.lsp.inlay_hint.enable(false, { bufnr = ev.buf })
+      vim.schedule(function()
+        vim.lsp.buf_detach_client(ev.buf, ev.data.client_id)
+      end)
+    end
+  end,
+})
 
 local signs = { ERROR = '', WARN = '', HINT = '', INFO = '' }
 local numhl, text = {}, {} ---@type table<vim.diagnostic.Severity, string>, table<vim.diagnostic.Severity, string>

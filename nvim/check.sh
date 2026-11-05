@@ -6,3 +6,4 @@ VIMRUNTIME="${VIMRUNTIME:-$(nvim --headless -c 'lua io.write(vim.env.VIMRUNTIME)
 export VIMRUNTIME
 luacheck .
 lua-language-server --check . --checklevel=Warning
+nvim --headless -l tests/test_nearest.lua

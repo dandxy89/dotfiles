@@ -35,7 +35,7 @@ return {
     -- Client-side command used by the "used in N constraints" code lens.
     ['lp.showReferences'] = function(command, ctx)
       local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-      local locations = command.arguments[3] or {}
+      local locations = command.arguments[3] or {} ---@cast locations lsp.Location[]
       local items = vim.lsp.util.locations_to_items(locations, client.offset_encoding)
       vim.fn.setqflist({}, ' ', { title = 'LP references', items = items })
       vim.cmd.copen()

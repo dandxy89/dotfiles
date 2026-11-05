@@ -38,8 +38,6 @@ alias du='du -csh'
 alias df='df -h'
 alias grep='grep --color=auto'
 command -v colordiff >/dev/null 2>&1 && alias diff='colordiff -ru'
-alias fd='fd --one-file-system --hidden'
-alias rg='rg -uuu'
 
 alias myip='curl -s http://ipecho.net/plain; echo'
 alias weather='curl -4 https://wttr.in/durham'
