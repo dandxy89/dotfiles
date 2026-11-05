@@ -9,7 +9,11 @@ vim.api.nvim_create_autocmd('PackChanged', {
     if ev.data.spec.name == 'blink-cmp' and (ev.data.kind == 'install' or ev.data.kind == 'update') then
       vim.cmd.packadd('blink-lib')
       vim.cmd.packadd('blink-cmp')
-      require('blink.cmp').download():pwait()
+      require('blink.cmp.fuzzy.download').ensure_downloaded(function(err)
+        if err then
+          vim.notify('blink.cmp fuzzy download failed: ' .. tostring(err), vim.log.levels.ERROR)
+        end
+      end)
     end
   end,
 })
@@ -62,7 +66,7 @@ require('blink.cmp').setup({
   fuzzy = { implementation = 'prefer_rust_with_warning' },
   keymap = { preset = 'enter' },
   signature = { enabled = true, window = { border = 'rounded' } },
-  cmdline = { enabled = true, sources = { default = { 'cmdline', 'path' } } },
+  cmdline = { enabled = false },
   sources = {
     default = { 'lsp', 'path', 'snippets', 'buffer', 'ripgrep' },
     providers = {

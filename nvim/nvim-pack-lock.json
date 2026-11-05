@@ -10,27 +10,27 @@
       "src": "https://github.com/saghen/blink.lib"
     },
     "blink-ripgrep.nvim": {
-      "rev": "eec58ad5fa71ee935b382fc6b5863be6bb9caa03",
+      "rev": "47c9795bf1be9f4b6466d19a2bf0dca42bd65bf7",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "carvion.nvim": {
-      "rev": "a5a120d535b83fec5b08efab2557effbc2f34602",
+      "rev": "bf099b9f8a826ea614100cc1e637c6e49e1c1a7d",
       "src": "https://github.com/zitrocode/carvion.nvim"
     },
     "fzf-lua": {
-      "rev": "05e44d38de0a79c11fba5f7bf8138791b1dbdd1e",
+      "rev": "11357ee24a9f092b1db503237eb57e2a11e48434",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "f2421c550618d257048afa650413d9e542ddbe67",
+      "rev": "ef707fb93301a9b856f36eae4c8f56f5b988a794",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "leap.nvim": {
-      "rev": "38af0ab56c6eb8757ee6006dd13ab79c2bc11a49",
+      "rev": "277e04fad21e3af05a55cc414757b09a704f2a92",
       "src": "https://codeberg.org/andyg/leap.nvim.git"
     },
     "nvim-treesitter": {
-      "rev": "de9f0f3dbdab1952f136dc7bd67ff3bafdf994da",
+      "rev": "610734c5d3e59761d5f79318d120633374537fa5",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
