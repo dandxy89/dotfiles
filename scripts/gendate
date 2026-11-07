@@ -1,10 +1,11 @@
 #!/bin/bash
 # Print today's date (YYYY-MM-DD); 'gendate h N' prefixes a markdown heading,
 # e.g. 'gendate h 3' -> '### 2023-03-29'
+set -euo pipefail
 
 if [[ $# -gt 0 ]]; then
-	if [[ "$1" != "h" || $# -ne 2 ]]; then
-		echo "Usage: gendate h 2 to generate with markdown heading ##"
+	if [[ "$1" != "h" || $# -ne 2 || ! $2 =~ ^[1-6]$ ]]; then
+		echo "Usage: gendate [h 1-6]" >&2
 		exit 1
 	fi
 	printf '#%.0s' $(seq "$2")

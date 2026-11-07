@@ -1,9 +1,10 @@
-#!/bin/bash
-# Convert a nanosecond epoch timestamp to a readable datetime
+#!/usr/bin/env bash
+# Convert a nanosecond epoch timestamp to a readable datetime (macOS/BSD date)
+set -euo pipefail
 
-if [ -z "$1" ]; then
-    echo "Usage: $0 <nanotimestamp>"
-    exit 1
+if [[ $# -ne 1 || ! $1 =~ ^[0-9]+$ ]]; then
+	echo "Usage: ${0##*/} <nanotimestamp>" >&2
+	exit 1
 fi
 
 echo "Nanotimestamp: $1"

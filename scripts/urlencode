@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Percent-encode args (or stdin lines) per RFC 3986. jq's @uri does the work.
 
-if [ -n "$1" ]; then
+set -euo pipefail
+
+if [ $# -gt 0 ]; then
 	printf '%s' "$*" | jq -sRr '@uri'
 	exit
 fi
