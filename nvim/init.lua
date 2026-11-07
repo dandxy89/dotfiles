@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd('User', {
       tier = 3,
       install_info = {
         url = 'https://github.com/dandxy89/treesitter-lp',
-        revision = '3ac1092ebcf7a1f0b7f6de176360338f60bbd4fd',
+        revision = '7b212e7c585fc4208d0371d4338afd1f8fb61ef1',
         queries = 'queries',
       },
     }
