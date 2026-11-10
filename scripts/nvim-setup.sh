@@ -5,7 +5,7 @@
 # --install  : create symlink and install plugins/parsers (default on new machine)
 # --verify   : check symlink, parsers, LSP binaries, and open test files
 # --upgrade  : update plugins (vim.pack.update) and treesitter parsers in place
-# --clean    : remove the config symlink and all plugin/parser state, so
+# --clean    : remove the config symlink and plugin/parser/cache state, so
 #              --install starts from scratch
 # (no args)  : run both install then verify
 
@@ -29,6 +29,11 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NVIM_SRC="${DOTFILES_DIR}/nvim"
 NVIM_CFG="${HOME}/.config/nvim"
 NVIM_DATA="$(nvim --headless -c "lua io.write(vim.fn.stdpath('data'))" -c qa 2>/dev/null || true)"
+
+# nvim exits 0 even when the Lua throws; turn an error into a non-zero exit.
+nvim_lua() {
+  nvim --headless -c "lua local ok, e = pcall(function() $1 end); if not ok then io.stderr:write(tostring(e), '\\n'); vim.cmd.cquit() end" -c qa 2>&1 | tail "${2:--5}"
+}
 
 require_nvim() {
   if ! command -v nvim &>/dev/null; then
@@ -114,7 +119,7 @@ install_plugins() {
   fi
 
   info "aligning plugins to nvim-pack-lock.json …"
-  if nvim --headless -c "lua vim.pack.update(nil, { target = 'lockfile', force = true })" -c "qa" 2>&1 | tail -5; then
+  if nvim_lua "vim.pack.update(nil, { target = 'lockfile', force = true })"; then
     pass "plugins match lockfile"
   else
     fail "lockfile sync failed"
@@ -124,9 +129,7 @@ install_plugins() {
 install_ts_parsers() {
   header "3. Treesitter parser installation"
   info "installing every parser in vim.g.treesitter_parsers (synchronous) …"
-  if nvim --headless \
-    -c "lua require('nvim-treesitter').install(vim.g.treesitter_parsers):wait(600000)" \
-    -c "qa" 2>&1 | tail -5; then
+  if nvim_lua "require('nvim-treesitter').install(vim.g.treesitter_parsers):wait(600000)"; then
     pass "parsers installed"
   else
     fail "parser installation failed (needs a C compiler and the tree-sitter CLI)"
@@ -136,14 +139,14 @@ install_ts_parsers() {
 upgrade_plugins() {
   header "Plugin upgrade"
   # force = true skips the confirmation buffer, which nothing can answer headless
-  if nvim --headless -c "lua vim.pack.update(nil, { force = true })" -c "qa" 2>&1 | tail -10; then
+  if nvim_lua "vim.pack.update(nil, { force = true })" -10; then
     pass "plugins updated"
   else
     fail "plugin update failed"
   fi
 
   header "Treesitter parser upgrade"
-  if nvim --headless -c "lua require('nvim-treesitter').update():wait(600000)" -c "qa" 2>&1 | tail -5; then
+  if nvim_lua "require('nvim-treesitter').update():wait(600000)"; then
     pass "parsers updated"
   else
     fail "parser update failed"
@@ -151,11 +154,13 @@ upgrade_plugins() {
 }
 
 clean_nvim() {
-  header "Clean — remove config symlink and plugin/parser state"
+  header "Clean — remove config symlink and plugin/parser/cache state (undo and ShaDa are kept)"
 
+  # ponytail: parser dir is nvim-treesitter's default (site/parser); undo/ShaDa/history are never touched
+  local data="${NVIM_DATA:-${XDG_DATA_HOME:-${HOME}/.local/share}/nvim}"
   local dirs=(
-    "${NVIM_DATA:-${XDG_DATA_HOME:-${HOME}/.local/share}/nvim}"
-    "${XDG_STATE_HOME:-${HOME}/.local/state}/nvim"
+    "${data}/site/pack"
+    "${data}/site/parser"
     "${XDG_CACHE_HOME:-${HOME}/.cache}/nvim"
   )
 

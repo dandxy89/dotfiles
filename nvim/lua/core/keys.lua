@@ -26,9 +26,8 @@ end, { desc = 'Toggle codelens' })
 map('n', '<Leader>fl', function()
   if vim.bo.filetype == 'json' or vim.bo.filetype == 'jsonc' then
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    if
-      not pcall(vim.cmd --[[@as fun(cmd: string)]], '%!jq .')
-    then
+    vim.cmd('%!jq .')
+    if vim.v.shell_error ~= 0 then
       vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
       vim.notify('jq formatting failed', vim.log.levels.ERROR)
     end
@@ -101,8 +100,8 @@ map('n', '<Leader>md', function()
   end)
 end, { desc = 'LP diff/explore' })
 
-map('v', 'K', "<cmd>m '>-2<CR>gv=gv", { desc = 'Move line up' })
-map('v', 'J', "<cmd>m '>+1<CR>gv=gv", { desc = 'Move line down' })
+map('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move line up' })
+map('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move line down' })
 map('n', '<M-k>', ':m .-2<CR>==', { desc = 'Move line up' })
 map('n', '<M-j>', ':m .+1<CR>==', { desc = 'Move line down' })
 map('v', '<Leader>r', '"hy:%s/<C-r>h//g<left><left>', { desc = 'Replace selection' })

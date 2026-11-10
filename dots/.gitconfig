@@ -27,7 +27,7 @@
     ss = "!f() { git stash show stash^{/$*} -p; }; f"
 	sa = "!f() { git stash apply stash^{/$*}; }; f"
 	sl = stash list
-	lol = log --graph --decorate --pretty=oneline --abbrev-commits
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
     br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
     undo = reset --soft HEAD~1
     contrib = shortlog -e --summary --numbered
@@ -47,12 +47,6 @@
 [diff]
 	algorithm = histogram
 	tool = nvimdiff
-[difftool "nvimdiff"]
-	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "nvimdiff"]
-	cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [github]
 	user = dandxy89
 [rerere]
@@ -68,4 +62,7 @@
 	autoStash = true
 	autoSquash = true
 [merge]
+	tool = nvimdiff
 	conflictstyle = zdiff3
+[include]
+	path = ~/.gitconfig.local

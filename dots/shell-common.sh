@@ -84,15 +84,18 @@ alias sweep_target='cargo sweep --recursive --time 0 ~/Work'
 # Functions
 # =====================================================
 # Tmux session: tmx [name] (defaults to RustDev)
+_tmx_enter() {
+    if [ -n "$TMUX" ]; then tmux switch-client -t "$1"; else tmux attach-session -t "$1"; fi
+}
 tmx() {
     local session_name="${1:-RustDev}"
 
     if tmux has-session -t "$session_name" 2>/dev/null; then
-        tmux attach-session -t "$session_name"
+        _tmx_enter "$session_name"
     else
         tmux new-session -d -s "$session_name"
-        tmux new-window -n terminal
-        tmux new-window -d -n nvim
-        tmux attach-session -d -t "$session_name"
+        tmux new-window -t "$session_name" -n terminal
+        tmux new-window -d -t "$session_name" -n nvim
+        _tmx_enter "$session_name"
     fi
 }

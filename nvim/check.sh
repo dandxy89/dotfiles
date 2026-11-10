@@ -7,4 +7,4 @@ export VIMRUNTIME
 luacheck .
 stylua --check .
 lua-language-server --check . --checklevel=Hint
-nvim --headless -l tests/test_nearest.lua
+nvim --headless --cmd "set rtp^=." -l tests/test_nearest.lua

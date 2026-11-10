@@ -101,7 +101,11 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('VimResized', {
   group = augroup('AutoResizeWindows'),
-  command = 'tabdo wincmd =',
+  callback = function()
+    local tab = vim.fn.tabpagenr()
+    vim.cmd('tabdo wincmd =')
+    vim.cmd.tabnext(tab)
+  end,
 })
 
 vim.api.nvim_create_autocmd('BufReadPost', {
