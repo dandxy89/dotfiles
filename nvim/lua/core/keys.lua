@@ -35,6 +35,22 @@ map('n', '<Leader>fl', function()
     vim.lsp.buf.format()
   end
 end, { desc = 'Format code' })
+map('n', '<Leader>cb', function()
+  local dir = vim.fn.stdpath('data') .. '/site/pack/core/opt/blink-cmp'
+  if vim.fn.executable('cargo') ~= 1 then
+    return vim.notify('cargo not found on PATH', vim.log.levels.ERROR)
+  end
+  vim.notify('blink.cmp: cargo build --release ...')
+  vim.system({ 'cargo', 'build', '--release' }, { cwd = dir, text = true }, function(res)
+    vim.schedule(function()
+      if res.code ~= 0 then
+        return vim.notify('blink.cmp build failed:\n' .. (res.stderr or ''), vim.log.levels.ERROR)
+      end
+      vim.notify('blink.cmp build done; restarting')
+      vim.cmd.restart()
+    end)
+  end)
+end, { desc = 'Rebuild blink.cmp (release) and restart' })
 map('n', '<Leader>de', vim.diagnostic.open_float, { desc = 'Open diagnostics float' })
 map('n', '<BS>', '<C-o>', { desc = 'Jump back' })
 map('n', ']q', '<cmd>cnext<CR>', { desc = 'Quickfix next' })
