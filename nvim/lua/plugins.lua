@@ -75,6 +75,30 @@ require('blink.cmp').setup({
   },
 })
 
+-- Failsafe: PackChanged only fires on install/update, so a copied pack dir or a failed
+-- download leaves blink without its Rust fuzzy library. Retry on every startup until it loads.
+-- Completion keeps working meanwhile via the Lua fallback (fuzzy.implementation above).
+vim.schedule(function()
+  if pcall(require, 'blink.cmp.fuzzy.rust') then
+    return
+  end
+  require('blink.cmp.fuzzy.download').ensure_downloaded(function(err, impl)
+    if err then
+      vim.notify(
+        'blink.cmp: Rust fuzzy library unavailable ('
+          .. tostring(err)
+          .. '); using Lua fallback.\n'
+          .. 'Fix: cd '
+          .. vim.fn.stdpath('data')
+          .. '/site/pack/core/opt/blink-cmp && cargo build --release',
+        vim.log.levels.WARN
+      )
+    elseif impl ~= 'lua' then
+      vim.notify('blink.cmp: Rust fuzzy library ready; restart Neovim.', vim.log.levels.INFO)
+    end
+  end)
+end)
+
 vim.g.treesitter_parsers = {
   'bash',
   'lua',
