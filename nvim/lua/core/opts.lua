@@ -4,7 +4,6 @@ opt.number, opt.relativenumber, opt.cursorline = true, true, true
 opt.ruler, opt.laststatus, opt.cmdheight = false, 2, 1
 opt.signcolumn, opt.numberwidth, opt.statuscolumn = 'yes:1', 3, '%l%s'
 opt.pumheight, opt.winborder = 25, 'rounded'
-opt.background = 'dark'
 opt.smoothscroll, opt.title = true, true
 opt.guicursor = {
   'n-v:block',

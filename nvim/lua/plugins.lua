@@ -46,7 +46,7 @@ local function lazy(name, setup)
   end
 end
 
-vim.cmd.colorscheme('oxidefox')
+vim.cmd.colorscheme('dantheme')
 
 require('blink.cmp').setup({
   completion = {

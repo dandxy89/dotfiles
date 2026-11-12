@@ -10,6 +10,7 @@
 #   nvim         nightly prebuilt -> /opt/nvim (builds master from source if glibc too old)
 #   tree-sitter  latest CLI binary -> /usr/local/bin (generates extra parsers)
 #   lazygit      latest binary -> /usr/local/bin (used by nvim's <Leader>lg terminal)
+#   font         Geist Mono (latest release) -> ~/.local/share/fonts (Ghostty font)
 #   rust         rustup + cargo + rust-analyzer component
 #   python       uv, then `uv tool install` basedpyright + ruff + ty
 #   lsp          the remaining servers configured in nvim/lsp/:
@@ -123,7 +124,7 @@ resolve_repo() {
 
 install_apt_packages() {
   header "2. System packages (apt)"
-  local pkgs=(build-essential git curl unzip ca-certificates tmux ripgrep bat fd-find)
+  local pkgs=(build-essential git curl unzip ca-certificates tmux ripgrep bat fd-find fontconfig)
   info "apt-get update …"
   ${SUDO} apt-get update -qq
   info "installing: ${pkgs[*]}"
@@ -301,6 +302,35 @@ install_lazygit() {
   pass "lazygit installed: $(/usr/local/bin/lazygit --version 2>/dev/null | head -1 || echo '?')"
 }
 
+install_font() {
+  header "7b. Geist Mono font"
+  local dir="${HOME}/.local/share/fonts/GeistMono"
+  if compgen -G "${dir}/GeistMono-*.ttf" >/dev/null; then
+    pass "Geist Mono already installed: ${dir}"
+    return
+  fi
+  local tmp ver
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "${tmp}"' RETURN
+
+  info "resolving latest Geist release"
+  ver="$(curl -fsSL "https://api.github.com/repos/vercel/geist-font/releases/latest" |
+    grep -Po '"tag_name":\s*"\K[^"]*' || true)"
+  if [[ -z "${ver}" ]]; then
+    fail "could not resolve latest Geist version (GitHub API rate limit?)"
+    return
+  fi
+  if ! curl -fL --retry 3 -o "${tmp}/geist.zip" \
+    "https://github.com/vercel/geist-font/releases/download/${ver}/geist-font-${ver}.zip"; then
+    fail "could not download Geist ${ver}"
+    return
+  fi
+  mkdir -p "${dir}"
+  unzip -q -j -o "${tmp}/geist.zip" 'geist-font/GeistMono/ttf/*.ttf' -d "${dir}"
+  fc-cache -f "${dir}" >/dev/null
+  pass "Geist Mono ${ver} installed: ${dir}"
+}
+
 install_rust() {
   header "5. Rust (rustup + rust-analyzer)"
   if command -v rustup &>/dev/null; then
@@ -420,7 +450,7 @@ install_marksman() {
 }
 
 ensure_path() {
-  header "10. Shell config (PATH + tmux + lazygit + fd + aliases)"
+  header "10. Shell config (PATH + tmux + lazygit + ghostty + fd + aliases)"
   local marker="# >>> dotfiles bootstrap >>>"
   local block
   block="${marker}
@@ -464,6 +494,17 @@ export PATH=\"\$HOME/.local/bin:\$HOME/.cargo/bin:\$PATH\"
     pass "linked lazygit config: ${lg_dst}"
   else
     warn "lazygit not found — skipping its config"
+  fi
+
+  # Ghostty: font + dantheme light/dark, following the system appearance.
+  if [[ -d "${DOTFILES_DIR}/dots/ghostty" ]]; then
+    local gh_dir="${HOME}/.config/ghostty"
+    mkdir -p "${gh_dir}"
+    [[ -e "${gh_dir}/config" && ! -L "${gh_dir}/config" ]] &&
+      mv "${gh_dir}/config" "${gh_dir}/config.bak.$$" && warn "backed up existing Ghostty config"
+    ln -sfn "${DOTFILES_DIR}/dots/ghostty/config" "${gh_dir}/config"
+    ln -sfn "${DOTFILES_DIR}/dots/ghostty/themes" "${gh_dir}/themes"
+    pass "linked Ghostty config + themes"
   fi
 
   # fd honours ~/.config/fd/ignore globally; fzf-lua's file picker relies on it.
@@ -547,6 +588,7 @@ install_nvim
 install_rust
 install_tree_sitter
 install_lazygit
+install_font
 install_python_tools
 install_language_servers
 ensure_path

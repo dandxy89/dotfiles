@@ -1,0 +1,14 @@
+font-family = Geist Mono
+font-family = JetBrains Mono
+font-size = 16
+adjust-cell-height = 10%
+
+# Follows macOS appearance; nvim's dantheme picks up the matching background.
+theme = light:dantheme-light,dark:dantheme-dark
+window-padding-x = 12
+window-padding-y = 8
+
+scrollback-limit = 10000000
+cursor-style = block
+cursor-style-blink = true
+keybind = shift+enter=text:\x1b\r
