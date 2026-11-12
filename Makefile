@@ -1,4 +1,4 @@
-.PHONY: check test install-nvim link lint-sh
+.PHONY: check test install-nvim link lint-sh upgrade
 
 # Symlink shell/git/tmux/fd config into $HOME; existing real files are renamed to *.bak.
 LINKS = dots/.zshrc:.zshrc dots/.gitconfig:.gitconfig dots/tmux.conf:.tmux.conf configs/fd/ignore:.config/fd/ignore
@@ -31,3 +31,7 @@ test:
 # Symlink nvim config, install plugins and parsers, verify.
 install-nvim:
 	./scripts/nvim-setup.sh
+
+# Update nvim plugins and verify startup.
+upgrade:
+	./scripts/nvim-setup.sh --upgrade
