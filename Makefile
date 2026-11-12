@@ -9,6 +9,12 @@ link:
 		if [ -e "$$dst" ] && [ ! -L "$$dst" ]; then mv "$$dst" "$$dst.bak" && echo "backed up $$dst.bak"; fi; \
 		ln -sfn "$$src" "$$dst" && echo "$$dst -> $$src"; \
 	done
+	@# lazygit's config dir is OS-specific (macOS: ~/Library/Application Support/lazygit).
+	@if command -v lazygit >/dev/null; then \
+		dst="$$(lazygit --print-config-dir)/config.yml"; mkdir -p "$$(dirname "$$dst")"; \
+		if [ -e "$$dst" ] && [ ! -L "$$dst" ]; then mv "$$dst" "$$dst.bak" && echo "backed up $$dst.bak"; fi; \
+		ln -sfn "$(CURDIR)/dots/lazygit.yml" "$$dst" && echo "$$dst -> $(CURDIR)/dots/lazygit.yml"; \
+	fi
 
 # Shell lint: needs shellcheck; zsh -n syntax-checks .zshrc.
 lint-sh:

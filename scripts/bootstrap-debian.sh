@@ -420,7 +420,7 @@ install_marksman() {
 }
 
 ensure_path() {
-  header "10. Shell config (PATH + tmux + fd + aliases)"
+  header "10. Shell config (PATH + tmux + lazygit + fd + aliases)"
   local marker="# >>> dotfiles bootstrap >>>"
   local block
   block="${marker}
@@ -451,6 +451,19 @@ export PATH=\"\$HOME/.local/bin:\$HOME/.cargo/bin:\$PATH\"
       mv "${tmux_dst}" "${tmux_dst}.bak.$$" && warn "backed up existing ~/.tmux.conf"
     ln -sf "${tmux_src}" "${tmux_dst}"
     pass "linked tmux config: ${tmux_dst} → ${tmux_src}"
+  fi
+
+  # lazygit theme (oxidefox) — config dir is whatever lazygit reports.
+  if command -v lazygit >/dev/null; then
+    local lg_dst
+    lg_dst="$(lazygit --print-config-dir)/config.yml"
+    mkdir -p "$(dirname "${lg_dst}")"
+    [[ -e "${lg_dst}" && ! -L "${lg_dst}" ]] &&
+      mv "${lg_dst}" "${lg_dst}.bak.$$" && warn "backed up existing lazygit config"
+    ln -sf "${DOTFILES_DIR}/dots/lazygit.yml" "${lg_dst}"
+    pass "linked lazygit config: ${lg_dst}"
+  else
+    warn "lazygit not found — skipping its config"
   fi
 
   # fd honours ~/.config/fd/ignore globally; fzf-lua's file picker relies on it.

@@ -1,0 +1,17 @@
+# oxidefox theme (palette from nvim/colors/oxidefox.lua).
+# Linked to `lazygit --print-config-dir`/config.yml by `make link` / bootstrap.
+gui:
+  nerdFontsVersion: "3"
+  theme:
+    activeBorderColor: ["#78A9FF", bold]
+    inactiveBorderColor: ["#3A3A3A"]
+    searchingActiveBorderColor: ["#FFB14A", bold]
+    optionsTextColor: ["#78A9FF"]
+    selectedLineBgColor: ["#525253"]
+    inactiveViewSelectedLineBgColor: ["#3A3A3A"]
+    cherryPickedCommitFgColor: ["#78A9FF"]
+    cherryPickedCommitBgColor: ["#3A3A3A"]
+    markedBaseCommitFgColor: ["#FFB14A"]
+    markedBaseCommitBgColor: ["#3A3A3A"]
+    unstagedChangesColor: ["#EE5396"]
+    defaultFgColor: ["#DFDFE0"]
