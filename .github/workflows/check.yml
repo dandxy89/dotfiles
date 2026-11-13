@@ -21,4 +21,9 @@ jobs:
           mkdir -p "$HOME/lls" && curl -fsSL "$url" | tar -xz -C "$HOME/lls"
           echo "$HOME/lls/bin" >> "$GITHUB_PATH"
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq luarocks && sudo luarocks install luacheck
+      - name: Install treesitter parsers for tests
+        run: |
+          sudo npm install -g tree-sitter-cli
+          git clone --depth 1 --branch main https://github.com/nvim-treesitter/nvim-treesitter "$HOME/ts"
+          nvim --headless --cmd "set rtp+=$HOME/ts" -c 'lua require("nvim-treesitter").install({ "rust", "python" }):wait(300000)' -c q
       - run: ./nvim/check.sh
