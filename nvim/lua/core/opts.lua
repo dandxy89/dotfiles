@@ -1,53 +1,76 @@
-local opt = vim.opt
+local o = vim.o
 
-opt.number, opt.relativenumber, opt.cursorline = true, true, true
-opt.ruler, opt.laststatus, opt.cmdheight = false, 2, 1
-opt.signcolumn, opt.numberwidth, opt.statuscolumn = 'yes:1', 3, '%l%s'
-opt.pumheight, opt.winborder = 25, 'rounded'
-opt.background = 'dark'
-opt.smoothscroll, opt.title = true, true
-opt.guicursor = {
+o.number = true
+o.relativenumber = true
+o.cursorline = true
+o.ruler = false
+o.laststatus = 2
+o.cmdheight = 1
+o.signcolumn = 'yes:1'
+o.numberwidth = 3
+o.statuscolumn = '%l%s'
+o.pumheight = 25
+o.winborder = 'rounded'
+o.background = 'dark'
+o.smoothscroll = true
+o.title = true
+o.guicursor = table.concat({
   'n-v:block',
   'i-c-ci-ve:ver25',
   'r-cr:hor20',
   'o:hor50',
   'i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor',
   'sm:block-blinkwait175-blinkoff150-blinkon175',
-}
+}, ',')
 
-opt.backup, opt.writebackup, opt.swapfile = false, false, false
-opt.undofile, opt.undolevels = true, 10000
-opt.autoread, opt.autowrite = true, true
+o.backup = false
+o.writebackup = false
+o.swapfile = false
+o.undofile = true
+o.undolevels = 10000
+o.autoread = true
+o.autowrite = true
 
-opt.expandtab, opt.shiftwidth, opt.softtabstop, opt.tabstop = true, 4, 4, 4
-opt.wrap = false
+o.expandtab = true
+o.shiftwidth = 4
+o.softtabstop = 4
+o.tabstop = 4
+o.wrap = false
 
-opt.ignorecase, opt.smartcase = true, true
+o.ignorecase = true
+o.smartcase = true
 
-opt.splitright, opt.splitbelow = true, true
-opt.splitkeep = 'screen'
-opt.jumpoptions = 'view'
-opt.confirm = true
-opt.breakindent = true
-opt.inccommand = 'split'
-opt.scrolloff = 10
+o.splitright = true
+o.splitbelow = true
+o.splitkeep = 'screen'
+o.jumpoptions = 'view'
+o.confirm = true
+o.breakindent = true
+o.inccommand = 'split'
+o.scrolloff = 10
 
-opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
+o.ttimeoutlen = 0
+o.timeoutlen = 300
+o.updatetime = 200
 
-opt.clipboard = 'unnamedplus'
+o.clipboard = 'unnamedplus'
 -- headless/SSH boxes without xclip/xsel/wl-clipboard: fall back to OSC52 instead of warning on every yank
 if vim.env.SSH_TTY and vim.fn.has('clipboard') == 0 then
   vim.g.clipboard = 'osc52'
 end
-opt.spelllang = 'en_gb'
+o.spelllang = 'en_gb'
 -- spell is enabled per filetype in ftplugin/{markdown,text,gitcommit}.lua; Harper covers code comments
-opt.shortmess = 'filnxtToOFWcC'
+o.shortmess = 'filnxtToOFWcC'
 
-opt.foldenable, opt.foldlevel, opt.foldcolumn = true, 99, '0'
-opt.foldmethod, opt.foldexpr, opt.foldtext = 'expr', 'v:lua.vim.treesitter.foldexpr()', ''
-opt.fillchars:append({ fold = ' ' })
+o.foldenable = true
+o.foldlevel = 99
+o.foldcolumn = '0'
+o.foldmethod = 'expr'
+o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+o.foldtext = ''
+vim.opt.fillchars:append({ fold = ' ' })
 
-opt.diffopt:append('algorithm:histogram')
+vim.opt.diffopt:append('algorithm:histogram')
 
 vim.filetype.add({
   filename = { ['.env'] = 'dosini' },
