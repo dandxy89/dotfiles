@@ -68,9 +68,9 @@ o.foldcolumn = '0'
 o.foldmethod = 'expr'
 o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 o.foldtext = ''
-vim.opt.fillchars:append({ fold = ' ' })
+o.fillchars = 'fold: '
 
-vim.opt.diffopt:append('algorithm:histogram')
+o.diffopt = o.diffopt .. ',algorithm:histogram'
 
 vim.filetype.add({
   filename = { ['.env'] = 'dosini' },

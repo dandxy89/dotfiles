@@ -14,7 +14,7 @@ return {
   on_attach = function(client, buf)
     local function run(command)
       return function()
-        local params = { title = command, command = command, arguments = { vim.uri_from_fname(vim.api.nvim_buf_get_name(buf)) } }
+        local params = { title = command, command = command, arguments = { vim.lsp.util.make_text_document_params(buf).uri } }
         client:exec_cmd(params, { bufnr = buf }, function(err, result)
           if err then
             return vim.notify(err.message, vim.log.levels.ERROR)
