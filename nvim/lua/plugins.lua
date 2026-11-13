@@ -24,12 +24,14 @@ vim.pack.add({
   gh('mikavilpas/blink-ripgrep.nvim'),
   { src = 'https://codeberg.org/andyg/leap.nvim.git', name = 'leap.nvim' },
   { src = gh('nvim-treesitter/nvim-treesitter'), version = 'main' },
-  { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
 }, { confirm = false })
 
 vim.pack.add({
+  { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
   gh('lewis6991/gitsigns.nvim'),
   gh('ibhagwan/fzf-lua'),
+  gh('MeanderingProgrammer/render-markdown.nvim'),
+  gh('nvim-treesitter/nvim-treesitter-context'),
 }, { load = function() end, confirm = false })
 
 ---@param name string
@@ -39,9 +41,9 @@ local function lazy(name, setup)
   local done = false
   return function()
     if not done then
-      done = true
       vim.cmd.packadd(name)
       setup()
+      done = true -- only after success, so a failed setup retries on next trigger
     end
   end
 end
@@ -115,6 +117,12 @@ vim.g.treesitter_parsers = {
   'make',
   'dockerfile',
   'lp',
+  'groovy',
+  'markdown_inline',
+  'diff',
+  'gitcommit',
+  'regex',
+  'comment',
 }
 
 vim.api.nvim_create_autocmd('FileType', {
@@ -130,6 +138,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
   once = true,
   callback = function()
+    vim.cmd.packadd('nvim-treesitter-textobjects')
     require('nvim-treesitter-textobjects').setup({
       select = { lookahead = true, include_surrounding_whitespace = true },
       move = { set_jumps = true },
@@ -400,4 +409,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
       vim.keymap.set('n', m[1], fzf(m[2]), { buffer = ev.buf, silent = true, desc = m[3] })
     end
   end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  once = true,
+  callback = lazy('render-markdown.nvim', function()
+    require('render-markdown').setup({})
+  end),
+})
+
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+  once = true,
+  callback = lazy('nvim-treesitter-context', function()
+    require('treesitter-context').setup({ max_lines = 3 })
+  end),
 })

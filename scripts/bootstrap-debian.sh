@@ -5,7 +5,7 @@
 # ./nvim-setup.sh for the config symlink, plugins, and treesitter parsers.
 #
 # What it installs:
-#   apt          build-essential git curl unzip tmux ripgrep bat fd-find
+#   apt          build-essential git curl unzip tmux ripgrep bat fd-find xclip
 #   fzf          latest prebuilt binary (apt's is too old for fzf-lua)
 #   nvim         nightly prebuilt -> /opt/nvim (builds master from source if glibc too old)
 #   tree-sitter  latest CLI binary -> /usr/local/bin (generates extra parsers)
@@ -14,9 +14,10 @@
 #   rust         rustup + cargo + rust-analyzer component
 #   python       uv, then `uv tool install` basedpyright + ruff + ty
 #   lsp          the remaining servers configured in nvim/lsp/:
-#                  npm    bashls, dockerls, compose, jsonls, yamlls, buf
+#                  npm    bashls, dockerls, compose, jsonls, yamlls, buf, npm-groovy-lint
 #                  cargo  taplo-cli (--features lsp), harper-ls  [slow, compiles]
 #                  github lua-language-server, marksman
+#                  uv     autotools-language-server; go  checkmake
 #
 # Note: python & rust treesitter parsers compile via the C compiler (build-essential);
 # the tree-sitter CLI installed here covers parsers that need a generator (bash, markdown, …).
@@ -124,7 +125,7 @@ resolve_repo() {
 
 install_apt_packages() {
   header "2. System packages (apt)"
-  local pkgs=(build-essential git curl unzip ca-certificates tmux ripgrep bat fd-find fontconfig)
+  local pkgs=(build-essential git curl unzip ca-certificates tmux ripgrep bat fd-find fontconfig xclip)
   info "apt-get update …"
   ${SUDO} apt-get update -qq
   info "installing: ${pkgs[*]}"
@@ -381,7 +382,8 @@ install_language_servers() {
       @microsoft/compose-language-service \
       vscode-langservers-extracted \
       yaml-language-server \
-      @bufbuild/buf; then
+      @bufbuild/buf \
+      npm-groovy-lint; then
       pass "npm language servers installed"
     else
       fail "npm language server install failed"
@@ -399,6 +401,12 @@ install_language_servers() {
 
   info "uv tool install ty"
   uv tool install --quiet ty || fail "uv tool install ty failed"
+  uv tool install --quiet autotools-language-server || fail "uv tool install autotools-language-server failed"
+  if command -v go &>/dev/null; then
+    GOBIN="${LOCAL_BIN}" go install github.com/checkmake/checkmake/cmd/checkmake@latest || fail "go install checkmake failed"
+  else
+    warn "go not found — skipping checkmake (Makefile linter)"
+  fi
 
   install_lua_ls
   install_marksman
@@ -446,7 +454,17 @@ install_marksman() {
     return
   fi
   ${SUDO} install -m 0755 "${tmp}/marksman" /usr/local/bin/marksman
-  pass "marksman installed: $(marksman --version 2>/dev/null || echo '?')"
+  # The .NET single-file build needs ICU at runtime; without it marksman aborts on start.
+  if ! /usr/local/bin/marksman --version &>/dev/null; then
+    warn "marksman will not start; installing libicu and retrying"
+    DEBIAN_FRONTEND=noninteractive ${SUDO} apt-get install -y -qq libicu-dev ||
+      DEBIAN_FRONTEND=noninteractive ${SUDO} apt-get install -y -qq "$(apt-cache search --names-only '^libicu[0-9]+$' | awk 'NR==1{print $1}')"
+  fi
+  if /usr/local/bin/marksman --version &>/dev/null; then
+    pass "marksman installed: $(/usr/local/bin/marksman --version 2>/dev/null | head -1)"
+  else
+    fail "marksman installed but does not run (check libicu / glibc)"
+  fi
 }
 
 ensure_path() {
@@ -541,7 +559,7 @@ verify_tools() {
   header "12. Installed binaries"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
   local bin
-  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv npm; do
+  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv npm marksman lua-language-server; do
     if command -v "${bin}" &>/dev/null; then
       pass "${bin}: $(command -v "${bin}")"
     else

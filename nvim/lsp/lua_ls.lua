@@ -20,14 +20,7 @@ return {
       completion = {
         enable = true,
       },
-      diagnostics = {
-        enable = true,
-        globals = { 'vim' },
-      },
-      workspace = {
-        library = { vim.env.VIMRUNTIME },
-        checkThirdParty = false,
-      },
+      diagnostics = { enable = true },
     },
   },
 }

@@ -1,3 +1,4 @@
+-- Requires rustup with a nightly toolchain for the fallback below.
 ---@type vim.lsp.Config
 return {
   cmd = {

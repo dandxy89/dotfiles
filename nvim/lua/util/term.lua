@@ -3,7 +3,12 @@ local bufs = {} ---@type table<string, integer>
 
 ---@param cmd string shell command
 ---@param layout 'bottom'|'right'|'tab'
+---@return nil
 function M.toggle(cmd, layout)
+  local bin = vim.split(cmd, ' ', { plain = true })[1]
+  if vim.fn.executable(bin) ~= 1 then
+    return vim.notify(bin .. ' not found on PATH', vim.log.levels.ERROR)
+  end
   local buf = bufs[cmd]
   local win = buf and vim.fn.bufwinid(buf) or -1
   if win ~= -1 then

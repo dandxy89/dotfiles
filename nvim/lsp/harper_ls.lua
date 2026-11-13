@@ -5,7 +5,7 @@ return {
   root_markers = { '.git' },
   settings = {
     ['harper-ls'] = {
-      userDictPath = '~/dict.txt',
+      userDictPath = vim.fn.expand('~/dict.txt'),
       codeActions = { ForceStable = false },
       markdown = { IgnoreLinkTitle = false },
       diagnosticSeverity = 'hint',

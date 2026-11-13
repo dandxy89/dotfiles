@@ -15,7 +15,9 @@ local function ruff_action(bufnr, kind)
   ---@type lsp.CodeActionParams
   local params = { textDocument = range.textDocument, range = range.range, context = { only = { kind }, diagnostics = {} } }
   local res = client:request_sync('textDocument/codeAction', params, 2000, bufnr)
-  for _, action in ipairs(res and res.result or {}) do
+  ---@type lsp.CodeAction[]
+  local actions = res and res.result or {}
+  for _, action in ipairs(actions) do
     if not action.edit and action.data then
       local resolved = client:request_sync('codeAction/resolve', action, 2000, bufnr)
       action = resolved and resolved.result or action
@@ -27,13 +29,30 @@ local function ruff_action(bufnr, kind)
 end
 
 vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = { '*.rs', '*.py', '*.toml', '*.lp' },
+  pattern = { '*.rs', '*.py', '*.toml', '*.lp', '*.lua' },
   group = augroup('FormatOnSave'),
   callback = function(ev)
     if not vim.g.disable_autoformat then
       if vim.bo[ev.buf].filetype == 'python' then
         -- ponytail: no fixAll on save, it deletes half-written imports; use <Leader>ca
         ruff_action(ev.buf, 'source.organizeImports')
+      end
+      if vim.bo[ev.buf].filetype == 'lua' then
+        -- ponytail: stylua is the project standard and lua_ls formatting differs; add conform.nvim if more formatters appear
+        if vim.fn.executable('stylua') == 1 and vim.bo[ev.buf].modifiable then
+          local res = vim
+            .system(
+              { 'stylua', '-' },
+              { stdin = table.concat(vim.api.nvim_buf_get_lines(ev.buf, 0, -1, false), '\n') .. '\n', text = true, cwd = vim.fs.dirname(ev.file) }
+            )
+            :wait()
+          if res.code == 0 then
+            vim.api.nvim_buf_set_lines(ev.buf, 0, -1, false, vim.split((res.stdout:gsub('\n$', '')), '\n'))
+          else
+            vim.notify('stylua failed: ' .. (res.stderr or ''), vim.log.levels.WARN)
+          end
+        end
+        return
       end
       vim.lsp.buf.format({
         async = false,
@@ -50,7 +69,8 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   group = augroup('StripWhitespace'),
   callback = function()
     -- diffs need their trailing context whitespace
-    if not vim.bo.modifiable or vim.bo.filetype == 'diff' then
+    -- markdown: two trailing spaces are a hard line break
+    if not vim.bo.modifiable or vim.bo.filetype == 'diff' or vim.bo.filetype == 'markdown' then
       return
     end
     local pos = vim.api.nvim_win_get_cursor(0)
@@ -135,4 +155,13 @@ vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
 vim.api.nvim_create_autocmd('LspProgress', {
   group = augroup('LspProgress'),
   command = 'redrawstatus',
+})
+
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  group = augroup('Checktime'),
+  callback = function()
+    if vim.fn.getcmdwintype() == '' then
+      vim.cmd.checktime()
+    end
+  end,
 })

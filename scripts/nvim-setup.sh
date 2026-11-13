@@ -27,7 +27,7 @@ header() { echo -e "\n${BOLD}$*${NC}"; }
 FAILED=0
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NVIM_SRC="${DOTFILES_DIR}/nvim"
-NVIM_CFG="${HOME}/.config/nvim"
+NVIM_CFG="${XDG_CONFIG_HOME:-${HOME}/.config}/nvim"
 NVIM_DATA="$(nvim --headless -c "lua io.write(vim.fn.stdpath('data'))" -c qa 2>/dev/null || true)"
 
 # nvim exits 0 even when the Lua throws; turn an error into a non-zero exit.
@@ -37,7 +37,7 @@ nvim_lua() {
 
 require_nvim() {
   if ! command -v nvim &>/dev/null; then
-    fail "nvim not found on PATH — install Neovim 0.11+ first"
+    fail "nvim not found on PATH — install Neovim 0.12+ first (nightly for vim.hl.hl_op)"
     exit 1
   fi
   local ver
@@ -246,6 +246,10 @@ verify_lsp_binaries() {
   check_binary "docker-compose-langserver" "docker_compose_language_service (Compose)"
   check_binary "buf"                     "buf_ls (Protobuf)"
   check_binary "ty"                      "ty (Python type checker)"
+  check_binary "lp-lsp"                  "lp_lsp (LP files)"
+  check_binary "autotools-language-server" "autotools_ls (Makefile)"
+  check_binary "checkmake"               "checkmake (Makefile linter)"
+  check_binary "npm-groovy-lint"         "npm-groovy-lint (Jenkinsfile)"
 
   if command -v rustup &>/dev/null; then
     if rustup run stable rust-analyzer --version &>/dev/null 2>&1; then

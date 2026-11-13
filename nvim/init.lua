@@ -1,3 +1,8 @@
+if vim.fn.has('nvim-0.12') == 0 then
+  vim.notify('Neovim 0.12+ required (nightly for vim.hl.hl_op)', vim.log.levels.ERROR)
+  return
+end
+
 vim.loader.enable()
 
 vim.keymap.set('', '<Space>', '<Nop>', { silent = true })

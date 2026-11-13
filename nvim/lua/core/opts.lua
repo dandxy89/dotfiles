@@ -25,11 +25,20 @@ opt.wrap = false
 opt.ignorecase, opt.smartcase = true, true
 
 opt.splitright, opt.splitbelow = true, true
+opt.splitkeep = 'screen'
+opt.jumpoptions = 'view'
+opt.confirm = true
+opt.breakindent = true
+opt.inccommand = 'split'
 opt.scrolloff = 10
 
 opt.ttimeoutlen, opt.timeoutlen, opt.updatetime = 0, 300, 200
 
 opt.clipboard = 'unnamedplus'
+-- headless/SSH boxes without xclip/xsel/wl-clipboard: fall back to OSC52 instead of warning on every yank
+if vim.env.SSH_TTY and vim.fn.has('clipboard') == 0 then
+  vim.g.clipboard = 'osc52'
+end
 opt.spelllang = 'en_gb'
 -- spell is enabled per filetype in ftplugin/{markdown,text,gitcommit}.lua; Harper covers code comments
 opt.shortmess = 'filnxtToOFWcC'
