@@ -1,5 +1,5 @@
 -- Outdated-dependency hints for pyproject.toml (PyPI) and Cargo.toml (crates.io).
--- Virtual text at end of line shows the latest version; `<leader>cv` lists recent versions.
+-- Virtual text at end of line shows the latest version; `<leader>cv` picks a version to write into the spec.
 local M = {}
 local ns = vim.api.nvim_create_namespace('deps')
 local cache = {} ---@type table<string, {latest: string, versions: string[]}>
@@ -193,7 +193,7 @@ function M.refresh(buf)
   end
 end
 
---- Show recent versions of the dependency on the cursor line.
+--- Pick a version for the dependency on the cursor line and write it into the spec.
 function M.versions()
   local buf = vim.api.nvim_get_current_buf()
   local eco = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t') == 'Cargo.toml' and 'crates' or 'pypi'
@@ -204,7 +204,19 @@ function M.versions()
       if not info then
         return vim.notify(d.name .. ': not fetched yet', vim.log.levels.WARN)
       end
-      return vim.notify(('%s (spec %s)\n%s'):format(d.name, d.spec, table.concat(vim.list_slice(info.versions, 1, 15), '  ')), vim.log.levels.INFO)
+      return vim.ui.select(info.versions, { prompt = ('%s (current %s)'):format(d.name, d.spec) }, function(v)
+        if not v or not vim.api.nvim_buf_is_valid(buf) then
+          return
+        end
+        local line = vim.api.nvim_buf_get_lines(buf, lnum, lnum + 1, false)[1] or ''
+        local n = line:find(d.name, 1, true)
+        local s, e = line:find(d.spec, n or 1, true)
+        if not s then
+          return vim.notify(d.name .. ': line changed, spec not found', vim.log.levels.ERROR)
+        end
+        vim.api.nvim_buf_set_text(buf, lnum, s - 1, lnum, e, { v })
+        M.refresh(buf)
+      end)
     end
   end
   vim.notify('no dependency on this line', vim.log.levels.WARN)
@@ -217,7 +229,7 @@ function M.setup()
     pattern = { 'pyproject.toml', 'Cargo.toml' },
     callback = function(a)
       M.refresh(a.buf)
-      vim.keymap.set('n', '<leader>cv', M.versions, { buffer = a.buf, desc = 'Dependency versions' })
+      vim.keymap.set('n', '<leader>cv', M.versions, { buffer = a.buf, desc = 'Pick dependency version' })
     end,
   })
 end
