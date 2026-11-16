@@ -211,7 +211,7 @@ function M.versions()
         local line = vim.api.nvim_buf_get_lines(buf, lnum, lnum + 1, false)[1] or ''
         local n = line:find(d.name, 1, true)
         local s, e = line:find(d.spec, n or 1, true)
-        if not s then
+        if not s or not e then
           return vim.notify(d.name .. ': line changed, spec not found', vim.log.levels.ERROR)
         end
         vim.api.nvim_buf_set_text(buf, lnum, s - 1, lnum, e, { v })
