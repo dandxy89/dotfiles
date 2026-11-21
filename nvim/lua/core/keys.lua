@@ -141,7 +141,7 @@ map('i', '<C-s>', '<Esc><cmd>w<CR>', { desc = 'Save file' })
 map('i', '<Tab>', function()
   local col = vim.fn.col('.')
   return vim.api.nvim_get_current_line():sub(col, col):match('[%)%]}>"\'`]') and '<Right>' or '<Tab>'
-end, { expr = true })
+end, { expr = true, desc = 'Tab, or step over closing bracket/quote' })
 
 map('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 

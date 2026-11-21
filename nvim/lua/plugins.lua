@@ -5,6 +5,7 @@ local function gh(repo)
 end
 
 vim.api.nvim_create_autocmd('PackChanged', {
+  group = vim.api.nvim_create_augroup('custom_pack_changed', { clear = true }),
   callback = function(ev)
     if ev.data.spec.name == 'blink-cmp' and (ev.data.kind == 'install' or ev.data.kind == 'update') then
       vim.cmd.packadd('blink-lib')
@@ -32,7 +33,7 @@ vim.pack.add({
   gh('ibhagwan/fzf-lua'),
   gh('MeanderingProgrammer/render-markdown.nvim'),
   gh('nvim-treesitter/nvim-treesitter-context'),
-}, { load = function() end, confirm = false })
+}, { load = function() end, confirm = false }) -- install only; packadd'd lazily below
 
 ---@param name string
 ---@param setup fun()
@@ -159,7 +160,7 @@ vim.api.nvim_create_autocmd('FileType', {
     }) do
       vim.keymap.set({ 'x', 'o' }, lhs, function()
         select.select_textobject(query, 'textobjects')
-      end)
+      end, { desc = 'Select ' .. query })
     end
     local move = require('nvim-treesitter-textobjects.move')
     for lhs, m in pairs({
@@ -174,7 +175,7 @@ vim.api.nvim_create_autocmd('FileType', {
     }) do
       vim.keymap.set({ 'n', 'x', 'o' }, lhs, function()
         move[m[1]](m[2], 'textobjects')
-      end)
+      end, { desc = m[1]:gsub('_', ' ') .. ' ' .. m[2] })
     end
   end,
 })
@@ -183,6 +184,7 @@ local sel_node, sel_buf ---@type TSNode?, integer?
 ---@param node TSNode
 local function select_node(node)
   local sr, sc, er, ec = node:range()
+  -- end is exclusive; col 0 means the node ends at the end of the previous line
   if ec == 0 then
     er = er - 1
     ec = #vim.api.nvim_buf_get_lines(0, er, er + 1, true)[1]

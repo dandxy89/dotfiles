@@ -1,4 +1,4 @@
-.PHONY: check test install-nvim link lint-sh upgrade
+.PHONY: check test install-nvim link lint-sh fmt-sh upgrade
 
 # Symlink shell/git/tmux/fd/ghostty config into $HOME; existing real files are renamed to *.bak.
 LINKS = dots/.zshrc:.zshrc dots/.gitconfig:.gitconfig dots/tmux.conf:.tmux.conf configs/fd/ignore:.config/fd/ignore \
@@ -23,10 +23,23 @@ link:
 		ln -sfn "$(CURDIR)/dots/ghostty/config" "$$dst" && echo "$$dst -> $(CURDIR)/dots/ghostty/config"; \
 	fi
 
-# Shell lint: needs shellcheck; zsh -n syntax-checks .zshrc.
+# Shell lint: shellcheck + shfmt (same tools bashls uses); zsh -n syntax-checks .zshrc (shellcheck has no zsh mode).
+# PowerShell: PSScriptAnalyzer via pwsh, skipped when pwsh is absent (CI always runs it).
+SH_FILES = $(filter-out %.ps1,$(wildcard scripts/*)) dots/shell-common.sh nvim/check.sh
+PS_FILES = $(wildcard scripts/*.ps1)
+SHFMT = shfmt -i 2 -ci
 lint-sh:
-	shellcheck scripts/* dots/shell-common.sh nvim/check.sh
+	shellcheck $(SH_FILES)
+	$(SHFMT) -d $(SH_FILES)
 	zsh -n dots/.zshrc
+	@if command -v pwsh >/dev/null; then \
+		for f in $(PS_FILES); do \
+			pwsh -NoProfile -Command "if (Invoke-ScriptAnalyzer -Path '$$f' -Severity Warning,Error) { Invoke-ScriptAnalyzer -Path '$$f' -Severity Warning,Error | Format-Table -AutoSize | Out-String | Write-Output; exit 1 }" || exit 1; \
+		done; echo "PSScriptAnalyzer: clean"; \
+	else echo "pwsh not found: skipping PSScriptAnalyzer"; fi
+
+fmt-sh:
+	$(SHFMT) -w $(SH_FILES)
 
 # Lint the nvim config (luacheck + lua-language-server) and run its tests.
 check:

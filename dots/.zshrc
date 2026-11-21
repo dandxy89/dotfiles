@@ -67,7 +67,7 @@ path_append() {
     [[ ":$PATH:" != *":$1:"* ]] && PATH="$PATH:$1"
 }
 
-path_prepend "$HOME/Projects/nvim-macos-arm64/bin"
+path_prepend "$HOME/Projects/nvim-macos-$(uname -m)/bin"
 path_append "$HOME/.local/bin"
 [[ -n "$BREW_PREFIX" ]] && path_prepend "$BREW_PREFIX/opt/postgresql@15/bin"
 command -v go >/dev/null 2>&1 && path_append "$(go env GOPATH)/bin"

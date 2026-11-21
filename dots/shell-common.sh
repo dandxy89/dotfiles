@@ -1,5 +1,6 @@
+# shellcheck shell=bash
 # shell-common.sh — portable shell config (zsh + bash)
-# Sourced from ~/.zshrc / ~/.bashrc by the dotfiles bootstrap.
+# bootstrap-debian.sh sources it from ~/.bashrc and ~/.zshrc; dots/.zshrc (macOS) inlines its own copy.
 # Keep this free of oh-my-zsh / brew / macOS-only assumptions.
 
 # =====================================================
@@ -20,9 +21,9 @@ alias la='ls -la'
 
 # Colour-aware ls: GNU takes --color, BSD (macOS) takes -G
 if ls --color=auto / >/dev/null 2>&1; then
-    alias ls='ls --color=auto'
+  alias ls='ls --color=auto'
 else
-    alias ls='ls -G'
+  alias ls='ls -G'
 fi
 
 alias e='exit'
@@ -49,11 +50,12 @@ alias weatherDubai='curl -4 https://wttr.in/Dubai'
 # NOTE: FZF_*_COMMAND runs in a subshell; shell aliases don't apply there,
 # so flags must be specified inline below.
 if command -v fzf >/dev/null 2>&1; then
-    if [ -n "${ZSH_VERSION:-}" ]; then
-        source <(fzf --zsh)
-    elif [ -n "${BASH_VERSION:-}" ]; then
-        eval "$(fzf --bash)"
-    fi
+  if [ -n "${ZSH_VERSION:-}" ]; then
+    # shellcheck disable=SC1090
+    source <(fzf --zsh)
+  elif [ -n "${BASH_VERSION:-}" ]; then
+    eval "$(fzf --bash)"
+  fi
 fi
 
 # Shared fd flags — relies on ~/.config/fd/ignore for excludes
@@ -85,17 +87,17 @@ alias sweep_target='cargo sweep --recursive --time 0 ~/Work'
 # =====================================================
 # Tmux session: tmx [name] (defaults to RustDev)
 _tmx_enter() {
-    if [ -n "$TMUX" ]; then tmux switch-client -t "$1"; else tmux attach-session -t "$1"; fi
+  if [ -n "$TMUX" ]; then tmux switch-client -t "$1"; else tmux attach-session -t "$1"; fi
 }
 tmx() {
-    local session_name="${1:-RustDev}"
+  local session_name="${1:-RustDev}"
 
-    if tmux has-session -t "$session_name" 2>/dev/null; then
-        _tmx_enter "$session_name"
-    else
-        tmux new-session -d -s "$session_name"
-        tmux new-window -t "$session_name" -n terminal
-        tmux new-window -d -t "$session_name" -n nvim
-        _tmx_enter "$session_name"
-    fi
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    _tmx_enter "$session_name"
+  else
+    tmux new-session -d -s "$session_name"
+    tmux new-window -t "$session_name" -n terminal
+    tmux new-window -d -t "$session_name" -n nvim
+    _tmx_enter "$session_name"
+  fi
 }

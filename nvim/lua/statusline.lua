@@ -41,6 +41,7 @@ local mode_hl = {
   ['\19'] = 'Number',
 }
 local sev = vim.diagnostic.severity
+---@type {[1]: vim.diagnostic.Severity, [2]: string, [3]: string}[] severity, icon, highlight group
 local diag = { { sev.ERROR, ' ', 'DiagnosticError' }, { sev.WARN, ' ', 'DiagnosticWarn' }, { sev.HINT, ' ', 'DiagnosticHint' } }
 
 ---@param group string
@@ -50,6 +51,7 @@ local function hl(group, text)
   return '%#' .. group .. '#' .. text
 end
 
+--- Evaluated per window via `%{%...%}`; inactive windows get just the file name.
 ---@return string
 function M.render()
   local win = vim.g.statusline_winid or vim.api.nvim_get_current_win()

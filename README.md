@@ -7,10 +7,16 @@ Neovim config (0.12+, `vim.pack`), shell, tmux and git config.
 ```sh
 ./scripts/nvim-setup.sh          # symlink nvim/, install plugins + parsers, verify
 ./scripts/bootstrap-debian.sh    # Debian/Ubuntu: tools, shell-common.sh, tmux, fd ignore
+./scripts/bootstrap-macos.sh     # macOS: Homebrew, nvim nightly, oh-my-zsh, LSPs, `make link`
+.\scripts\bootstrap-windows.ps1  # Windows: WSL + Ubuntu, then bootstrap-debian.sh inside it
 make check                       # luacheck + lua-language-server + tests
+make lint-sh                     # shellcheck + shfmt + zsh -n, PSScriptAnalyzer if pwsh is installed
+make fmt-sh                      # shfmt -w the shell scripts
 ```
 
-- `dots/.zshrc` (macOS, oh-my-zsh), `dots/shell-common.sh` (portable), `dots/tmux.conf`, `dots/.gitconfig` are not auto-linked on macOS: symlink them to `~`.
+- In nvim, `bashls` lints and formats through `shellcheck` and `shfmt`; `powershell_es` needs `pwsh` plus the PowerShellEditorServices bundle in `~/.local/share/powershell_es`. `bootstrap-macos.sh` installs both.
+
+- `dots/.zshrc` (macOS, oh-my-zsh), `dots/shell-common.sh` (portable). On macOS `bootstrap-macos.sh` runs `make link`; elsewhere run `make link` to symlink dots into `~`.
 - `dots/.gitconfig` sets no credential helper. Set `user.email` locally (e.g. `git config --global user.email`); commit signing is off.
 - The `lp` tree-sitter grammar installs from `dandxy89/treesitter-lp`; bump `revision` in `nvim/init.lua`, then `:TSUpdate lp`.
 

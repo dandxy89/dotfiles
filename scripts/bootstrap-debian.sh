@@ -6,6 +6,7 @@
 #
 # What it installs:
 #   apt          build-essential git curl unzip tmux ripgrep bat fd-find xclip
+#                + shellcheck shfmt (bashls lints/formats through these)
 #   fzf          latest prebuilt binary (apt's is too old for fzf-lua)
 #   nvim         nightly prebuilt -> /opt/nvim (builds master from source if glibc too old)
 #   tree-sitter  latest CLI binary -> /usr/local/bin (generates extra parsers)
@@ -15,7 +16,7 @@
 #   python       uv, then `uv tool install` basedpyright + ruff + ty
 #   lsp          the remaining servers configured in nvim/lsp/:
 #                  npm    bashls, dockerls, compose, jsonls, yamlls, buf, npm-groovy-lint
-#                  cargo  taplo-cli (--features lsp), harper-ls  [slow, compiles]
+#                  cargo  taplo-cli (--features lsp), harper-ls, lp-lsp  [slow, compiles]
 #                  github lua-language-server, marksman
 #                  uv     autotools-language-server; go  checkmake
 #
@@ -41,7 +42,10 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 pass() { echo -e "  ${GREEN}✓${NC} $*"; }
-fail() { echo -e "  ${RED}✗${NC} $*"; FAILED=$((FAILED + 1)); }
+fail() {
+  echo -e "  ${RED}✗${NC} $*"
+  FAILED=$((FAILED + 1))
+}
 warn() { echo -e "  ${YELLOW}!${NC} $*"; }
 info() { echo -e "  ${BLUE}→${NC} $*"; }
 header() { echo -e "\n${BOLD}$*${NC}"; }
@@ -125,7 +129,7 @@ resolve_repo() {
 
 install_apt_packages() {
   header "2. System packages (apt)"
-  local pkgs=(build-essential git curl unzip ca-certificates tmux ripgrep bat fd-find fontconfig xclip)
+  local pkgs=(build-essential git curl unzip ca-certificates tmux ripgrep bat fd-find fontconfig xclip shellcheck shfmt)
   info "apt-get update …"
   ${SUDO} apt-get update -qq
   info "installing: ${pkgs[*]}"
@@ -163,7 +167,7 @@ install_nvim() {
   header "4. Neovim (prebuilt, source fallback)"
   local tmp url
   tmp="$(mktemp -d)"
-  trap 'rm -rf "${tmp}"' RETURN
+  trap 'rm -rf "${tmp}"; trap - RETURN' RETURN
 
   url="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-${NVIM_ARCH}.tar.gz"
   info "downloading ${url}"
@@ -232,7 +236,7 @@ install_tree_sitter() {
     arm64) ts_arch="arm64" ;;
   esac
   tmp="$(mktemp -d)"
-  trap 'rm -rf "${tmp}"' RETURN
+  trap 'rm -rf "${tmp}"; trap - RETURN' RETURN
 
   url="https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-${ts_arch}.gz"
   info "downloading ${url}"
@@ -282,7 +286,7 @@ install_lazygit() {
   # nvim's <Leader>lg opens lazygit in a terminal tab.
   local tmp ver url
   tmp="$(mktemp -d)"
-  trap 'rm -rf "${tmp}"' RETURN
+  trap 'rm -rf "${tmp}"; trap - RETURN' RETURN
 
   info "resolving latest lazygit release"
   ver="$(curl -fsSL "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" |
@@ -304,7 +308,7 @@ install_lazygit() {
 }
 
 install_font() {
-  header "7b. Geist Mono font"
+  header "8. Geist Mono font"
   local dir="${HOME}/.local/share/fonts/GeistMono"
   if compgen -G "${dir}/GeistMono-*.ttf" >/dev/null; then
     pass "Geist Mono already installed: ${dir}"
@@ -312,7 +316,7 @@ install_font() {
   fi
   local tmp ver
   tmp="$(mktemp -d)"
-  trap 'rm -rf "${tmp}"' RETURN
+  trap 'rm -rf "${tmp}"; trap - RETURN' RETURN
 
   info "resolving latest Geist release"
   ver="$(curl -fsSL "https://api.github.com/repos/vercel/geist-font/releases/latest" |
@@ -350,7 +354,7 @@ install_rust() {
 }
 
 install_python_tools() {
-  header "8. Python LSP tools (uv)"
+  header "9. Python LSP tools (uv)"
   if command -v uv &>/dev/null; then
     pass "uv already present: $(uv --version)"
   else
@@ -365,7 +369,7 @@ install_python_tools() {
 }
 
 install_language_servers() {
-  header "9. Language servers"
+  header "10. Language servers"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
 
   # Node-based servers. A user-owned npm prefix keeps this out of sudo's way.
@@ -393,13 +397,13 @@ install_language_servers() {
   fi
 
   # taplo needs the non-default `lsp` feature or it builds without a server.
-  info "cargo install: taplo-cli (lsp) + harper-ls + lp-lsp + lp_diff — this compiles, allow a few minutes"
+  info "cargo install: taplo-cli (lsp) + harper-ls + lp-lsp + lp_parser_tui — this compiles, allow a few minutes"
   cargo install --quiet --locked --features lsp taplo-cli || fail "cargo install taplo-cli failed"
   cargo install --quiet --locked harper-ls || fail "cargo install harper-ls failed"
-  cargo install --quiet --locked --git https://github.com/dandxy89/lp_parser_rs lp-lsp lp_parser_tui \
-    || fail "cargo install lp-lsp + lp_diff failed"
+  cargo install --quiet --locked --git https://github.com/dandxy89/lp_parser_rs lp-lsp lp_parser_tui ||
+    fail "cargo install lp-lsp + lp_parser_tui failed"
 
-  info "uv tool install ty"
+  info "uv tool install ty autotools-language-server"
   uv tool install --quiet ty || fail "uv tool install ty failed"
   uv tool install --quiet autotools-language-server || fail "uv tool install autotools-language-server failed"
   if command -v go &>/dev/null; then
@@ -426,7 +430,7 @@ install_lua_ls() {
     return
   fi
   tmp="$(mktemp -d)"
-  trap 'rm -rf "${tmp}"' RETURN
+  trap 'rm -rf "${tmp}"; trap - RETURN' RETURN
   if ! curl -fL --retry 3 -o "${tmp}/luals.tar.gz" \
     "https://github.com/LuaLS/lua-language-server/releases/download/${ver}/lua-language-server-${ver}-linux-${arch}.tar.gz"; then
     fail "could not download lua-language-server ${ver}"
@@ -447,7 +451,7 @@ install_marksman() {
   esac
   local tmp
   tmp="$(mktemp -d)"
-  trap 'rm -rf "${tmp}"' RETURN
+  trap 'rm -rf "${tmp}"; trap - RETURN' RETURN
   if ! curl -fL --retry 3 -o "${tmp}/marksman" \
     "https://github.com/artempyanykh/marksman/releases/latest/download/${asset}"; then
     fail "could not download marksman"
@@ -468,7 +472,7 @@ install_marksman() {
 }
 
 ensure_path() {
-  header "10. Shell config (PATH + tmux + lazygit + ghostty + fd + aliases)"
+  header "11. Shell config (PATH + tmux + lazygit + ghostty + fd + aliases)"
   local marker="# >>> dotfiles bootstrap >>>"
   local block
   block="${marker}
@@ -536,7 +540,7 @@ export PATH=\"\$HOME/.local/bin:\$HOME/.cargo/bin:\$PATH\"
 }
 
 run_nvim_setup() {
-  header "11. Neovim config (symlink + plugins + parsers + verify)"
+  header "12. Neovim config (symlink + plugins + parsers + verify)"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
   if [[ "${NVIM_OK}" -ne 1 ]]; then
     fail "skipping config — nvim is not runnable on this OS (see step 4)"
@@ -556,10 +560,10 @@ run_nvim_setup() {
 }
 
 verify_tools() {
-  header "12. Installed binaries"
+  header "13. Installed binaries"
   export PATH="${LOCAL_BIN}:${HOME}/.cargo/bin:${PATH}"
   local bin
-  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv npm marksman lua-language-server; do
+  for bin in nvim fzf tree-sitter lazygit rg tmux bat fd cargo uv npm marksman lua-language-server shellcheck shfmt; do
     if command -v "${bin}" &>/dev/null; then
       pass "${bin}: $(command -v "${bin}")"
     else
@@ -571,7 +575,7 @@ verify_tools() {
 SKIP_CONFIG=0
 case "${1:-}" in
   --help | -h)
-    sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,/^$/s/^# \{0,1\}//p' "$0"
     exit 0
     ;;
   --skip-config) SKIP_CONFIG=1 ;;

@@ -4,8 +4,8 @@
 set -euo pipefail
 
 if [ $# -gt 0 ]; then
-	printf '%s' "$*" | jq -sRr '@uri'
-	exit
+  printf '%s' "$*" | jq -sRr '@uri'
+  exit
 fi
 
 jq -Rr '@uri'

@@ -3,8 +3,8 @@
 set -euo pipefail
 
 if [[ $# -ne 1 || ! $1 =~ ^[0-9]+$ ]]; then
-	echo "Usage: ${0##*/} <nanotimestamp>" >&2
-	exit 1
+  echo "Usage: ${0##*/} <nanotimestamp>" >&2
+  exit 1
 fi
 
 echo "Nanotimestamp: $1"

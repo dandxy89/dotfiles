@@ -1,10 +1,30 @@
 -- Outdated-dependency hints for pyproject.toml (PyPI) and Cargo.toml (crates.io).
 -- Virtual text at end of line shows the latest version; `<leader>cv` picks a version to write into the spec.
+
+---@alias deps.Eco 'pypi'|'crates'
+
+---@class deps.Index
+---@field name string
+---@field url string
+---@field default? true
+
+---@class deps.Dep
+---@field lnum integer 0-based
+---@field name string
+---@field spec string version as written in the spec, e.g. `1.0` or `2.31`
+---@field index? deps.Index private uv index, if any
+
+---@class deps.Info
+---@field latest string
+---@field versions string[] stable versions, newest first
+
 local M = {}
 local ns = vim.api.nvim_create_namespace('deps')
-local cache = {} ---@type table<string, {latest: string, versions: string[]}>
+local cache = {} ---@type table<string, deps.Info>
 local UA = 'nvim-deps'
 
+---@param v string
+---@return integer[]
 local function nums(v)
   local t = {}
   for n in v:gmatch('%d+') do
@@ -29,10 +49,11 @@ local function outdated(spec, latest)
 end
 
 ---@param buf integer
----@return {lnum: integer, name: string, spec: string, index: {name: string, url: string}?}[]
+---@param eco deps.Eco
+---@return deps.Dep[]
 local function parse(buf, eco)
-  local deps, section = {}, ''
-  local indexes, sources, default = {}, {}, nil ---@type table<string, {name: string, url: string}>, table<string, string>, {name: string, url: string}?
+  local deps, section = {}, '' ---@type deps.Dep[], string
+  local indexes, sources, default = {}, {}, nil ---@type table<string, deps.Index>, table<string, string>, deps.Index?
   local cur ---@type table?
   for i, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
     if eco == 'pypi' then
@@ -85,7 +106,8 @@ local function parse(buf, eco)
   return deps
 end
 
----@param d {name: string, index: {name: string, url: string}?}
+---@param eco deps.Eco
+---@param d deps.Dep
 ---@return string
 local function cache_key(eco, d)
   return ('%s:%s:%s'):format(eco, d.index and d.index.url or '', d.name)
@@ -99,13 +121,14 @@ local function file_version(f)
 end
 
 ---@param v string
+---@return boolean
 local function stable(v)
   return v:match('^[%d%.]+$') ~= nil
 end
 
----@param eco 'pypi'|'crates'
----@param d {name: string, index: {name: string, url: string}?}
----@param cb fun(info: {latest: string, versions: string[]}|nil, err: string|nil)
+---@param eco deps.Eco
+---@param d deps.Dep
+---@param cb fun(info: deps.Info?, err: string?)
 local function fetch(eco, d, cb)
   local key = cache_key(eco, d)
   if cache[key] then
@@ -171,6 +194,7 @@ local function fetch(eco, d, cb)
   end)
 end
 
+--- Re-fetch and redraw the version hints for every dependency in `buf`.
 ---@param buf integer
 function M.refresh(buf)
   vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
@@ -222,6 +246,7 @@ function M.versions()
   vim.notify('no dependency on this line', vim.log.levels.WARN)
 end
 
+--- Show hints and map `<leader>cv` in pyproject.toml and Cargo.toml buffers.
 function M.setup()
   local group = vim.api.nvim_create_augroup('Deps', { clear = true })
   vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost' }, {

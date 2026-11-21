@@ -137,7 +137,6 @@ hi('Todo', { fg = syntax.comment, gui = 'bold,italic' })
 
 -- Diagnostics
 hi('DiagnosticError', { fg = diag.error })
-hi('DiagnosticError', { fg = diag.error })
 hi('DiagnosticWarn', { fg = diag.warn })
 hi('DiagnosticInfo', { fg = diag.info })
 hi('DiagnosticHint', { fg = diag.hint })

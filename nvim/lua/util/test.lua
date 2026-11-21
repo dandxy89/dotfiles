@@ -1,7 +1,10 @@
-local M = {}
-M.last = nil ---@type string?
+---@alias test.Kind 'suite'|'file'|'nearest'
 
----@type table<string, table<'suite'|'file'|'nearest', string>>
+local M = {}
+M.last = nil ---@type string? last command run, for `M.run('last')`
+
+--- Per filetype; `%f` is the buffer path, `%s` the nearest test name.
+---@type table<string, table<test.Kind, string>>
 local runners = {
   rust = { suite = 'cargo test', file = 'cargo test', nearest = 'cargo test %s' },
   python = { suite = 'uv run pytest', file = 'uv run pytest %f', nearest = 'uv run pytest %f::%s' },
@@ -27,6 +30,7 @@ end
 
 local win ---@type integer?
 
+--- Run `cmd` in a bottom terminal split, replacing the previous one; focus stays put.
 ---@param cmd string
 local function run(cmd)
   M.last = cmd
@@ -39,7 +43,7 @@ local function run(cmd)
   vim.api.nvim_set_current_win(from)
 end
 
----@param kind 'suite'|'file'|'nearest'|'last'
+---@param kind test.Kind|'last'
 function M.run(kind)
   if kind == 'last' then
     if not M.last then

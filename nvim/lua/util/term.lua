@@ -1,9 +1,8 @@
 local M = {}
-local bufs = {} ---@type table<string, integer>
+local bufs = {} ---@type table<string, integer> terminal buffer per command, reused across toggles
 
 ---@param cmd string shell command
 ---@param layout 'bottom'|'right'|'tab'
----@return nil
 function M.toggle(cmd, layout)
   local bin = vim.split(cmd, ' ', { plain = true })[1]
   if vim.fn.executable(bin) ~= 1 then

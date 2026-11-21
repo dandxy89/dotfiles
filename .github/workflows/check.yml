@@ -28,3 +28,12 @@ jobs:
           git clone --depth 1 --branch main https://github.com/nvim-treesitter/nvim-treesitter "$HOME/ts"
           nvim --headless --cmd "set rtp+=$HOME/ts" -c 'lua require("nvim-treesitter").install({ "rust", "python" }):wait(300000)' -c q
       - run: ./nvim/check.sh
+  shell:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      # shellcheck and pwsh ship on the runner image; PSScriptAnalyzer is installed if the image lacks it.
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq shfmt zsh
+      - shell: pwsh
+        run: if (-not (Get-Module -ListAvailable PSScriptAnalyzer)) { Install-Module PSScriptAnalyzer -Scope CurrentUser -Force }
+      - run: make lint-sh

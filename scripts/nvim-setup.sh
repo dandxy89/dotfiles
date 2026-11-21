@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Neovim setup and verification script
-# Usage: ./scripts/nvim-setup.sh [--install | --verify | --clean | --help]
+# Link this repo's nvim/ as the Neovim config, install plugins + parsers, and verify.
+# Usage: ./scripts/nvim-setup.sh [--install | --verify | --upgrade | --clean | --help]
 #
-# --install  : create symlink and install plugins/parsers (default on new machine)
+# --install  : create symlink and install plugins/parsers
 # --verify   : check symlink, parsers, LSP binaries, and open test files
 # --upgrade  : update plugins (vim.pack.update) and treesitter parsers in place
 # --clean    : remove the config symlink and plugin/parser/cache state, so
@@ -19,7 +19,10 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 pass() { echo -e "  ${GREEN}✓${NC} $*"; }
-fail() { echo -e "  ${RED}✗${NC} $*"; FAILED=$((FAILED + 1)); }
+fail() {
+  echo -e "  ${RED}✗${NC} $*"
+  FAILED=$((FAILED + 1))
+}
 warn() { echo -e "  ${YELLOW}!${NC} $*"; }
 info() { echo -e "  ${BLUE}→${NC} $*"; }
 header() { echo -e "\n${BOLD}$*${NC}"; }
@@ -233,23 +236,25 @@ verify_util_test() {
 verify_lsp_binaries() {
   header "5. LSP server binaries"
   check_binary "basedpyright-langserver" "basedpyright (Python)"
-  check_binary "ruff"                    "ruff (Python linter/LSP)"
-  check_binary "rust-analyzer"           "rust-analyzer (Rust)"
-  check_binary "bash-language-server"    "bashls (Bash)"
-  check_binary "lua-language-server"     "lua_ls (Lua)"
-  check_binary "taplo"                   "taplo (TOML)"
-  check_binary "marksman"                "marksman (Markdown)"
-  check_binary "yaml-language-server"    "yamlls (YAML)"
+  check_binary "ruff" "ruff (Python linter/LSP)"
+  check_binary "rust-analyzer" "rust-analyzer (Rust)"
+  check_binary "bash-language-server" "bashls (Bash)"
+  check_binary "lua-language-server" "lua_ls (Lua)"
+  check_binary "taplo" "taplo (TOML)"
+  check_binary "marksman" "marksman (Markdown)"
+  check_binary "yaml-language-server" "yamlls (YAML)"
   check_binary "vscode-json-language-server" "jsonls (JSON)"
-  check_binary "harper-ls"              "harper_ls (prose grammar)"
-  check_binary "docker-langserver"      "dockerls (Dockerfile)"
+  check_binary "harper-ls" "harper_ls (prose grammar)"
+  check_binary "docker-langserver" "dockerls (Dockerfile)"
   check_binary "docker-compose-langserver" "docker_compose_language_service (Compose)"
-  check_binary "buf"                     "buf_ls (Protobuf)"
-  check_binary "ty"                      "ty (Python type checker)"
-  check_binary "lp-lsp"                  "lp_lsp (LP files)"
+  check_binary "buf" "buf_ls (Protobuf)"
+  check_binary "ty" "ty (Python type checker)"
+  check_binary "lp-lsp" "lp_lsp (LP files)"
   check_binary "autotools-language-server" "autotools_ls (Makefile)"
-  check_binary "checkmake"               "checkmake (Makefile linter)"
-  check_binary "npm-groovy-lint"         "npm-groovy-lint (Jenkinsfile)"
+  check_binary "checkmake" "checkmake (Makefile linter)"
+  check_binary "npm-groovy-lint" "npm-groovy-lint (Jenkinsfile)"
+  check_binary "shellcheck" "shellcheck (bashls diagnostics)"
+  check_binary "shfmt" "shfmt (bashls formatting)"
 
   if command -v rustup &>/dev/null; then
     if rustup run stable rust-analyzer --version &>/dev/null 2>&1; then
@@ -265,8 +270,10 @@ verify_lsp_binaries() {
 verify_open_file() {
   local section="$1" lang="$2" ext="$3" hint="$4"
   header "${section}. ${lang} file — TS highlight + LSP attach"
-  local tmpfile
-  tmpfile=$(mktemp "/tmp/nvim-verify-XXXXXX.${ext}")
+  # BSD mktemp leaves a suffixed template's Xs literal, so make a dir and name the file.
+  local tmpdir tmpfile
+  tmpdir=$(mktemp -d)
+  tmpfile="${tmpdir}/verify.${ext}"
   cat >"${tmpfile}"
 
   local out
@@ -281,7 +288,7 @@ verify_open_file() {
           io.flush()
           vim.cmd('qa!')
         end, 3000)" 2>&1 || true)
-  rm -f "${tmpfile}"
+  rm -rf "${tmpdir}"
 
   if echo "${out}" | grep -q 'ts=true'; then
     pass "treesitter parser active for ${lang}"
@@ -330,13 +337,7 @@ MODE="${1:-all}"
 
 case "${MODE}" in
   --help | -h)
-    echo "Usage: $(basename "$0") [--install | --verify | --upgrade | --clean | --help]"
-    echo ""
-    echo "  --install   Create symlink and install plugins + TS parsers"
-    echo "  --verify    Check symlink, parsers, LSP binaries, and open test files"
-    echo "  --upgrade   Update plugins and TS parsers in place"
-    echo "  --clean     Remove symlink and plugin/parser state (re-run --install after)"
-    echo "  (no args)   Run install then verify"
+    sed -n '2,/^$/s/^# \{0,1\}//p' "$0"
     exit 0
     ;;
   --install)

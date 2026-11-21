@@ -4,13 +4,13 @@
 set -euo pipefail
 
 if [[ $# -gt 0 ]]; then
-	if [[ "$1" != "h" || $# -ne 2 || ! $2 =~ ^[1-6]$ ]]; then
-		echo "Usage: gendate [h 1-6]" >&2
-		exit 1
-	fi
-	printf '#%.0s' $(seq "$2")
-	echo " $(date +%F)"
-	exit 0
+  if [[ "$1" != "h" || $# -ne 2 || ! $2 =~ ^[1-6]$ ]]; then
+    echo "Usage: gendate [h 1-6]" >&2
+    exit 1
+  fi
+  printf '#%.0s' $(seq "$2")
+  echo " $(date +%F)"
+  exit 0
 fi
 
 date +%F
