@@ -109,7 +109,7 @@ install_brew() {
 resolve_repo() {
   header "2. Dotfiles repository"
   local script_dir
-  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." 2>/dev/null && pwd || true)"
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." 2>/dev/null && pwd)" || script_dir=""
 
   if [[ -n "${script_dir}" && -f "${script_dir}/nvim/init.lua" ]]; then
     DOTFILES_DIR="${script_dir}"
