@@ -155,6 +155,14 @@ local function fetch(eco, d, cb)
         return cb(nil, ('curl exit %d'):format(res.code))
       end
       local ok, data = pcall(vim.json.decode, res.stdout)
+      if not ok and eco == 'pypi' and d.index and res.stdout:find('<a ', 1, true) then
+        -- Index ignored the Accept header and served PEP 503 HTML.
+        local files = {}
+        for f in res.stdout:gmatch('<a [^>]*>([^<]*)</a>') do
+          files[#files + 1] = { filename = (f:gsub('#.*$', '')):match('[^/]+$') }
+        end
+        ok, data = true, { files = files }
+      end
       if not ok then
         return cb(nil, 'bad JSON')
       end
@@ -166,8 +174,10 @@ local function fetch(eco, d, cb)
             found[#found + 1] = file_version(f.filename)
           end
         end
+        local seen = {}
         for _, v in ipairs(found) do
-          if stable(v) then
+          if stable(v) and not seen[v] then
+            seen[v] = true
             versions[#versions + 1] = v
           end
         end
